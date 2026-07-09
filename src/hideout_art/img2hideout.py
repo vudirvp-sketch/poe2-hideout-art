@@ -4,16 +4,37 @@ Algorithm
 ---------
 1. Load the image with Pillow and downscale to a target width
    (default: ~120 px to keep placement count manageable).
-2. For each pixel, find the closest palette entry by Euclidean RGB
-   distance.
-3. Map the pixel's (col, row) to world (x, y) using a configurable
-   scale and origin. By default y grows upward (top row of the image
-   becomes the highest y).
-4. Emit one ``Placement`` per non-background pixel.
+2. For each pixel, decide whether to skip it:
 
-Optional: ``max_count`` per palette entry is respected — once a
-decoration hits its cap, subsequent pixels that would map to it are
-skipped.
+   * if the image has an **alpha channel**, pixels with ``alpha < alpha_threshold``
+     are skipped (transparent);
+   * otherwise, pixels within ``background_threshold`` of ``background``
+     colour are skipped (legacy behaviour).
+
+3. Map the surviving pixel to a palette entry. Two strategies:
+
+   * **nearest** (default): Euclidean (or weighted / redmean) RGB distance
+     to each palette colour, pick the smallest;
+   * **dither** (Floyd-Steinberg): same distance metric, but the residual
+     error is propagated to neighbours → much smoother gradients.
+
+4. Map pixel (col, row) to world (x, y):
+
+   * ``y`` grows upward (top row of image → highest ``y``);
+   * ``scale`` = world units per pixel;
+   * ``step`` = place a decoration every Nth pixel (default 1 = every pixel).
+     ``step > 1`` reduces placement count and lets each decoration breathe.
+
+5. Optionally skip placements outside ``bounds`` (world-coord rectangle).
+   Useful when the user has «outlined» the hideout's playable area.
+
+6. Optionally jitter ``r`` (multiples of 15°) and ``variant`` per placement
+   for visual variety. Default OFF — preserves the original rigid look.
+
+7. Optionally write a PNG preview of the resulting hideout alongside.
+
+All new options are opt-in; defaults reproduce the pre-1.1 behaviour
+byte-for-byte on a non-alpha, non-dithered input.
 
 This module is **not** imported by ``hideout_art/__init__.py`` because
 Pillow is a heavier optional dependency.
@@ -21,37 +42,124 @@ Pillow is a heavier optional dependency.
 
 from __future__ import annotations
 
+import random
 from pathlib import Path
 
-from .constants import KNOWN_HASHES
+from .constants import KNOWN_HASHES, ROTATION_MODULUS
 from .palette import ColorEntry, Palette, default_palette
 from .parser import Hideout, Placement
 
+# ---------------------------------------------------------------------------
+# Color distance metrics
+# ---------------------------------------------------------------------------
 
-def _closest_entry(rgb: tuple[int, int, int], palette: Palette) -> ColorEntry | None:
+# Weights for the "weighted" metric — standard ITU-R BT.601 luma weights.
+_LUMA_R, _LUMA_G, _LUMA_B = 0.299, 0.587, 0.114
+
+
+def _dist_rgb(a: tuple[int, int, int], b: tuple[int, int, int]) -> float:
+    dr = a[0] - b[0]
+    dg = a[1] - b[1]
+    db = a[2] - b[2]
+    return dr * dr + dg * dg + db * db
+
+
+def _dist_weighted(a: tuple[int, int, int], b: tuple[int, int, int]) -> float:
+    """Luminance-weighted Euclidean distance.
+
+    Prevents dark-green from matching dark-brown just because their RGB
+    magnitudes are similar — green channel counts more, so the green
+    decoration wins for green-ish pixels.
+    """
+    dr = (a[0] - b[0]) * _LUMA_R
+    dg = (a[1] - b[1]) * _LUMA_G
+    db = (a[2] - b[2]) * _LUMA_B
+    return dr * dr + dg * dg + db * db
+
+
+def _dist_redmean(a: tuple[int, int, int], b: tuple[int, int, int]) -> float:
+    """redmean — a cheap perceptual metric that works well for close colours.
+
+    See https://www.compuphase.com/cmetric.htm. Computationally tiny but
+    noticeably better than plain Euclidean for the red/orange/brown range.
+    """
+    r_mean = (a[0] + b[0]) / 2.0
+    dr = a[0] - b[0]
+    dg = a[1] - b[1]
+    db = a[2] - b[2]
+    return (
+        (2.0 + r_mean / 256.0) * dr * dr
+        + 4.0 * dg * dg
+        + (2.0 + (255.0 - r_mean) / 256.0) * db * db
+    )
+
+
+_METRICS = {
+    "rgb": _dist_rgb,
+    "weighted": _dist_weighted,
+    "redmean": _dist_redmean,
+}
+
+
+def _closest_entry(
+    rgb: tuple[int, int, int],
+    palette: Palette,
+    metric: str = "rgb",
+) -> ColorEntry | None:
+    fn = _METRICS.get(metric, _dist_rgb)
     best: ColorEntry | None = None
-    best_d2 = float("inf")
+    best_d = float("inf")
     for e in palette.entries:
-        dr = rgb[0] - e.color[0]
-        dg = rgb[1] - e.color[1]
-        db = rgb[2] - e.color[2]
-        d2 = dr * dr + dg * dg + db * db
-        if d2 < best_d2:
-            best_d2 = d2
+        d = fn(rgb, e.color)
+        if d < best_d:
+            best_d = d
             best = e
     return best
 
+
+# ---------------------------------------------------------------------------
+# PIL resample filter lookup
+# ---------------------------------------------------------------------------
+
+def _resample_filter(name: str):
+    try:
+        from PIL import Image  # noqa: F401
+    except ImportError:
+        return None
+    # Lazy lookup so we don't import PIL at module load time.
+    table = {
+        "nearest": Image.NEAREST,
+        "bilinear": Image.BILINEAR,
+        "bicubic": Image.BICUBIC,
+        "lanczos": Image.LANCZOS,
+    }
+    return table.get(name.lower(), Image.BICUBIC)
+
+
+# ---------------------------------------------------------------------------
+# Main entry point
+# ---------------------------------------------------------------------------
 
 def image_to_hideout(
     image_path: str | Path,
     *,
     palette: Palette | None = None,
     target_width: int = 120,
-    scale: int = 2,           # world units per pixel
+    scale: int = 2,
+    step: int = 1,
     origin_x: int = 700,
     origin_y: int = 550,
     background: tuple[int, int, int] | None = (0, 0, 0),
     background_threshold: int = 30,
+    alpha_threshold: int = 32,
+    use_alpha: bool = True,
+    color_metric: str = "rgb",
+    dither: bool = False,
+    jitter: bool = False,
+    jitter_seed: int = 0,
+    jitter_variants: int = 8,
+    bounds: tuple[int, int, int, int] | None = None,
+    resample: str = "bicubic",
     hideout_name: str = "Imported",
     hideout_hash: int = 0,
     language: str = "English",
@@ -69,12 +177,46 @@ def image_to_hideout(
         ratio is preserved.
     scale : int
         World units per pixel. Larger = spread-out composition.
+    step : int
+        Place a decoration every ``step``-th pixel in both x and y.
+        ``step=2`` halves the placement count and lets each decoration
+        breathe (useful when decorations occupy a non-trivial tile area).
     origin_x, origin_y : int
         World coordinate of the BOTTOM-LEFT pixel of the image (y grows
         upward, so the bottom row corresponds to ``origin_y``).
     background : (r,g,b) or None
         If set, pixels within ``background_threshold`` of this colour
-        are skipped (treated as transparent).
+        are skipped (treated as transparent). Ignored when the image
+        has an alpha channel and ``use_alpha=True``.
+    background_threshold : int
+        Euclidean RGB distance (not squared) under which a pixel is
+        treated as background.
+    alpha_threshold : int
+        For images with alpha: pixels with ``alpha < alpha_threshold``
+        are skipped.
+    use_alpha : bool
+        Whether to honour the alpha channel when present. Default True.
+        Set to False to force background-colour matching even on RGBA
+        images (legacy behaviour).
+    color_metric : str
+        One of ``"rgb"`` (default, Euclidean), ``"weighted"`` (luminance),
+        ``"redmean"`` (perceptual, good for warm colours).
+    dither : bool
+        If True, use Floyd-Steinberg error diffusion. Default False.
+    jitter : bool
+        If True, randomise ``r`` (multiples of 15°) and ``variant`` per
+        placement. Default False.
+    jitter_seed : int
+        RNG seed for reproducible jitter. 0 = unpredictable.
+    jitter_variants : int
+        Max variant index when jittering (typical observed range: 0..8).
+    bounds : (x_min, y_min, x_max, y_max) or None
+        If set, skip placements whose world (x, y) falls outside this
+        rectangle. Useful when the user has «outlined» the hideout.
+    resample : str
+        PIL downscaling filter: ``"nearest"``, ``"bilinear"``,
+        ``"bicubic"`` (default), ``"lanczos"``. For pixel-art sources
+        prefer ``"nearest"`` to preserve crisp edges.
     hideout_name, hideout_hash, language : str / int
         Header fields for the resulting .hideout file.
 
@@ -91,49 +233,116 @@ def image_to_hideout(
         ) from e
 
     palette = palette or default_palette()
+    rng = random.Random(jitter_seed if jitter_seed else None)
 
-    img = Image.open(image_path).convert("RGB")
+    # ----- load + downscale ------------------------------------------------
+    img = Image.open(image_path)
+    has_alpha = use_alpha and "A" in img.getbands()
+    if has_alpha:
+        img = img.convert("RGBA")
+    else:
+        img = img.convert("RGB")
+
     if img.width > target_width:
         new_h = max(1, int(img.height * target_width / img.width))
-        img = img.resize((target_width, new_h))
+        img = img.resize((target_width, new_h), _resample_filter(resample))
 
     w, h = img.size
     pixels = img.load()
 
-    # Track per-entry counts to honour max_count.
-    counts: dict[int, int] = {id(e): 0 for e in palette.entries}
-
-    placements: list[Placement] = []
+    # Build a mutable RGB buffer (and a separate alpha mask if applicable).
+    # We need mutability for Floyd-Steinberg; even without dither, working
+    # from a flat list is faster than PIL's per-pixel access.
+    rgb_buf: list[list[tuple[int, int, int]]] = []
+    alpha_mask: list[list[int]] | None = None if not has_alpha else []
     for row in range(h):
-        # row=0 is the TOP of the image; we want the top of the image
-        # to be the highest y, so y = origin_y + (h - 1 - row) * scale
-        y = origin_y + (h - 1 - row) * scale
+        rgb_row: list[tuple[int, int, int]] = []
+        a_row: list[int] = []
         for col in range(w):
+            px = pixels[col, row]
+            if has_alpha:
+                r, g, b, a = px  # type: ignore[misc]
+                rgb_row.append((r, g, b))
+                a_row.append(a)
+            else:
+                r, g, b = px  # type: ignore[misc]
+                rgb_row.append((r, g, b))
+        rgb_buf.append(rgb_row)
+        if has_alpha:
+            assert alpha_mask is not None
+            alpha_mask.append(a_row)
+
+    # ----- per-pixel skip predicate ---------------------------------------
+    def is_skipped(row: int, col: int, rgb: tuple[int, int, int]) -> bool:
+        if has_alpha:
+            assert alpha_mask is not None
+            if alpha_mask[row][col] < alpha_threshold:
+                return True
+        elif background is not None:
+            dr = rgb[0] - background[0]
+            dg = rgb[1] - background[1]
+            db = rgb[2] - background[2]
+            if dr * dr + dg * dg + db * db <= background_threshold * background_threshold:
+                return True
+        return False
+
+    # ----- sample loop -----------------------------------------------------
+    counts: dict[int, int] = {id(e): 0 for e in palette.entries}
+    placements: list[Placement] = []
+
+    # Rotation step = 15° = 65536 / 24
+    r_step = ROTATION_MODULUS // 24
+
+    for row in range(0, h, step):
+        y = origin_y + (h - 1 - row) * scale
+        for col in range(0, w, step):
             x = origin_x + col * scale
-            rgb = pixels[col, row]
+            rgb = rgb_buf[row][col]
 
-            if background is not None:
-                dr = rgb[0] - background[0]
-                dg = rgb[1] - background[1]
-                db = rgb[2] - background[2]
-                if dr * dr + dg * dg + db * db <= background_threshold * background_threshold:
-                    continue
+            if is_skipped(row, col, rgb):
+                continue
 
-            entry = _closest_entry(rgb, palette)
+            entry = _closest_entry(rgb, palette, metric=color_metric)
             if entry is None:
                 continue
             if entry.max_count is not None and counts[id(entry)] >= entry.max_count:
                 continue
             counts[id(entry)] += 1
 
+            # Bounds check (world coords)
+            if bounds is not None:
+                x_min, y_min, x_max, y_max = bounds
+                if x < x_min or x > x_max or y < y_min or y > y_max:
+                    continue
+
+            # Jitter (optional)
+            r_val = 0
+            fv_val = 0
+            if jitter:
+                r_val = rng.randint(0, 23) * r_step
+                fv_val = rng.randint(0, max(0, jitter_variants - 1))
+
             placements.append(Placement(
                 name=entry.decoration,
                 hash=KNOWN_HASHES[entry.decoration],
                 x=x,
                 y=y,
-                r=0,
-                fv=0,
+                r=r_val,
+                fv=fv_val,
             ))
+
+            # ----- Floyd-Steinberg error diffusion ----------------------
+            if dither:
+                target = entry.color
+                err = (
+                    rgb[0] - target[0],
+                    rgb[1] - target[1],
+                    rgb[2] - target[2],
+                )
+                _diffuse(rgb_buf, row, col + 1, err, 7 / 16)
+                _diffuse(rgb_buf, row + 1, col - 1, err, 3 / 16)
+                _diffuse(rgb_buf, row + 1, col, err, 5 / 16)
+                _diffuse(rgb_buf, row + 1, col + 1, err, 1 / 16)
 
     return Hideout(
         version=1,
@@ -141,4 +350,25 @@ def image_to_hideout(
         hideout_name=hideout_name,
         hideout_hash=hideout_hash,
         placements=placements,
+    )
+
+
+def _diffuse(
+    buf: list[list[tuple[int, int, int]]],
+    row: int,
+    col: int,
+    err: tuple[int, int, int],
+    coeff: float,
+) -> None:
+    """Propagate quantisation error to a neighbour pixel (in place)."""
+    if row < 0 or row >= len(buf):
+        return
+    line = buf[row]
+    if col < 0 or col >= len(line):
+        return
+    r, g, b = line[col]
+    line[col] = (
+        max(0, min(255, int(round(r + err[0] * coeff)))),
+        max(0, min(255, int(round(g + err[1] * coeff)))),
+        max(0, min(255, int(round(b + err[2] * coeff)))),
     )

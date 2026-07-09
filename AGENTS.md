@@ -12,10 +12,13 @@ everything lives and where the surprises are.
 | If you need to... | Open this file |
 |---|---|
 | Understand the file format | `docs/format.md` |
+| Understand the `img2hideout` pipeline + options | `docs/img2hideout.md` |
+| See current state + known issues | `STATUS.md` |
 | Find the parser entrypoint | `src/hideout_art/parser.py` → `Hideout.from_file()` |
 | Find the writer | `src/hideout_art/writer.py` → `write_hideout()` |
 | Add a new decoration hash | `src/hideout_art/constants.py` → `KNOWN_HASHES` |
 | Add a new geometric transform | `src/hideout_art/transforms.py` |
+| Extend `img2hideout` (dither, alpha, etc.) | `src/hideout_art/img2hideout.py` |
 | Add a CLI subcommand | `src/hideout_art/cli.py` (register in `build_parser()`) |
 | See what's tested | `tests/` |
 | Find example inputs | `examples/` |
@@ -135,11 +138,26 @@ minimal.
 
 - **`format.md`** — the canonical file format spec. Update this if you
   discover new field semantics.
+- **`img2hideout.md`** — full parameter reference for the
+  `img2hideout` pipeline (alpha, dither, jitter, bounds, resample,
+  colour metrics). Update when adding a new option.
 - **`screenshots/`** — PNGs used by `README.md`.
+
+### Top-level
+
+- **`STATUS.md`** — short live state-of-the-project doc. **Read this
+  first** when picking up the project: what works, what's broken, what
+  to improve next. Keep it under ~200 lines; move long history to
+  `CHANGELOG.md`.
 
 ### `examples/`
 
-- **`palette.json`** — example palette file for `img2hideout`.
+- **`palette.json`** — example palette file for `img2hideout` (4-colour,
+  Canal Hideout). Fine for abstract shapes; insufficient for portraits.
+- **`palette_2b.json`** — template palette for portraits (2B-like
+  characters) with `TODO_*` placeholders. Filling the template requires
+  finding new decorations in-game and adding their hashes to
+  `KNOWN_HASHES`. See the file's `_how_to_fill` block.
 - **`README.md`** — how to use the examples.
 
 ### `scripts/`

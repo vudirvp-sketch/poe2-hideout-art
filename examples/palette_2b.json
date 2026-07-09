@@ -1,0 +1,91 @@
+{
+  "_comment": "Recommended palette for portraits that need a broader tonal range than the default 4-colour Canal palette. The default palette only covers pink/green/light-green/dark-brown — fine for abstract hearts, but NOT enough for a face or character like 2B from NieR. This template suggests the colour ROLES you need; the user must find the actual decoration in-game, place one, export the hideout, run `hideout-art inspect path/to/export.hideout` to read the hash, and add it to KNOWN_HASHES in src/hideout_art/constants.py. Until the TODOs are filled in, image_to_hideout() will refuse to load this palette (Palette.__post_init__ raises on unknown decoration names).",
+  "_how_to_fill": [
+    "1. In the game, place ONE of each missing decoration in your hideout.",
+    "2. Export the hideout to .hideout.",
+    "3. Run: hideout-art inspect path/to/export.hideout",
+    "4. The 'Unknown hashes' section lists the hash for each unknown name.",
+    "5. Add the entry to KNOWN_HASHES in src/hideout_art/constants.py.",
+    "6. Add the decoration name to ART_TYPES in the same file (if it's purely artistic).",
+    "7. Replace the TODO entries below with the actual decoration name.",
+    "8. Now `hideout-art img2hideout portrait.png --palette examples/palette_2b.json` works."
+  ],
+  "_colour_roles_needed_for_2b": {
+    "white":  "2B's dress, skin highlights, skirt trim. Look for snow, marble, bone, white flowers, pale sand.",
+    "black":  "2B's blindfold, hair, glove, boots. Look for charred wood, obsidian, ash, black sand, dark stone.",
+    "gray":   "Shadows on dress, sword blade, metal details. Look for stone rubble, gravel, ash pile, slate.",
+    "silver": "Sword blade highlights, metallic accents. Look for crystal, ice, polished stone.",
+    "skin":   "2B's skin (visible near eyes/neck). Look for pale tan sand, pale pink sand (already have Falling Sand), peach flower.",
+    "pink":   "Glow accents, lips. Already covered by Falling Sand.",
+    "red":    "Emblem on dress. Look for red flower, blood moss, ruby crystal, red candle."
+  },
+  "entries": [
+    {
+      "color": [248, 187, 208],
+      "decoration": "Falling Sand",
+      "weight": 1.0,
+      "max_count": null
+    },
+    {
+      "color": [46, 125, 50],
+      "decoration": "Long Grass",
+      "weight": 1.0,
+      "max_count": null
+    },
+    {
+      "color": [139, 195, 74],
+      "decoration": "Fringe Moss",
+      "weight": 1.0,
+      "max_count": null
+    },
+    {
+      "color": [78, 52, 46],
+      "decoration": "Sand Tussock",
+      "weight": 1.0,
+      "max_count": null
+    },
+
+    {
+      "_role": "white (dress, highlights)",
+      "color": [240, 240, 240],
+      "decoration": "TODO_WHITE_DECORATION",
+      "weight": 1.0,
+      "max_count": null
+    },
+    {
+      "_role": "black (blindfold, hair)",
+      "color": [20, 20, 20],
+      "decoration": "TODO_BLACK_DECORATION",
+      "weight": 1.0,
+      "max_count": null
+    },
+    {
+      "_role": "gray (shadows, sword)",
+      "color": [128, 128, 128],
+      "decoration": "TODO_GRAY_DECORATION",
+      "weight": 1.0,
+      "max_count": null
+    },
+    {
+      "_role": "silver (metallic accents)",
+      "color": [200, 200, 215],
+      "decoration": "TODO_SILVER_DECORATION",
+      "weight": 1.0,
+      "max_count": null
+    },
+    {
+      "_role": "skin tone (visible neck/face)",
+      "color": [228, 200, 178],
+      "decoration": "TODO_SKIN_DECORATION",
+      "weight": 1.0,
+      "max_count": null
+    },
+    {
+      "_role": "red (emblem)",
+      "color": [180, 30, 30],
+      "decoration": "TODO_RED_DECORATION",
+      "weight": 1.0,
+      "max_count": null
+    }
+  ]
+}

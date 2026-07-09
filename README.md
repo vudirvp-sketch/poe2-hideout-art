@@ -56,8 +56,13 @@ hideout-art shift    path/to/file.hideout -o art_only.hideout -x 50 --art-only
 hideout-art transfer path/to/file.hideout -o other.hideout \
     --name "Kurast Hideout" --hash 12345
 hideout-art img2hideout picture.png -o art.hideout \
-    --palette examples/palette.json --scale 3 --width 100
+    --palette examples/palette.json --scale 3 --width 100 --step 2 \
+    --preview
 ```
+
+See [`docs/img2hideout.md`](docs/img2hideout.md) for the full parameter
+reference (alpha channel, dithering, jitter, bounds, resample, colour
+metrics, etc.).
 
 ### Python API
 
@@ -141,8 +146,13 @@ See [`docs/format.md`](docs/format.md) for the full spec. Short version:
 - Validate that a `hash` exists in a target hideout without a sample export.
   Use `Hideout.find_unknown_hashes()` after loading a target sample.
 - Discover tile-grid boundaries — they are not in the file; placements
-  outside the playable area are silently clipped by the game.
+  outside the playable area are silently clipped by the game. You can
+  work around this with `img2hideout --bounds x_min,y_min,x_max,y_max`
+  if you have "outlined" the playable area.
 - Know each decoration's tile footprint without observing it in-game.
+
+See [`STATUS.md`](STATUS.md) for the current list of known issues and
+planned improvements.
 
 ## Repository layout
 
