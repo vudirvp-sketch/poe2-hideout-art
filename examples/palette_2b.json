@@ -1,5 +1,5 @@
 {
-  "_comment": "TEMPLATE palette for cool-tone portraits (e.g. 2B from NieR:Automata) — needs pure white (dress), pure black (blindfold/hair), silver (sword blade), skin tone, and red (emblem). In 0.2.4 the white/silver/gray TODOs were FILLED with the Marble-серия (RGB sampled via VLM analysis of the 'еще элементы.jpg' screenshot — see _rgb_sources below). Black, skin and red are STILL MISSING. Until those 3 are filled, the palette LOADS (Marble entries resolve to known hashes), but it cannot yet render a recognisable 2B — the darkest entry is Sand Tussock (78,52,46) which is too warm-brown for a blindfold.",
+  "_comment": "TEMPLATE palette for cool-tone portraits (e.g. 2B from NieR:Automata) — needs pure white (dress), pure black (blindfold/hair), silver (sword blade), skin tone, and red (emblem). In 0.2.4 the white/silver/gray TODOs were FILLED with the Marble-серия. In 0.2.5 the black and red TODOs were FILLED with Small Coastal Stone (VLM-confirmed dark) and Maraket Rubble (VLM-confirmed reddish — user's intuition was right). Only the skin TODO remains: Sand Tussock's VLM RGB is inconsistent across measurements (KI-11), and no other known decoration is pale-tan enough. Until skin is filled, the palette LOADS (all non-TODO entries resolve to known hashes), but a 2B render will lack a believable face/hands tone.",
   "_how_to_fill": [
     "1. In the game, place ONE of each missing decoration in your hideout.",
     "2. Export the hideout to .hideout.",
@@ -11,43 +11,54 @@
     "8. Now `hideout-art img2hideout portrait.png --palette examples/palette_2b.json` works."
   ],
   "_rgb_sources": {
-    "_method": "RGB values for the Marble-серия and Cave Fossil/Coral/Brazier were measured via VLM (glm-4.6v) analysis of the screenshot исходники/еще элементы.jpg. The VLM identified each decoration visually and reported a mid-tone RGB. These are FIRST-PASS estimates, not pixel-exact medians — they may shift by ±10-15 points after a clean pixel sampling pass. The key qualitative finding: Cave Fossil is BROWN (140,110,80), not the light gray/white we assumed in 0.2.2 — it is NOT a cool-palette candidate.",
+    "_method": "RGB values were measured via VLM (glm-4.6v) analysis of screenshots in исходники/. VLM identified each decoration visually and reported a mid-tone RGB. These are FIRST-PASS estimates, not pixel-exact medians — they may shift by ±10-15 points after a clean pixel sampling pass. See KI-11 in STATUS.md for the VLM-noise problem (Sand Tussock's RGB varied from (78,52,46) in 0.2.1 to (180,160,120) in 0.2.5 — likely different parts of the plant).",
     "Marble Bench":     "(210, 210, 205) — VLM mid-tone estimate, 1 sample, 0.2.4",
     "Marble Table":     "(200, 200, 195) — VLM mid-tone estimate, 2 samples, 0.2.4",
     "Marble Walls":     "(210, 210, 205) — VLM mid-tone estimate, 1 sample, 0.2.4",
     "Marble Fountain":  "(230, 230, 220) — VLM mid-tone estimate (brightest, near-white), 1 sample, 0.2.4",
     "Cave Fossil":      "(140, 110, 80) — VLM mid-tone BROWN rock; previously assumed light gray — corrected in 0.2.4. NOT a 2B cool-palette candidate.",
     "Cave Coral":       "(150, 130, 110) — VLM mid-tone brownish-gray; warm, not cool. NOT a 2B candidate.",
-    "Summit Brazier":   "(180, 140, 80) — VLM mid-tone golden-brown metal; warm, NOT cool. Candidate for warm 'red' role only."
+    "Summit Brazier":   "(180, 140, 80) — VLM mid-tone golden-brown metal; warm, NOT cool. Candidate for warm 'red' role only.",
+    "Small Coastal Stone":  "(85, 75, 70) — VLM mid-tone DARK warm-gray, 0.2.5. is_dark=true, is_cool_tone=false (warm). Darkest non-plant decoration available. Used for 2B 'black' role (warmer than pure black, but recognisable as blindfold/hair).",
+    "Maraket Rubble":   "(153, 78, 68) — VLM mid-tone REDDISH-BROWN, 0.2.5. is_reddish=true. Prior 0.2.1 estimate (138,120,94) was too neutral — user correctly observed reddish tint. Used for 2B 'red' role (dark brick-red, darker than ideal but recognisable as emblem).",
+    "Falling Sand":     "(255, 192, 203) — VLM particle-effect PINK, 0.2.5 re-measured (matches 0.2.4 (248,187,208) within noise). Confirms NOT skin/red — too pink.",
+    "Seaweed":          "(128, 96, 64) — VLM mid-tone BROWN, 0.2.5 (new decoration in 0.2.5, hash 1015947674). Warm aquatic plant — NOT a 2B candidate. Documented for completeness.",
+    "Sand Tussock":     "VLM RGB CONFLICT — 0.2.1 (78,52,46) very dark brown vs 0.2.5 (180,160,120) light tan. Likely sampled different parts of the plant. NOT used for 'skin' until pixel sampling resolves the conflict (KI-11)."
   },
   "_colour_roles_needed_for_2b": {
     "white":  "2B's dress, skin highlights, skirt trim. FILLED in 0.2.4 by Marble Fountain (230,230,220) — brightest marble, near-white. Marble Table (200,200,195) is the alternate mid-white.",
-    "black":  "2B's blindfold, hair, glove, boots. Look for charred wood, obsidian, ash, black sand, dark stone. STILL MISSING — Sand Tussock (78,52,46) is the closest existing option but too brown.",
+    "black":  "2B's blindfold, hair, glove, boots. FILLED in 0.2.5 by Small Coastal Stone (85,75,70) — VLM-confirmed is_dark=true. Warmer than ideal pure black, but the darkest non-plant option. User intuition ('камни разные чем не черный?') was correct.",
     "gray":   "Shadows on dress, sword blade, metal details. FILLED in 0.2.4 by Marble Bench (210,210,205) and Marble Walls (210,210,205) — light cool gray.",
     "silver": "Sword blade highlights, metallic accents. FILLED in 0.2.4 by Marble Table (200,200,195) — slightly cooler/darker than Marble Fountain, used for silver role. Note: 4 marble decorations have very similar RGB (200-230 range); this is intentional — they are 4 visually similar marble textures.",
-    "skin":   "2B's skin (visible near eyes/neck). Look for pale tan sand, pale pink sand, peach flower. Falling Sand (248,187,208) is too pink — need peach/tan. STILL MISSING.",
-    "pink":   "Glow accents, lips. COVERED by Falling Sand.",
-    "red":    "Emblem on dress. Look for red flower, blood moss, ruby crystal, red candle. STILL MISSING — 0.2.2 Summit Brazier (180,140,80) is golden-brown, too yellow for true red."
+    "skin":   "2B's skin (visible near eyes/neck). STILL MISSING. Sand Tussock's VLM RGB is inconsistent (KI-11) — 0.2.1 measured (78,52,46), 0.2.5 measured (180,160,120), a 100+ point swing. Falling Sand (255,192,203) is too pink. Need a peach/tan decoration or pixel sampling of Sand Tussock to resolve which part is the mid-tone.",
+    "pink":   "Glow accents, lips. COVERED by Falling Sand (255,192,203).",
+    "red":    "Emblem on dress. FILLED in 0.2.5 by Maraket Rubble (153,78,68) — VLM-confirmed is_reddish=true. User correctly observed that Maraket Rubble has a reddish/pink tint. Prior candidate Summit Brazier (180,140,80) was golden-brown, too yellow — Maraket Rubble is much closer to true red."
   },
   "_available_warm_alternatives_in_0_2_1": {
-    "Maraket Rubble":     "warm tan/khaki (138,120,94) — usable for mid-tone warm fills, NOT for cool 2B gray",
-    "Maraket Treasures":  "dark warm gray (108,91,83) — too warm for 2B sword, but ok for warm shadow",
-    "Maraket Samovar":    "light warm gray (148,133,115) — too warm for 2B sword, but ok for warm highlight",
-    "Maraket Ornament":   "warm tan/khaki (136,120,97) — near-duplicate of Maraket Rubble",
-    "Coastal Pebble":     "warm tan/khaki (134,115,94) — near-duplicate of Maraket Rubble"
+    "_comment": "These 0.2.1 RGB estimates are KNOWN TO BE NOISY (KI-11). The 0.2.5 VLM re-measurement of the Maraket-серия on укрошения.jpg showed substantial drift — Maraket Rubble went from (138,120,94) to (153,78,68), Maraket Treasures from (108,91,83) to (191,154,111). Treat 0.2.1 values here as placeholders pending re-measurement.",
+    "Maraket Rubble":     "REDDISH-BROWN (153,78,68) — VLM 0.2.5 re-measured (was 138,120,94 in 0.2.1). Now fills the 2B 'red' role.",
+    "Maraket Treasures":  "GOLD (191,154,111) — VLM 0.2.5 (was 108,91,83 in 0.2.1 — likely sampled shadow).",
+    "Maraket Samovar":    "COPPER (184,134,77) — VLM 0.2.5 (was 148,133,115 in 0.2.1).",
+    "Maraket Ornament":   "BRONZE (197,153,102) — VLM 0.2.5 (was 136,120,97 in 0.2.1).",
+    "Coastal Pebble":     "warm tan/khaki (134,115,94) — 0.2.1 estimate, not yet re-measured (KI-11)."
   },
-  "_0_2_4_measured_rgb_summary": {
-    "_comment": "VLM analysis of исходники/еще элементы.jpg (2026-07-09). 4 Marble decorations + 3 cave/brazier decorations measured. Marble-серия are confirmed cool light-gray/white and now fill 3 of 6 TODOs. Cave Fossil turned out to be BROWN — corrected the prior 0.2.2 guess of 'light gray/white ammonite'.",
-    "marble_series": {
-      "Marble Fountain":  "(230,230,220) — brightest, near-white. Role: white (2B dress).",
-      "Marble Table":     "(200,200,195) — mid light gray. Role: silver (sword blade).",
-      "Marble Bench":     "(210,210,205) — light gray. Role: gray (dress shadows).",
-      "Marble Walls":     "(210,210,205) — light gray (near-twin of Marble Bench). Role: gray alt."
+  "_0_2_5_measured_rgb_summary": {
+    "_comment": "VLM (glm-4.6v) re-analysis in 0.2.5 of three screenshots: водоросли и летающий песок.jpg (Seaweed + Falling Sand), камни и кустарники.jpg (Small Coastal Stone + Coastal Bush + Sand Tussock), укрошения.jpg (Maraket-серия). Closes 2 of 3 remaining 2B TODOs (black, red). User pushback on 0.2.4 conclusions was partially correct: Maraket Rubble IS reddish (not neutral tan as 0.2.1 said), and Small Coastal Stone IS dark enough for black. Sand Tussock RGB is too inconsistent to use for skin.",
+    "new_0_2_5_measurements": {
+      "Small Coastal Stone":  "(85,75,70) — DARK warm-gray, is_dark=true. Fills 'black' role.",
+      "Maraket Rubble":       "(153,78,68) — REDDISH-BROWN, is_reddish=true. Fills 'red' role.",
+      "Seaweed":              "(128,96,64) — BROWN, warm. New decoration (hash 1015947674), NOT a 2B candidate.",
+      "Falling Sand":         "(255,192,203) — PINK, re-confirmed (matches 0.2.4 within noise). NOT skin/red.",
+      "Coastal Bush":         "(80,120,80) — green, warm. Not a 2B candidate.",
+      "Sand Tussock":         "(180,160,120) — light tan in 0.2.5 vs (78,52,46) dark brown in 0.2.1. CONFLICT — see KI-11."
     },
-    "not_2b_candidates": {
-      "Cave Fossil":      "(140,110,80) BROWN — corrected from prior 'light gray/white' guess. NOT cool.",
-      "Cave Coral":       "(150,130,110) brownish-gray — warm, NOT cool.",
-      "Summit Brazier":   "(180,140,80) golden-brown — warm, NOT cool."
+    "todo_status_after_0_2_5": {
+      "white":  "FILLED 0.2.4 (Marble Fountain)",
+      "silver": "FILLED 0.2.4 (Marble Table)",
+      "gray":   "FILLED 0.2.4 (Marble Bench + Marble Walls)",
+      "black":  "FILLED 0.2.5 (Small Coastal Stone)",
+      "red":    "FILLED 0.2.5 (Maraket Rubble)",
+      "skin":   "STILL MISSING — pending pixel-sampling resolution of Sand Tussock RGB conflict (KI-11), or a new peach/tan decoration from another hideout."
     }
   },
   "entries": [
@@ -105,23 +116,23 @@
       "max_count": null
     },
     {
-      "_role": "black (blindfold, hair) — STILL MISSING, look in-game",
-      "color": [20, 20, 20],
-      "decoration": "TODO_BLACK_DECORATION",
+      "_role": "black (blindfold, hair) — FILLED 0.2.5, VLM-measured from Small Coastal Stone (is_dark=true)",
+      "color": [85, 75, 70],
+      "decoration": "Small Coastal Stone",
       "weight": 1.0,
       "max_count": null
     },
     {
-      "_role": "skin tone (visible neck/face) — STILL MISSING",
+      "_role": "skin tone (visible neck/face) — STILL MISSING. Sand Tussock RGB is inconsistent across VLM passes (KI-11); Falling Sand is too pink. Need a peach/tan decoration or pixel sampling.",
       "color": [228, 200, 178],
       "decoration": "TODO_SKIN_DECORATION",
       "weight": 1.0,
       "max_count": null
     },
     {
-      "_role": "red (emblem) — STILL MISSING",
-      "color": [180, 30, 30],
-      "decoration": "TODO_RED_DECORATION",
+      "_role": "red (emblem) — FILLED 0.2.5, VLM-measured from Maraket Rubble (is_reddish=true, user intuition confirmed)",
+      "color": [153, 78, 68],
+      "decoration": "Maraket Rubble",
       "weight": 1.0,
       "max_count": null
     }

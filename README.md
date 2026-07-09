@@ -179,11 +179,11 @@ poe2-hideout-art/
 ├── examples/                # example palette JSON + sample inputs
 │   ├── palette.json         # 4-colour Canal Hideout base palette
 │   ├── palette_warm.json    # 9-colour warm-tone palette (0.2.1, working)
-│   ├── palette_2b.json      # cool-tone portraits (3 of 6 TODOs filled 0.2.4)
+│   ├── palette_2b.json      # cool-tone portraits (5 of 6 TODOs filled 0.2.5 — only skin remains)
 │   └── README.md
-├── исходники/               # (0.2.1+0.2.2) user-provided reference exports:
-│   │                          7 .hideout files + matching screenshots,
-│   │                          source of the 23 new hashes, the Canal
+├── исходники/               # (0.2.1+0.2.2+0.2.5) user-provided reference exports:
+│   │                          8 .hideout files + matching screenshots,
+│   │                          source of the 24 new hashes (23 in 0.2.2 + 1 Seaweed in 0.2.5), the Canal
 │   │                          Hideout canvas bounds calibration, and the
 │   │                          DECORATION_FOOTPRINT_CATALOG measurements
 ├── docs/

@@ -55,20 +55,24 @@ KNOWN_HASHES: dict[str, int] = {
     # Decorations used for floor art (original Canal Hideout palette, 0.1.0)
     # ------------------------------------------------------------------ #
     "Long Grass":           2219637749,  # Russian in-game: "Высокая трава"
-    "Falling Sand":         3853073345,
+    "Falling Sand":         3853073345,  # Russian "Летающий песок"; PINK particle effect (255,192,203) — VLM 0.2.5 re-measured (matches 0.2.4 (248,187,208) within noise). NOT skin/red — too pink.
     "Fringe Moss":          1459723677,
-    "Sand Tussock":          146816198,  # Russian in-game: "Песчаный кустарник"
+    "Sand Tussock":          146816198,  # Russian "Песчаный кустарник". VLM RGB CONFLICT (KI-11): 0.2.1 estimated (78,52,46) very dark brown; 0.2.5 re-measured (180,160,120) light tan. Real value depends on which part of plant — needs pixel sampling. NOT used for 2B 'skin' (too uncertain).
 
     # ------------------------------------------------------------------ #
     # Warm-tone earth decorations (added in 0.2.1 from user-provided exports).
     # Sampled median in-game RGB values are kept in the comment for reference;
     # use them when building palettes (see examples/palette_warm.json).
+    # NOTE (0.2.5, KI-11): the 0.2.1 RGB estimates were re-measured in 0.2.5
+    # via VLM (glm-4.6v) on укрошения.jpg. Maraket Rubble is REDDISH (153,78,68),
+    # not tan (138,120,94) — the 0.2.1 estimate was too neutral. Other 0.2.1
+    # values were also off; see KI-11 for the VLM-noise problem.
     # ------------------------------------------------------------------ #
-    "Maraket Rubble":       3012657298,  # warm tan/khaki  ~ (138,120, 94)
-    "Maraket Treasures":    1078696835,  # dark warm gray  ~ (108, 91, 83)
-    "Maraket Samovar":       57228444,   # light warm gray ~ (148,133,115)
-    "Maraket Ornament":     2125171205,  # warm tan/khaki  ~ (136,120, 97)
-    "Coastal Pebble":       2365064644,  # warm tan/khaki  ~ (134,115, 94)
+    "Maraket Rubble":       3012657298,  # REDDISH-BROWN (153,78,68) — VLM 0.2.5, is_reddish=true → fills 2B 'red' role. Prior 0.2.1 (138,120,94) was too neutral.
+    "Maraket Treasures":    1078696835,  # GOLD (191,154,111) — VLM 0.2.5 (prior 0.2.1 (108,91,83) was way off — likely sampled shadow)
+    "Maraket Samovar":       57228444,   # COPPER (184,134,77) — VLM 0.2.5 (prior 0.2.1 (148,133,115) was too gray)
+    "Maraket Ornament":     2125171205,  # BRONZE (197,153,102) — VLM 0.2.5 (prior 0.2.1 (136,120,97) was too neutral)
+    "Coastal Pebble":       2365064644,  # warm tan/khaki  ~ (134,115, 94) — 0.2.1 estimate, not yet re-measured (KI-11)
 
     # ------------------------------------------------------------------ #
     # New Canal Hideout decorations (added in 0.2.2 from "исходники/" folder).
@@ -82,9 +86,9 @@ KNOWN_HASHES: dict[str, int] = {
     "Petrified Cave Figure": 2014424642, # large statue (estimate 2-3 tiles)
 
     # Coastal stones (warm tan/gray, three sizes)
-    "Coastal Bush":         2984478824,  # coastal bush, warm green-tan
-    "Small Coastal Stone":  1122244925,  # small stone ~0.5 tile
-    "Medium Coastal Stone":  369950199,  # medium stone ~1 tile
+    "Coastal Bush":         2984478824,  # coastal bush, warm green-tan (80,120,80) — VLM 0.2.5
+    "Small Coastal Stone":  1122244925,  # small DARK warm-gray stone (85,75,70) — VLM 0.2.5, is_dark=true → candidate for 2B 'black' role
+    "Medium Coastal Stone":  369950199,  # medium stone ~1 tile (RGB not yet re-measured)
 
     # Plants / foliage
     "Slender Seedling":     532751457,   # Russian "Тонкосемянник"; bushy shrub
@@ -110,6 +114,14 @@ KNOWN_HASHES: dict[str, int] = {
     # Camp props (warm brown wood + canvas)
     "Camp Crate":           2156404357,  # wooden crate, warm brown
     "Camp Gear":             412387213,  # bedroll/sack, warm tan
+
+    # ------------------------------------------------------------------ #
+    # Aquatic decoration (added in 0.2.5 from "исходники/водоросли и летающий
+    # песок.hideout"). Russian in-game name "Морская водоросль". 7 placements
+    # in source file (variants 0..11). VLM-measured mid-tone BROWN (128,96,64),
+    # warm — NOT a cool-palette candidate.
+    # ------------------------------------------------------------------ #
+    "Seaweed":             1015947674,  # brown aquatic plant (128,96,64) — VLM 0.2.5, warm. NOT cool.
 }
 
 # Reverse lookup: hash -> name
@@ -148,6 +160,8 @@ ART_TYPES: frozenset[str] = frozenset({
     "Marble Fountain",
     "Camp Crate",
     "Camp Gear",
+    # Aquatic (0.2.5)
+    "Seaweed",
     # Add more as the catalogue grows — keep functional objects OUT.
 })
 
@@ -246,7 +260,7 @@ class DecorationFootprint(NamedTuple):
 DECORATION_FOOTPRINT_CATALOG: dict[str, DecorationFootprint] = {
     # ----- original Canal Hideout art (0.1.0) -----
     "Long Grass":            DecorationFootprint(5,  13.3, 17.3,  1.0, "high"),
-    "Falling Sand":          DecorationFootprint(0,  None, None,  None, "none"),
+    "Falling Sand":          DecorationFootprint(1,  None, None,  None, "single"),  # 1 placement in водоросли и летающий песок.hideout (0.2.5)
     "Fringe Moss":           DecorationFootprint(0,  None, None,  None, "none"),
     "Sand Tussock":          DecorationFootprint(7,  17.1, 38.9,  1.0, "high"),
 
@@ -287,6 +301,10 @@ DECORATION_FOOTPRINT_CATALOG: dict[str, DecorationFootprint] = {
     # Camp props
     "Camp Crate":            DecorationFootprint(4,  15.7, 30.9,  1.0, "medium"),
     "Camp Gear":             DecorationFootprint(1,  None, None,  None, "single"),
+
+    # Aquatic (0.2.5) — 7 placements in водоросли и летающий песок.hideout.
+    # Re-run scripts/measure_decorations.py to refresh after adding more samples.
+    "Seaweed":               DecorationFootprint(7,  26.1, 68.9,  1.5, "high"),
 }
 
 

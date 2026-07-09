@@ -7,6 +7,104 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.5] - 2026-07-09
+
+### Added
+- **New decoration: Seaweed** (Морская водоросль, hash=1015947674). Found in
+  new user-provided `исходники/водоросли и летающий песок.hideout` (7
+  placements with variants 0..11). Added to `KNOWN_HASHES`, `ART_TYPES`,
+  and `DECORATION_FOOTPRINT_CATALOG` (7 samples, min=26.1 wu, 1.5 tile,
+  confidence=high). VLM-measured mid-tone RGB (128,96,64) — warm brown,
+  NOT a 2B cool-palette candidate.
+- **2 of 3 remaining 2B TODOs filled** in `palette_2b.json`:
+  - `black` role → **Small Coastal Stone** (85,75,70) — VLM-confirmed
+    `is_dark=true` on `камни и кустарники.jpg`. User intuition
+    («камни разные чем не черный?») was correct.
+  - `red` role → **Maraket Rubble** (153,78,68) — VLM-confirmed
+    `is_reddish=true` on `укрошения.jpg`. User intuition
+    («маракетские обломки вон 'красноватый/розовый' оттенок имеют»)
+    was correct; the 0.2.1 estimate (138,120,94) was too neutral.
+  - `skin` role remains TODO — see KI-11 below.
+- **VLM re-analysis of 3 screenshots** (glm-4.6v):
+  - `исходники/водоросли и летающий песок.jpg` → Seaweed (128,96,64) +
+    Falling Sand re-confirmed as PINK (255,192,203) — matches 0.2.4
+    (248,187,208) within noise. NOT skin/red.
+  - `исходники/камни и кустарники.jpg` → Small Coastal Stone (85,75,70),
+    Coastal Bush (80,120,80), Sand Tussock (180,160,120) — note Sand
+    Tussock's 0.2.1 RGB was (78,52,46), a 100+ point conflict (KI-11).
+  - `исходники/укрошения.jpg` → Maraket Rubble (153,78,68 reddish),
+    Treasures (191,154,111 gold), Samovar (184,134,77 copper),
+    Ornament (197,153,102 bronze).
+- **New metadata block** in `palette_2b.json`: `_0_2_5_measured_rgb_summary`
+  with new measurements + `todo_status_after_0_2_5` table.
+- **New tests** in `tests/test_new_hashes.py`:
+  - `test_seaweed_hash_registered` — hash registered + reversible.
+  - `test_seaweed_is_art` — Seaweed in ART_TYPES.
+  - `test_seaweed_hash_no_collision` — hash not duplicated.
+  - `test_seaweed_present_in_source_export` — 7 placements in source file.
+  - `test_seaweed_is_art_in_source_export` — KI-9 invariant for new hash.
+  - `test_palette_2b_uses_small_coastal_stone_for_black` — regression
+    protection for the new black-role fill.
+  - `test_palette_2b_uses_maraket_rubble_for_red` — regression protection
+    for the new red-role fill.
+  - `test_palette_2b_black_red_rgb_values` — exact RGB regression test.
+  - `test_palette_2b_only_skin_todo_remains` — proves only skin TODO left.
+  - `test_maraket_rubble_present_in_ukroshenia_export` — source file check.
+  - `test_small_coastal_stone_present_in_stones_export` — source file check.
+  - `test_total_known_hash_count` updated 46 → 47.
+  - `test_parse_isxodnik_file_no_unknowns` extended with `водоросли и
+    летающий песок` substring (file must parse with no unknowns after
+    Seaweed is registered).
+  - `test_isxodnik_files_use_canal_hideout_hash` extended with new file.
+  - `test_is_art_true_for_all_new_022_decorations_in_exports` extended
+    with new file.
+  - `RUSSIAN_NAME_TO_CANONICAL` extended with `Летающий песок` →
+    `Falling Sand` and `Морская водоросль` → `Seaweed` mappings.
+  - `test_palette_2b_still_has_todos` updated — now expects 1 TODO
+    (skin only), down from 3 in 0.2.4 and 6 in 0.2.3.
+  - `test_palette_2b_marble_only_section_loads_via_palette_class` updated
+    — now expects 10 working entries (4 original + 4 marble + 2 new
+    role-fills), up from 8 in 0.2.4.
+- Total test count: **255** (254 pass, 1 skipped).
+
+### Changed
+- `src/hideout_art/constants.py`:
+  - Added Seaweed to KNOWN_HASHES, ART_TYPES, DECORATION_FOOTPRINT_CATALOG
+    (7 samples, min=26.1 wu, 1.5 tile, confidence=high).
+  - `Falling Sand` catalog entry updated: 0 samples/none → 1 sample/single
+    (a placement was added in the new `водоросли и летающий песок.hideout`).
+  - Small Coastal Stone comment updated: `small DARK warm-gray stone
+    (85,75,70) — VLM 0.2.5, is_dark=true → candidate for 2B 'black' role`.
+  - Coastal Bush comment updated with VLM 0.2.5 RGB (80,120,80).
+  - Maraket Rubble/Treasures/Samovar/Ornament comments updated with 0.2.5
+    VLM-measured RGB (replacing 0.2.1 estimates which were too neutral).
+  - Falling Sand comment updated with 0.2.5 re-measurement (255,192,203).
+  - Sand Tussock comment now documents the 0.2.1 vs 0.2.5 RGB conflict
+    (78,52,46) vs (180,160,120) — see KI-11.
+- `examples/palette_2b.json` — see Added section above.
+- `STATUS.md` — rewritten: KI-2 partial 0.2.5 (5/6 TODOs filled), new
+  KI-11 (VLM noise), new future-task "Drawing primitives из декораций"
+  (per user request — lines/curves/circles/S-shapes/filled circles from
+  layered decorations).
+- `AGENTS.md` — hash count 46→47, ART_TYPES 27→28, new 0.2.5 notes.
+- `docs/img2hideout.md` — palette_2b section updated: 5 of 6 TODOs filled.
+- `pyproject.toml` and `src/hideout_art/__init__.py` — version 0.2.4 → 0.2.5.
+
+### Fixed
+- None (no new bugs in code). The 0.2.1 RGB estimates for Maraket-серия
+  were qualitatively corrected by 0.2.5 re-measurement — see KI-11 for
+  why this is a documentation issue, not a code bug.
+
+### Known Issues
+- **KI-11 (new 0.2.5):** VLM-измерения RGB шумят — Sand Tussock varies
+  from (78,52,46) in 0.2.1 to (180,160,120) in 0.2.5 (100+ RGB point
+  swing, likely sampling different parts of the plant). Maraket-серия
+  also drifted substantially. All VLM RGB values are first-pass estimates
+  pending pixel sampling. Closes part of KI-2 but blocks `skin` role.
+- KI-2 is now **partial 0.2.5** (was partial 0.2.4): 5/6 TODOs filled,
+  only `skin` remains.
+- KI-10 is unchanged.
+
 ## [0.2.4] - 2026-07-09
 
 ### Added
@@ -164,7 +262,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `img2hideout`, CLI (`inspect`/`layers`/`stats`/`preview`/`shift`/
   `transfer`/`img2hideout`), 23 known hashes, docs, 33 pytest tests.
 
-[Unreleased]: https://github.com/vudirvp-sketch/poe2-hideout-art/compare/v0.2.4...HEAD
+[Unreleased]: https://github.com/vudirvp-sketch/poe2-hideout-art/compare/v0.2.5...HEAD
+[0.2.5]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.5
 [0.2.4]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.4
 [0.2.3]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.3
 [0.2.2]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.2

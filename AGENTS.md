@@ -120,21 +120,25 @@ minimal.
 - **`cli.py`** — argparse-based CLI. One file per command, registered
   in `build_parser()`. `_resolve_bounds()` handles `--bounds` named
   shortcuts (e.g. `canal`) and explicit `x_min,y_min,x_max,y_max`.
-- **`constants.py`** — `KNOWN_HASHES` (46 entries), `HASH_TO_NAME`,
-  `ART_TYPES` (27 entries), the magic-number constants
+- **`constants.py`** — `KNOWN_HASHES` (47 entries), `HASH_TO_NAME`,
+  `ART_TYPES` (28 entries), the magic-number constants
   (`ROTATION_MODULUS`, `FV_FLIP_X_BIT`, `FV_VARIANT_MASK`),
   `DEFAULT_TILE_SIZE_WORLD_UNITS = 23`, Canal Hideout geometry
   (`CANAL_HIDEOUT_HASH = 60415`, `CANAL_HIDEOUT_BOUNDS = (700, 540, 860, 775)`,
   `NAMED_BOUNDS`), and **`DECORATION_FOOTPRINT_CATALOG`** (0.2.3) —
-  placement footprint estimates for all 27 art decorations, with
+  placement footprint estimates for all 28 art decorations, with
   confidence levels. See KI-10 in `STATUS.md` for the placement-vs-
   sprite-bounds limitation. This is the file most PRs touch.
 
-  **RGB values in comments** (0.2.4): Marble-серия and Cave Fossil/
-  Coral/Brazier comments now include VLM-measured mid-tone RGB. Source:
-  VLM (glm-4.6v) analysis of `исходники/еще элементы.jpg`. Cave Fossil
-  corrected from "light gray/white" (0.2.2 guess) to "BROWN (140,110,80)".
-  See `examples/palette_2b.json` → `_rgb_sources` for full attribution.
+  **RGB values in comments** (0.2.4 + 0.2.5): Marble-серия, Cave Fossil/
+  Coral/Brazier, Small Coastal Stone, Maraket-серия, Falling Sand,
+  Sand Tussock, Seaweed comments now include VLM-measured mid-tone RGB.
+  Source: VLM (glm-4.6v) analysis of screenshots in `исходники/`.
+  Cave Fossil corrected from "light gray/white" (0.2.2 guess) to
+  "BROWN (140,110,80)". Maraket Rubble corrected from "tan (138,120,94)"
+  (0.2.1) to "REDDISH (153,78,68)" (0.2.5) — user intuition was right.
+  See `examples/palette_2b.json` → `_rgb_sources` + `_0_2_5_measured_rgb_summary`
+  for full attribution, and KI-11 in `STATUS.md` for VLM-noise caveat.
 
 ### `tests/`
 
@@ -149,15 +153,16 @@ minimal.
 - **`test_new_hashes.py`** — 0.2.1 warm hashes + 0.2.2 new Canal hashes
   + `CANAL_HIDEOUT_BOUNDS` + `--bounds canal` CLI resolver + KI-9 fix
   (Russian-name → English-canonical via hash) + 0.2.4 VLM-measured
-  Marble-серия RGB + palette_2b.json progress (3 of 6 TODOs filled).
-  95 cases total.
+  Marble-серия RGB + 0.2.5 Seaweed + Small Coastal Stone (black role) +
+  Maraket Rubble (red role) + palette_2b.json progress (5 of 6 TODOs
+  filled, only `skin` remains).
 - **`test_footprints.py`** (0.2.3) — 94 cases for
   `DECORATION_FOOTPRINT_CATALOG`: structural integrity, confidence↔
   samples consistency, spacing↔footprint math, regression tests for
   specific entries (Beech Tree, Cordilina, Marble Table), and a
   ground-truth check that `samples` matches real placement counts in
   `исходники/*.hideout`.
-- **Total test count: 237** (236 pass, 1 skipped — see `STATUS.md`).
+- **Total test count: 255** (254 pass, 1 skipped — see `STATUS.md`).
 - **`data/sample.hideout`** — tiny synthetic fixture (< 1 KB).
   Contains one of each: a functional object, an art-layer decoration
   with rotation, an art-layer decoration with `flip_x`, an unknown
@@ -178,6 +183,9 @@ by filename substring). Contents:
 - `еще элементы.hideout` — Cave Fossil, Cave Coral, Summit Brazier,
   Marble Bench/Table/Walls/Fountain.
 - `всякое.hideout` — Log, Beech Tree, Pile of Leaves, Camp Crate, Camp Gear.
+- `водоросли и летающий песок.hideout` (0.2.5) — 7 Seaweed (Морская
+  водоросль, new in 0.2.5) + 1 Falling Sand. Source file for the Seaweed
+  hash measurement.
 - Matching `.jpg` screenshots alongside each `.hideout` for RGB calibration.
 
 ### `docs/`

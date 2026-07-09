@@ -265,33 +265,49 @@ Atziri Statue и другие функциональные объекты (Stash
   5 Maraket/Coastal Pebble). **Загружается и работает.** Для пустынь,
   дерева, камня, осенних сцен.
 - `examples/palette_2b.json` — шаблон для холодных портретов (2B-style).
-  В 0.2.4 **3 из 6 TODO заполнены** Marble-серией (VLM-measured RGB):
-  - `white`  → Marble Fountain (230, 230, 220)
-  - `silver` → Marble Table    (200, 200, 195)
-  - `gray`   → Marble Bench    (210, 210, 205)
-  - `gray` alt → Marble Walls  (210, 210, 205)
+  В 0.2.5 **5 из 6 TODO заполнены**:
+  - `white`  → Marble Fountain (230, 230, 220) — 0.2.4
+  - `silver` → Marble Table    (200, 200, 195) — 0.2.4
+  - `gray`   → Marble Bench    (210, 210, 205) — 0.2.4
+  - `gray` alt → Marble Walls  (210, 210, 205) — 0.2.4
+  - `black`  → Small Coastal Stone (85, 75, 70) — 0.2.5, VLM-confirmed is_dark
+  - `red`    → Maraket Rubble (153, 78, 68) — 0.2.5, VLM-confirmed is_reddish
   
-  Остаются 3 TODO: `black` (повязка/волосы), `skin` (кожа), `red`
-  (эмблема) — ни одна известная декорация не подходит. Палитра пока
-  НЕ загружается через `Palette.from_json_file` из-за оставшихся TODO_*.
-  Если их временно вырезать — загрузится и работает.
+  Остался 1 TODO: `skin` (кожа). Sand Tussock имеет конфликт RGB между
+  проходами VLM (KI-11): 0.2.1 измерил (78,52,46), 0.2.5 — (180,160,120),
+  разница 100+ точек. Falling Sand — слишком розовый (255,192,203). Нужна
+  peach/tan декорация из другого убежища или pixel sampling. Палитра
+  пока НЕ загружается через `Palette.from_json_file` из-за оставшегося
+  TODO_SKIN. Если вырезать TODO_SKIN — загрузится и работает.
 
-### VLM-измеренные RGB (0.2.4)
+### VLM-измеренные RGB (0.2.4 + 0.2.5)
 
-Источником RGB-значений для Marble-серии и Cave Fossil/Coral/Brazier
-послужил VLM-анализ скриншота `исходники/еще элементы.jpg` через
+Источником RGB-значений для Marble-серии, Cave Fossil/Coral/Brazier
+(0.2.4), Small Coastal Stone, Maraket-серии, Sand Tussock, Seaweed,
+Falling Sand (0.2.5) послужил VLM-анализ скриншотов `исходники/` через
 `glm-4.6v`. VLM идентифицировал каждую декорацию визуально и сообщил
 mid-tone RGB.
 
-**Важная находка:** Cave Fossil — **коричневый** (140, 110, 80), а не
-светло-серый/белый, как предполагалось в 0.2.2. Это значит, что Cave
-Fossil **не** подходит для холодной 2B-палитры. Cave Coral и Summit
-Brazier тоже тёплые. Только Marble-серия оказалась действительно cool.
+**Важные находки 0.2.5:**
+- **Cave Fossil** — коричневый (140, 110, 80), а не светло-серый/белый,
+  как предполагалось в 0.2.2. Не подходит для холодной 2B-палитры.
+- **Maraket Rubble** — REDDISH (153, 78, 68), а не neutral tan (138,120,94)
+  как в 0.2.1. Пользователь был прав — теперь fills 'red' role.
+- **Small Coastal Stone** — DARK warm-gray (85, 75, 70), is_dark=true.
+  Пользователь был прав — теперь fills 'black' role.
+- **Seaweed** — коричневый (128, 96, 64), новая декорация в 0.2.5.
+
+**KI-11 (новый в 0.2.5):** VLM-измерения шумят. Sand Tussock:
+0.2.1 (78,52,46) vs 0.2.5 (180,160,120) — разница 100+ точек, вероятно
+разные части растения. Maraket Treasures: 0.2.1 (108,91,83) vs 0.2.5
+(191,154,111) — 0.2.1 вероятно измерил тень. Все VLM RGB — first-pass
+estimates, нужен pixel sampling для точности. Блокирует `skin` role.
 
 Полная таблица измеренных значений — в `examples/palette_2b.json` →
-`_0_2_4_measured_rgb_summary`, с указанием метода и источника.
+`_rgb_sources` + `_0_2_5_measured_rgb_summary`, с указанием метода и
+источника.
 
-## Доступные декорации Canal Hideout (46 шт.)
+## Доступные декорации Canal Hideout (47 шт.)
 
 Каталог `KNOWN_HASHES` в `src/hideout_art/constants.py` содержит:
 
@@ -299,7 +315,7 @@ Brazier тоже тёплые. Только Marble-серия оказалась
   Map Device, Relic Locker, Reforging Bench, Salvage Bench, Well,
   Wardrobe Decoration, Verisium Anvil, Atziri Statue.
 - **8 NPC:** Alva, Zelina, Zolin, Doryani, Ange, Hilda, Jado, Farrow.
-- **27 художественных декораций** (`ART_TYPES`):
+- **28 художественных декораций** (`ART_TYPES`):
   - 4 исходных: Long Grass, Falling Sand, Fringe Moss, Sand Tussock.
   - 5 тёплых Maraket (0.2.1): Rubble, Treasures, Samovar, Ornament,
     Coastal Pebble.
@@ -307,6 +323,7 @@ Brazier тоже тёплые. Только Marble-серия оказалась
     Bush, Small/Medium Coastal Stone, Slender Seedling, Log, Beech Tree,
     Pile of Leaves, Cave Fossil, Cave Coral, Summit Brazier, Marble
     Bench/Table/Walls/Fountain, Camp Crate, Camp Gear.
+  - 1 aquatic (0.2.5): Seaweed (Морская водоросль).
 
 Используйте `hideout-art inspect file.hideout`, чтобы увидеть, какие
 декорации есть в экспорте, и какие хеши ещё не в каталоге.
