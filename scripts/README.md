@@ -21,7 +21,7 @@ declared in `pyproject.toml`.
 | `measure_decorations.py` | Measure decoration placement footprints from `исходники/*.hideout` (re-run when new decorations are added; output goes to `decoration_footprints.json`, gitignored) |
 | `sample_pixels.py` | **(0.2.6)** Sample real pixel RGB under each art placement — closes KI-11. Auto or manual world→pixel calibration, diagnostic overlay PNG, JSON report. See usage below. |
 | `sample_all.py` | **(0.2.6)** Convenience wrapper: runs `sample_pixels.py` on all 7 `исходники/` screenshot+hideout pairs and consolidates into `sampled_all.json`. |
-| `draw_primitives.py` | **(0.2.7)** Inject the curated 5-shape drawing-primitives composition (vertical lines + hollow circle + filled circle + S-snake + thick line with contours) into the centre of an existing `.hideout` file. Strictly additive. See usage below. |
+| `draw_primitives.py` | **(0.2.7, defaults updated 0.2.8)** Inject the curated 5-shape drawing-primitives composition (vertical lines + hollow circle + filled circle + S-snake + thick line with contours) into the centre of an existing `.hideout` file. Strictly additive. See usage below. |
 | `render_primitives_preview.py` | **(0.2.7)** Render a colour-coded PNG preview of a hideout with per-decoration legend, Canal Hideout canvas outline, and centre marker. |
 
 ## `sample_pixels.py` — pixel sampling for ground-truth RGB
@@ -116,7 +116,7 @@ python scripts/sample_all.py
 Consolidates results to `scripts/sampled_all.json` — the source for
 the `_pixel_sampling_summary_0_2_6` block in `examples/palette_2b.json`.
 
-## `draw_primitives.py` — drawing primitives in world coords (0.2.7)
+## `draw_primitives.py` — drawing primitives in world coords (0.2.7, defaults 0.2.8)
 
 When `img2hideout` rasterises a PNG, geometric shapes (circles, lines,
 S-curves) become noisy dot clouds after palette quantisation. This
@@ -124,8 +124,11 @@ script draws them *directly* in world coordinates using art decorations,
 so each shape is clean and recognisable in-game.
 
 The script uses `src/hideout_art/primitives.py` — see that module for
-the per-shape API (line, hollow_circle, filled_circle, s_snake,
-thick_line_with_contours, center_composition).
+the per-shape API. Core (0.2.7): `line`, `polyline`, `hollow_circle`,
+`filled_circle`, `s_snake`, `thick_line_with_contours`,
+`center_composition`. Mosaic/bas-relief (0.2.8 NEW): `arc`, `rectangle`,
+`polygon`, `grid` (only `center_composition` is wired into the CLI; the
+mosaic primitives are Python-API only for now).
 
 ### Quick start
 
@@ -138,30 +141,44 @@ python scripts/draw_primitives.py \
     --preview preview.png
 ```
 
-This loads the source hideout (18 placements — Canal Hideout functional
-objects + NPCs), appends 52 art placements for the 5 primitives, and
-writes a 70-placement output file. All new placements are inside
+This loads the source hideout (30 placements — Canal Hideout functional
+objects + NPCs + 11 Cordilina boundary + 1 Petrified Cave Figure),
+appends 63 art placements for the 5 core primitives, and writes a
+93-placement output file. All new placements are inside
 `CANAL_HIDEOUT_BOUNDS = (700, 540, 860, 775)` — `--bounds-check` fails
 otherwise.
 
-### The 5 primitives (curated `center_composition`)
+### The 5 core primitives (curated `center_composition`)
 
 | Shape | Default decoration | Position (relative to centre) |
 |---|---|---|
 | 3 vertical parallel lines (length 80 wu) | Long Grass | top-left, x = cx−60..−45 |
 | Hollow circle (radius 18 wu) | Maraket Rubble | top-centre, (cx, cy−50) |
 | Filled circle (radius 14 wu) | Coastal Pebble | top-right, (cx+45, cy−50) |
-| S-snake (height 60, width 25 wu) | Sand Tussock | bottom-left, (cx−45, cy+35) |
-| Thick line with contours (length 50, thickness 14 wu) | Small Coastal Stone (outline) + Coastal Pebble (fill) | bottom-right, (cx+5..+55, cy+35) |
+| S-snake (height 60, width 25 wu) | Maraket Rubble *(0.2.8: was Sand Tussock)* | bottom-left, (cx−45, cy+35) |
+| Thick line with contours (length 50, **thickness 28** wu) | Small Coastal Stone (outline) + Long Grass (fill) *(0.2.8: was thickness 14 + Coastal Pebble fill)* | bottom-right, (cx+5..+55, cy+35) |
 
-### Options
+### 4 mosaic / bas-relief primitives (0.2.8, Python API only)
+
+These are NOT wired into `draw_primitives.py` CLI yet — call them
+directly from Python:
+
+| Shape | Use case | Example |
+|---|---|---|
+| `arc(cx, cy, radius, start_deg, end_deg, opts)` | Arches, semicircle caps, bas-relief curved corners | `arc(780, 657, 30, 0, 180, opts)` — upper half-ring |
+| `rectangle(x0, y0, x1, y1, opts)` | Hollow borders, picture frames | `rectangle(720, 580, 840, 720, opts)` |
+| `polygon(cx, cy, radius, n_sides, opts, rotation_deg=0)` | Triangles, squares, hexagons, octagons — mosaic tiles | `polygon(780, 657, 30, 6, opts)` — hexagon |
+| `grid(x0, y0, x1, y1, opts, cols, rows, include_border=True)` | Mosaic tile fields, pointillism fills, bas-relief textures | `grid(720, 580, 840, 720, opts, cols=5, rows=5)` — 5×5 lattice |
+
+### Options (CLI)
 
 - `--center X Y` (default: 780 657) — centre of the composition.
 - `--bounds-check` — fail if any new placement falls outside Canal
   Hideout bounds.
 - `--preview PATH` — render a default PNG preview.
 - `--<shape>-decoration NAME` — override the decoration for any shape
-  (e.g. `--line-decoration Maraket Rubble`).
+  (e.g. `--line-decoration Maraket Rubble`). Defaults: KI-14/15 fix
+  baked in (S-snake=Maraket Rubble, thick fill=Long Grass).
 - `--spacing-override N` — override the auto-derived placement spacing
   (in wu) for ALL primitives. Default: per-decoration `min_spacing_wu`
   from `DECORATION_FOOTPRINT_CATALOG`.
@@ -182,7 +199,9 @@ visible sprite overlap in-game (KI-10).
 
 Визуальная проверка (0.2.7, 2 скриншота): 3/5 фигур узнаваемы (vertical
 lines, hollow circle, filled circle), 2/5 нужно доработать (S-snake,
-thick_line). См. `STATUS.md` → KI-13/14/15.
+thick_line) → заведены KI-14/15. В 0.2.8 оба фикса применены (см.
+таблицу выше). **Ожидает повторной визуальной проверки пользователем**
+(цель: 5/5 узнаваемых фигур). См. `STATUS.md` → KI-13/14/15.
 
 ## `render_primitives_preview.py` — colour-coded preview (0.2.7)
 

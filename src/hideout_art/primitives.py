@@ -26,8 +26,8 @@ Design rules (do not violate)
 5. Primitives NEVER mutate the input Hideout — they return fresh lists.
    The caller decides where to splice the result.
 
-Shapes
-------
+Shapes (core, 0.2.7)
+--------------------
 * :func:`line` — straight line between two points.
 * :func:`polyline` — chain of segments (used by S-snake).
 * :func:`hollow_circle` — points on a circle perimeter.
@@ -35,8 +35,15 @@ Shapes
 * :func:`s_snake` — sinusoidal vertical S-shape.
 * :func:`thick_line_with_contours` — outline + fill thick band.
 
-See ``scripts/draw_primitives.py`` for a CLI that injects all five into the
-centre of an existing ``.hideout`` file.
+Shapes (mosaic / bas-relief, 0.2.8)
+-----------------------------------
+* :func:`arc` — partial circle (arches, frames, half-circles).
+* :func:`rectangle` — hollow rectangle outline (borders, frames).
+* :func:`polygon` — regular n-gon (triangle, square, pentagon, hexagon…).
+* :func:`grid` — regular cols×rows grid (mosaic tiles, pointillism).
+
+See ``scripts/draw_primitives.py`` for a CLI that injects the curated
+composition into the centre of an existing ``.hideout`` file.
 """
 
 from __future__ import annotations
@@ -411,6 +418,207 @@ def thick_line_with_contours(
 
 
 # --------------------------------------------------------------------------- #
+# Mosaic / bas-relief primitives (0.2.8)
+# --------------------------------------------------------------------------- #
+def arc(
+    cx: float,
+    cy: float,
+    radius: float,
+    start_angle_deg: float,
+    end_angle_deg: float,
+    opts: PrimitiveOptions,
+    *,
+    spacing: float | None = None,
+) -> list[Placement]:
+    """Draw a circular arc from ``start_angle_deg`` to ``end_angle_deg``.
+
+    Angles are in degrees, measured counter-clockwise from the +x axis
+    (standard math convention; matches ``math.cos``/``math.sin``).
+    The arc is sampled at uniform ``spacing`` along the arc length; both
+    endpoints are always included.
+
+    Use cases: arch tops, semicircle caps, quarter-circle corners in
+    bas-relief frames, curved brackets.
+    """
+    sp = spacing if spacing is not None else _resolve_spacing(opts)
+    # Normalise the sweep so we always travel counter-clockwise from start
+    # to end (the visual "short" or "long" way is the caller's choice — we
+    # just respect the sign of (end - start)).
+    sweep_deg = end_angle_deg - start_angle_deg
+    arc_len = abs(math.radians(sweep_deg)) * radius
+    if arc_len == 0:
+        return [_make_placement(
+            cx + radius * math.cos(math.radians(start_angle_deg)),
+            cy + radius * math.sin(math.radians(start_angle_deg)),
+            opts,
+        )]
+    n = max(2, int(math.ceil(arc_len / sp)))
+    out: list[Placement] = []
+    for i in range(n + 1):
+        t = i / n
+        ang = math.radians(start_angle_deg + sweep_deg * t)
+        out.append(_make_placement(
+            cx + radius * math.cos(ang),
+            cy + radius * math.sin(ang),
+            opts,
+        ))
+    return out
+
+
+def rectangle(
+    x0: float,
+    y0: float,
+    x1: float,
+    y1: float,
+    opts: PrimitiveOptions,
+    *,
+    spacing: float | None = None,
+) -> list[Placement]:
+    """Draw a hollow rectangle outline with corners at (x0, y0) and (x1, y1).
+
+    Each side is sampled at uniform ``spacing``; corners are included once
+    (not duplicated). Use for borders, picture frames, mosaic cell outlines.
+    """
+    if x0 > x1:
+        x0, x1 = x1, x0
+    if y0 > y1:
+        y0, y1 = y1, y0
+    # Walk the perimeter as a closed polyline — but skip the closing
+    # duplicate vertex so the start corner is not duplicated.
+    pts: list[tuple[float, float]] = [
+        (x0, y0),
+        (x1, y0),
+        (x1, y1),
+        (x0, y1),
+    ]
+    out: list[Placement] = []
+    for i in range(4):
+        a = pts[i]
+        b = pts[(i + 1) % 4]
+        seg = line(a[0], a[1], b[0], b[1], opts, spacing=spacing)
+        if i > 0:
+            seg = seg[1:]  # skip duplicated corner
+        # On the last side, also drop the closing vertex (== pts[0]).
+        if i == 3 and len(seg) >= 1:
+            seg = seg[:-1]
+        out.extend(seg)
+    return out
+
+
+def polygon(
+    cx: float,
+    cy: float,
+    radius: float,
+    n_sides: int,
+    opts: PrimitiveOptions,
+    *,
+    rotation_deg: float = 0.0,
+    spacing: float | None = None,
+) -> list[Placement]:
+    """Draw a regular n-gon centred at (cx, cy) with circumradius ``radius``.
+
+    The first vertex sits at ``rotation_deg`` (measured counter-clockwise
+    from +x axis, in degrees). Vertices are connected by line segments
+    sampled at uniform ``spacing``; each vertex appears exactly once.
+
+    Use cases: triangles, squares, pentagons, hexagons, octagons — the
+    basic tile shapes of geometric mosaics.
+
+    Raises
+    ------
+    ValueError
+        If ``n_sides < 3``.
+    """
+    if n_sides < 3:
+        raise ValueError(f"polygon needs n_sides >= 3 (got {n_sides})")
+    sp = spacing if spacing is not None else _resolve_spacing(opts)
+    rot = math.radians(rotation_deg)
+    # Vertices on the circumcircle.
+    vertices: list[tuple[float, float]] = []
+    for i in range(n_sides):
+        ang = rot + 2.0 * math.pi * i / n_sides
+        vertices.append((cx + radius * math.cos(ang),
+                         cy + radius * math.sin(ang)))
+    out: list[Placement] = []
+    for i in range(n_sides):
+        a = vertices[i]
+        b = vertices[(i + 1) % n_sides]
+        seg = line(a[0], a[1], b[0], b[1], opts, spacing=sp)
+        if i > 0:
+            seg = seg[1:]  # skip duplicated vertex
+        # On the last side, drop the closing vertex (== vertices[0]).
+        if i == n_sides - 1 and len(seg) >= 1:
+            seg = seg[:-1]
+        out.extend(seg)
+    return out
+
+
+def grid(
+    x0: float,
+    y0: float,
+    x1: float,
+    y1: float,
+    opts: PrimitiveOptions,
+    cols: int,
+    rows: int,
+    *,
+    include_border: bool = True,
+) -> list[Placement]:
+    """Draw a regular ``cols`` × ``rows`` grid of points inside the rectangle
+    (x0, y0)..(x1, y1).
+
+    Points are laid out in a uniform lattice. With ``include_border=True``
+    (default) the lattice includes the four rectangle sides (i.e. ``cols``
+    points per row, ``rows`` points per column). With ``include_border=False``
+    the points sit at cell centres (``cols-1`` interior x-positions, etc.) —
+    useful when you want pure "tile centres" without edge bleed.
+
+    Spacing is derived from the lattice geometry (NOT from
+    :data:`DECORATION_FOOTPRINT_CATALOG`) — the caller picks the cell count
+    and the function honours it. Use ``PrimitiveOptions.spacing_override``
+    only if you want to resample the same grid at a different density.
+
+    Use cases: mosaic tile grids, pointillism fills, regular dot fields
+    for bas-relief textures.
+
+    Raises
+    ------
+    ValueError
+        If ``cols`` or ``rows`` < 1.
+    """
+    if cols < 1 or rows < 1:
+        raise ValueError(
+            f"grid needs cols>=1 and rows>=1 (got cols={cols}, rows={rows})"
+        )
+    if x0 > x1:
+        x0, x1 = x1, x0
+    if y0 > y1:
+        y0, y1 = y1, y0
+    out: list[Placement] = []
+    if include_border:
+        # cols points uniformly spaced across [x0, x1] (inclusive both ends).
+        x_steps = cols - 1 if cols > 1 else 0
+        y_steps = rows - 1 if rows > 1 else 0
+        for j in range(rows):
+            ty = j / y_steps if y_steps > 0 else 0.0
+            py = y0 + (y1 - y0) * ty
+            for i in range(cols):
+                tx = i / x_steps if x_steps > 0 else 0.0
+                px = x0 + (x1 - x0) * tx
+                out.append(_make_placement(px, py, opts))
+    else:
+        # cols-1 interior cells along x; place a point at the centre of each.
+        x_cell = (x1 - x0) / cols
+        y_cell = (y1 - y0) / rows
+        for j in range(rows):
+            py = y0 + y_cell * (j + 0.5)
+            for i in range(cols):
+                px = x0 + x_cell * (i + 0.5)
+                out.append(_make_placement(px, py, opts))
+    return out
+
+
+# --------------------------------------------------------------------------- #
 # Convenience: a curated composition of all five primitives
 # --------------------------------------------------------------------------- #
 def center_composition(
@@ -420,9 +628,9 @@ def center_composition(
     line_decoration: str = "Long Grass",
     hollow_circle_decoration: str = "Maraket Rubble",
     filled_circle_decoration: str = "Coastal Pebble",
-    s_snake_decoration: str = "Sand Tussock",
+    s_snake_decoration: str = "Maraket Rubble",
     thick_outline_decoration: str = "Small Coastal Stone",
-    thick_fill_decoration: str = "Coastal Pebble",
+    thick_fill_decoration: str = "Long Grass",
     spacing_override: float | None = None,
 ) -> list[Placement]:
     """Build a composition of all five primitives around a centre point.
@@ -444,6 +652,17 @@ def center_composition(
     The decoration defaults use only decorations present in
     :data:`KNOWN_HASHES` with high/medium placement-confidence. Override
     them via the keyword arguments if a different palette is desired.
+
+    KI-14 / KI-15 fixes (0.2.8)
+    ---------------------------
+    Previous defaults produced 2/5 unrecognisable shapes in-game:
+      * ``s_snake_decoration`` was ``"Sand Tussock"`` (too sparse at width=25).
+        Now ``"Maraket Rubble"`` — denser (sp=13.6 vs 17.1) and higher contrast
+        against the tan Canal Hideout floor.
+      * ``thick_fill_decoration`` was ``"Coastal Pebble"`` at ``thickness=14``
+        (fill band only 1 point wide — invisible). Now ``"Long Grass"`` at
+        ``thickness=28`` — Long Grass visibility confirmed by KI-13 vertical
+        lines, 28 wu band gives ≥2 fill rows.
     """
     cx = float(center_x)
     cy = float(center_y)
@@ -482,11 +701,13 @@ def center_composition(
     out.extend(s_snake(cx - 45.0, bot_y, 60.0, 25.0,
                        opts(s_snake_decoration)))
 
-    # (5) Thick line with contours: horizontal at y = bot_y, length 50, thickness 14
+    # (5) Thick line with contours: horizontal at y = bot_y, length 50, thickness 28
+    #     KI-15 (0.2.8): was thickness=14 (1 fill row, invisible). Now 28 (2+
+    #     fill rows) + Long Grass fill (visible per KI-13 vertical lines).
     out.extend(thick_line_with_contours(
         cx + 5.0, bot_y,
         cx + 55.0, bot_y,
-        thickness=14.0,
+        thickness=28.0,
         outline_opts=opts(thick_outline_decoration),
         fill_opts=opts(thick_fill_decoration),
     ))

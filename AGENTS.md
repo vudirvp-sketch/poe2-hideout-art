@@ -20,7 +20,7 @@ everything lives and where the surprises are.
 | Look up a decoration's placement footprint | `src/hideout_art/constants.py` → `DECORATION_FOOTPRINT_CATALOG` |
 | Re-measure footprints after adding placements to `исходники/` | `scripts/measure_decorations.py` |
 | Pixel-sample real RGB under placements | `scripts/sample_pixels.py` (closes KI-11) |
-| Draw geometric shapes directly in world coords | `src/hideout_art/primitives.py` + `scripts/draw_primitives.py` (0.2.7) |
+| Draw geometric shapes directly in world coords | `src/hideout_art/primitives.py` + `scripts/draw_primitives.py` (0.2.7 core 5 фигур; 0.2.8 +4 mosaic/bas-relief) |
 | Add a new geometric transform | `src/hideout_art/transforms.py` |
 | Extend `img2hideout` (dither, alpha, etc.) | `src/hideout_art/img2hideout.py` |
 | Add a CLI subcommand | `src/hideout_art/cli.py` (register in `build_parser()`) |
@@ -119,12 +119,15 @@ minimal.
   Pure stdlib.
 - **`img2hideout.py`** — image → `Hideout`. Optional dependency on
   pillow.
-- **`primitives.py`** (0.2.7) — drawing primitives (`line`,
-  `hollow_circle`, `filled_circle`, `s_snake`, `thick_line_with_contours`,
-  `center_composition`). Pure stdlib. Uses `safe_spacing()` for per-
-  decoration density. Never mutates input Hideout. See KI-13/14/15 in
-  `STATUS.md` — 3/5 фигур узнаваемы в игре, 2/5 (S-snake, thick_line)
-  нужно доработать.
+- **`primitives.py`** (0.2.7 core + 0.2.8 mosaic) — drawing primitives.
+  Core (0.2.7): `line`, `polyline`, `hollow_circle`, `filled_circle`,
+  `s_snake`, `thick_line_with_contours`, + curated `center_composition`.
+  Mosaic/bas-relief (0.2.8 NEW): `arc`, `rectangle`, `polygon`,
+  `grid`. Pure stdlib. Uses `safe_spacing()` for per-decoration density.
+  Never mutates input Hideout. KI-13/14/15 закрыты в 0.2.8: S-snake
+  использует Maraket Rubble (был Sand Tussock), thick_line thickness=28
+  + Long Grass fill (было 14 + Coastal Pebble). Ожидает повторной
+  визуальной проверки пользователем.
 - **`cli.py`** — argparse-based CLI. One file per command, registered
   in `build_parser()`. `_resolve_bounds()` handles `--bounds` named
   shortcuts (e.g. `canal`) and explicit `x_min,y_min,x_max,y_max`.
@@ -173,10 +176,10 @@ minimal.
   specific entries (Beech Tree, Cordilina, Marble Table), and a
   ground-truth check that `samples` matches real placement counts in
   `исходники/*.hideout`.
-- **`test_primitives.py`** (0.2.7) — 37 cases: `safe_spacing` validation,
-  geometry tests для всех 5 фигур, `center_composition` end-to-end,
-  round-trip.
-- **Total test count: 311** (310 pass, 1 skipped).
+- **`test_primitives.py`** (0.2.7 + 0.2.8) — 59 cases total: `safe_spacing`
+  validation, geometry tests для всех 9 фигур (5 core + 4 mosaic),
+  `center_composition` end-to-end, KI-14/15 regression guards, round-trip.
+- **Total test count: 333** (332 pass, 1 skipped).
 - **`data/sample.hideout`** — tiny synthetic fixture (< 1 KB).
   Contains one of each: a functional object, an art-layer decoration
   with rotation, an art-layer decoration with `flip_x`, an unknown
@@ -245,12 +248,13 @@ One-off dev scripts. Anything experimental goes here, not in
 - **`sample_all.py`** (0.2.6) — convenience wrapper that runs
   `sample_pixels.py` on all 7 `исходники/` screenshot+hideout pairs
   and consolidates into `scripts/sampled_all.json`.
-- **`draw_primitives.py`** (0.2.7) — injects the curated 5-shape
-  composition (`center_composition` from `primitives.py`) into the
-  centre of an existing `.hideout` file. Strictly additive — never
-  removes placements. Optional `--bounds-check` fails if any new
+- **`draw_primitives.py`** (0.2.7, defaults updated 0.2.8) — injects the
+  curated 5-shape composition (`center_composition` from `primitives.py`)
+  into the centre of an existing `.hideout` file. Strictly additive —
+  never removes placements. Optional `--bounds-check` fails if any new
   placement falls outside Canal Hideout bounds. Optional `--preview`
-  renders a PNG. See KI-13 for the in-game verification caveat.
+  renders a PNG. 0.2.8 KI-14/15 fix baked into defaults:
+  `--s-snake-decoration=Maraket Rubble`, `--thick-fill-decoration=Long Grass`.
 - **`render_primitives_preview.py`** (0.2.7) — thicker preview PNG
   renderer with per-decoration colour coding, Canal Hideout canvas
   outline, centre marker, and legend. Used for visual sanity check

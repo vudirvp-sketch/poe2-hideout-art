@@ -1,10 +1,12 @@
-"""Tests for the drawing-primitives module (0.2.7).
+"""Tests for the drawing-primitives module.
 
 Covers:
 * Decoration validation (must be ART_TYPES + KNOWN_HASHES).
 * Spacing derivation from the catalog.
-* Geometry correctness for each primitive (line, hollow_circle,
+* Geometry correctness for each core primitive (line, hollow_circle,
   filled_circle, s_snake, thick_line_with_contours).
+* Geometry correctness for each mosaic primitive (arc, rectangle, polygon,
+  grid) — added in 0.2.8.
 * The curated ``center_composition`` end-to-end: fits inside Canal Hideout
   bounds when centred at (780, 657), uses only known art decorations, and
   has no duplicate placements per decoration.
@@ -27,11 +29,15 @@ from hideout_art.constants import (
 )
 from hideout_art.primitives import (
     PrimitiveOptions,
+    arc,
     center_composition,
     filled_circle,
+    grid,
     hollow_circle,
     line,
+    polygon,
     polyline,
+    rectangle,
     s_snake,
     safe_spacing,
     thick_line_with_contours,
@@ -347,10 +353,44 @@ class TestCenterComposition:
         assert "Maraket Rubble" in names
         # Filled circle = Coastal Pebble (default)
         assert "Coastal Pebble" in names
-        # S-snake = Sand Tussock (default)
-        assert "Sand Tussock" in names
+        # S-snake = Maraket Rubble (default since 0.2.8, KI-14 fix)
+        # — same decoration as hollow circle, distinguished by position.
         # Thick line outline = Small Coastal Stone (default)
         assert "Small Coastal Stone" in names
+        # Thick line fill = Long Grass (default since 0.2.8, KI-15 fix)
+        # — same decoration as vertical lines, distinguished by position.
+
+    def test_ki14_s_snake_uses_maraket_rubble(self):
+        """KI-14 (0.2.8): s_snake default must NOT be 'Sand Tussock'
+        (too sparse) — must be 'Maraket Rubble' or another dense decoration."""
+        out = center_composition(780, 657)
+        # Sand Tussock must not appear anywhere in the default composition.
+        names = {p.name for p in out}
+        assert "Sand Tussock" not in names, (
+            "KI-14 regression: Sand Tussock leaked back into the default "
+            "composition. It is too sparse for S-snake at width=25."
+        )
+
+    def test_ki15_thick_line_fill_uses_long_grass(self):
+        """KI-15 (0.2.8): thick_line fill must be 'Long Grass' (visible per
+        KI-13 vertical lines), NOT 'Coastal Pebble' (invisible at thickness=14)."""
+        out = center_composition(780, 657)
+        # The thick line sits at the bottom row (y ≈ cy + 35 = 692),
+        # spanning x ≈ cx + 5 .. cx + 55 = 785..835.
+        # Find Long Grass placements in that band that are NOT vertical lines
+        # (vertical lines sit at y in [cy-90, cy-10] = [670-90, 670-10]... wait
+        # let me recompute: top_y = cy - 50 = 607, vl_y_top = top_y - 40 = 567,
+        # vl_y_bot = top_y + 40 = 647. So vertical lines y in [567, 647].
+        # Thick line at bot_y = cy + 35 = 692, thickness 28 → y in [678, 706].
+        thick_band_long_grass = [
+            p for p in out
+            if p.name == "Long Grass" and 678 <= p.y <= 706
+        ]
+        assert len(thick_band_long_grass) >= 2, (
+            f"KI-15 regression: expected ≥2 Long Grass fill points in the "
+            f"thick line band (y∈[678, 706]), got {len(thick_band_long_grass)}. "
+            f"Fill decoration may have reverted to Coastal Pebble."
+        )
 
     def test_composition_is_relocatable(self):
         """Moving the centre moves all placements by the same delta (±1 wu
@@ -404,3 +444,189 @@ class TestEndToEnd:
             assert a == b
         finally:
             tmp_path.unlink(missing_ok=True)
+
+
+# --------------------------------------------------------------------------- #
+# arc (0.2.8)
+# --------------------------------------------------------------------------- #
+class TestArc:
+    def test_zero_sweep_returns_single_point(self):
+        opts = PrimitiveOptions(decoration="Long Grass")
+        out = arc(100, 100, 30.0, 45.0, 45.0, opts, spacing=10.0)
+        assert len(out) == 1
+        # Point should sit at angle 45° from centre.
+        px, py = out[0].x, out[0].y
+        ang = math.degrees(math.atan2(py - 100, px - 100))
+        assert abs(ang - 45.0) < 1.0
+
+    def test_endpoints_always_included(self):
+        opts = PrimitiveOptions(decoration="Long Grass")
+        out = arc(0, 0, 50.0, 0.0, 90.0, opts, spacing=100.0)
+        # Even with huge spacing, n is clamped at >=2 → 3 points (0°, 45°, 90°).
+        assert len(out) >= 3
+        # First point ≈ (50, 0); last point ≈ (0, 50).
+        assert abs(out[0].x - 50) <= 1 and abs(out[0].y - 0) <= 1
+        assert abs(out[-1].x - 0) <= 1 and abs(out[-1].y - 50) <= 1
+
+    def test_all_points_on_circle(self):
+        opts = PrimitiveOptions(decoration="Long Grass")
+        cx, cy, r = 100, 100, 50
+        out = arc(cx, cy, r, 0.0, 180.0, opts, spacing=10.0)
+        for p in out:
+            d = math.hypot(p.x - cx, p.y - cy)
+            assert d == pytest.approx(r, abs=1.0)
+
+    def test_negative_sweep_travels_clockwise(self):
+        """end < start means clockwise (negative sweep)."""
+        opts = PrimitiveOptions(decoration="Long Grass")
+        out = arc(0, 0, 50.0, 90.0, 0.0, opts, spacing=10.0)
+        # First point ≈ (0, 50) at 90°.
+        assert abs(out[0].x - 0) <= 1 and abs(out[0].y - 50) <= 1
+        # Last point ≈ (50, 0) at 0°.
+        assert abs(out[-1].x - 50) <= 1 and abs(out[-1].y - 0) <= 1
+
+    def test_full_circle_sweep(self):
+        opts = PrimitiveOptions(decoration="Long Grass")
+        out = arc(0, 0, 30.0, 0.0, 360.0, opts, spacing=10.0)
+        # Full circle ≈ 2π·30 ≈ 188 wu / 10 ≈ 19 segments → 20 points.
+        assert len(out) >= 18
+        # First and last point should be at the same place (start = end of full circle).
+        assert abs(out[0].x - out[-1].x) <= 1
+        assert abs(out[0].y - out[-1].y) <= 1
+
+
+# --------------------------------------------------------------------------- #
+# rectangle (0.2.8)
+# --------------------------------------------------------------------------- #
+class TestRectangle:
+    def test_corners_included_once(self):
+        opts = PrimitiveOptions(decoration="Maraket Rubble")
+        out = rectangle(100, 200, 200, 240, opts, spacing=15.0)
+        coords = [(p.x, p.y) for p in out]
+        # Each corner appears exactly once.
+        for corner in [(100, 200), (200, 200), (200, 240), (100, 240)]:
+            assert coords.count(corner) == 1, \
+                f"Corner {corner} appears {coords.count(corner)} times"
+
+    def test_all_points_on_perimeter(self):
+        opts = PrimitiveOptions(decoration="Maraket Rubble")
+        x0, y0, x1, y1 = 100, 200, 200, 240
+        out = rectangle(x0, y0, x1, y1, opts, spacing=15.0)
+        for p in out:
+            on_left = (p.x == x0 and y0 <= p.y <= y1)
+            on_right = (p.x == x1 and y0 <= p.y <= y1)
+            on_bottom = (p.y == y0 and x0 <= p.x <= x1)
+            on_top = (p.y == y1 and x0 <= p.x <= x1)
+            assert on_left or on_right or on_bottom or on_top, \
+                f"Point {p} not on rectangle perimeter"
+
+    def test_normalises_swapped_corners(self):
+        opts = PrimitiveOptions(decoration="Maraket Rubble")
+        a = rectangle(100, 200, 200, 240, opts, spacing=15.0)
+        b = rectangle(200, 240, 100, 200, opts, spacing=15.0)
+        assert {(p.x, p.y) for p in a} == {(p.x, p.y) for p in b}
+
+    def test_no_duplicate_coords(self):
+        opts = PrimitiveOptions(decoration="Maraket Rubble")
+        out = rectangle(100, 200, 250, 240, opts, spacing=10.0)
+        coords = [(p.x, p.y) for p in out]
+        assert len(coords) == len(set(coords)), \
+            f"Duplicate coords in rectangle: {coords}"
+
+
+# --------------------------------------------------------------------------- #
+# polygon (0.2.8)
+# --------------------------------------------------------------------------- #
+class TestPolygon:
+    def test_rejects_fewer_than_three_sides(self):
+        opts = PrimitiveOptions(decoration="Long Grass")
+        with pytest.raises(ValueError, match="n_sides >= 3"):
+            polygon(0, 0, 30, 2, opts)
+        with pytest.raises(ValueError, match="n_sides >= 3"):
+            polygon(0, 0, 30, 1, opts)
+
+    def test_vertices_on_circumcircle(self):
+        opts = PrimitiveOptions(decoration="Long Grass")
+        cx, cy, r = 100, 100, 40
+        out = polygon(cx, cy, r, 6, opts, spacing=100.0)  # huge spacing → only vertices
+        # Hexagon with huge spacing: each side gets endpoints + 0 interior.
+        # Polyline logic drops duplicate vertices, so we get exactly 6 unique vertices.
+        unique = {(p.x, p.y) for p in out}
+        assert len(unique) == 6
+        for px, py in unique:
+            d = math.hypot(px - cx, py - cy)
+            assert d == pytest.approx(r, abs=1.0)
+
+    def test_square_rotation_zero_has_vertex_on_x_axis(self):
+        opts = PrimitiveOptions(decoration="Long Grass")
+        out = polygon(100, 100, 30, 4, opts, rotation_deg=0.0, spacing=100.0)
+        unique = {(p.x, p.y) for p in out}
+        # rotation_deg=0 → first vertex at (cx + r, cy) = (130, 100).
+        assert (130, 100) in unique
+
+    def test_triangle_vertex_count(self):
+        opts = PrimitiveOptions(decoration="Long Grass")
+        out = polygon(0, 0, 30, 3, opts, spacing=100.0)
+        unique = {(p.x, p.y) for p in out}
+        assert len(unique) == 3
+
+    def test_octagon_has_eight_vertices(self):
+        opts = PrimitiveOptions(decoration="Long Grass")
+        out = polygon(0, 0, 30, 8, opts, spacing=100.0)
+        unique = {(p.x, p.y) for p in out}
+        assert len(unique) == 8
+
+
+# --------------------------------------------------------------------------- #
+# grid (0.2.8)
+# --------------------------------------------------------------------------- #
+class TestGrid:
+    def test_total_count_matches_cols_times_rows(self):
+        opts = PrimitiveOptions(decoration="Coastal Pebble")
+        out = grid(100, 200, 200, 240, opts, cols=5, rows=3)
+        assert len(out) == 5 * 3
+
+    def test_border_grid_includes_corners(self):
+        opts = PrimitiveOptions(decoration="Coastal Pebble")
+        out = grid(100, 200, 200, 240, opts, cols=3, rows=2,
+                   include_border=True)
+        coords = {(p.x, p.y) for p in out}
+        assert (100, 200) in coords
+        assert (200, 200) in coords
+        assert (100, 240) in coords
+        assert (200, 240) in coords
+
+    def test_centred_grid_excludes_border(self):
+        """include_border=False → no point sits on the rectangle perimeter."""
+        opts = PrimitiveOptions(decoration="Coastal Pebble")
+        x0, y0, x1, y1 = 100, 200, 200, 240
+        out = grid(x0, y0, x1, y1, opts, cols=3, rows=2,
+                   include_border=False)
+        for p in out:
+            on_left = (p.x == x0)
+            on_right = (p.x == x1)
+            on_bottom = (p.y == y0)
+            on_top = (p.y == y1)
+            assert not (on_left or on_right or on_bottom or on_top), \
+                f"Cell-centred point {p} on perimeter"
+
+    def test_rejects_zero_cols_or_rows(self):
+        opts = PrimitiveOptions(decoration="Coastal Pebble")
+        with pytest.raises(ValueError, match="cols>=1 and rows>=1"):
+            grid(100, 200, 200, 240, opts, cols=0, rows=3)
+        with pytest.raises(ValueError, match="cols>=1 and rows>=1"):
+            grid(100, 200, 200, 240, opts, cols=3, rows=0)
+
+    def test_single_cell_grid_returns_one_point(self):
+        opts = PrimitiveOptions(decoration="Coastal Pebble")
+        out = grid(100, 200, 200, 240, opts, cols=1, rows=1)
+        assert len(out) == 1
+        # With cols=1, rows=1: x_steps=0, y_steps=0 → t=0/0 falls back to 0.0
+        # → point at (x0, y0).
+        assert (out[0].x, out[0].y) == (100, 200)
+
+    def test_normalises_swapped_corners(self):
+        opts = PrimitiveOptions(decoration="Coastal Pebble")
+        a = grid(100, 200, 200, 240, opts, cols=3, rows=2)
+        b = grid(200, 240, 100, 200, opts, cols=3, rows=2)
+        assert {(p.x, p.y) for p in a} == {(p.x, p.y) for p in b}

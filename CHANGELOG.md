@@ -7,54 +7,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.2.7] - 2026-07-09
+## [0.2.8] - 2026-07-10
 
 ### Added
-- **Drawing primitives module** (`src/hideout_art/primitives.py`) — пять
-  генераторов фигур, размещающих art-декорации прямо в world-координатах:
-  - `line(x0, y0, x1, y1, opts)` — прямая линия;
-  - `polyline(points, opts)` — цепочка сегментов (используется S-snake);
-  - `hollow_circle(cx, cy, r, opts)` — контур круга;
-  - `filled_circle(cx, cy, r, opts)` — круг с заливкой (концентрические
-    кольца);
-  - `s_snake(cx, cy, height, width, opts)` — вертикальная синусоида;
-  - `thick_line_with_contours(x0..y1, thickness, outline_opts, fill_opts)`
-    — «стадион» с контуром + заливкой;
-  - `center_composition(cx, cy, ...)` — курируемая композиция из всех 5
-    фигур, центрированная на (780, 657) в Canal Hideout.
-  Все примитивы используют только `ART_TYPES`, соблюдают
-  `DECORATION_FOOTPRINT_CATALOG.min_spacing_wu` через `safe_spacing()`,
-  возвращают свежий `list[Placement]` (без мутации входного Hideout).
-- **`scripts/draw_primitives.py`** — CLI, добавляющий композицию в
-  существующий `.hideout`. Строго аддитивный. Опции: `--center X Y`,
-  `--bounds-check`, `--preview PATH`, per-primitive `--<shape>-decoration`,
-  `--spacing-override`.
-- **`scripts/render_primitives_preview.py`** — color-coded PNG preview с
-  Canal Hideout canvas outline + легендой по декорациям.
-- **37 новых pytest cases** в `tests/test_primitives.py` (geometry,
-  spacing validation, center_composition end-to-end, round-trip).
-- **Артефакт**: `download/чистый холст с примитивами.hideout` (70
-  placements = 18 functional + 52 art).
+- **4 mosaic / bas-relief primitives** в `src/hideout_art/primitives.py`:
+  - `arc(cx, cy, radius, start_angle_deg, end_angle_deg, opts)` — дуга
+    окружности (арки, рамки, полукруглые углы);
+  - `rectangle(x0, y0, x1, y1, opts)` — полый прямоугольник (бордюры,
+    рамки);
+  - `polygon(cx, cy, radius, n_sides, opts, rotation_deg=0)` —
+    правильный n-угольник (треугольник, квадрат, пятиугольник,
+    шестиугольник… — базовые тайлы мозаики);
+  - `grid(x0, y0, x1, y1, opts, cols, rows, include_border=True)` —
+    регулярная сетка cols×rows (мозаичные тайлы, пуантилизм, bas-relief
+    текстуры). Все 4 примитива — pure stdlib, используют `safe_spacing`
+    и `_make_placement`, не вводят новых декораций.
+- **22 новых pytest cases** в `tests/test_primitives.py`: TestArc (5),
+  TestRectangle (4), TestPolygon (5), TestGrid (6), + 2 regression-теста
+  для KI-14/KI-15 (`test_ki14_s_snake_uses_maraket_rubble`,
+  `test_ki15_thick_line_fill_uses_long_grass`).
+- **Артефакт**: `download/чистый холст с примитивами.hideout` (93
+  placements = 30 functional/boundary + 63 art, обновлён под 0.2.8).
+- **Превью**: `download/чистый холст с примитивами.{preview,colored}.png`.
 
-### Changed
-- `__init__.py` — re-exports primitives API. Version 0.2.6 → 0.2.7.
-- `pyproject.toml` — version 0.2.6 → 0.2.7.
-- `STATUS.md` — KI-13 partial (3/5 узнаваемы в игре), новые KI-14
-  (S-snake плохо видна) и KI-15 (thick_line плохо видна). KI-2 и KI-12
-  отмечены как wontfix (не критично). Длинная история KI сжата.
-- `AGENTS.md` — добавлен `primitives.py` в file map, обновлён test count
-  274 → 311, добавлен TL;DR entry для drawing primitives.
-- `README.md` — добавлен раздел "Drawing primitives (0.2.7)".
-- `CHANGELOG.md` — длинная история 0.2.0-0.2.6 сжата до кратких сводок.
+### Changed — KI-14 fix
+- `center_composition` default `s_snake_decoration`: `"Sand Tussock"` →
+  `"Maraket Rubble"`. Maraket Rubble имеет min_spacing=13.6 (на 21%
+  плотнее, чем Sand Tussock 17.1) и нейтрально-коричневый RGB (125,112,87)
+  против тёмной оливы Sand Tussock (112,99,79) — выше контраст на tan-полу.
+- `scripts/draw_primitives.py` CLI default `--s-snake-decoration`
+  синхронизирован.
 
-### Known Issues
-- **KI-13 (partial 0.2.7)** — Drawing primitives проверены в игре: 3/5
-  фигур узнаваемы (vertical lines, hollow circle, filled circle), 2/5
-  плохо видны (S-snake, thick_line). См. STATUS.md.
-- **KI-14 (new 0.2.7)** — S-snake из Sand Tussock плохо различима.
-- **KI-15 (new 0.2.7)** — Thick_line при thickness=14 не видна.
-- KI-2, KI-12 — wontfix (low priority, не блокируют).
-- KI-10 — open (low priority).
+### Changed — KI-15 fix
+- `center_composition` default `thick_fill_decoration`: `"Coastal Pebble"`
+  → `"Long Grass"`. Long Grass виден на полу (KI-13 vertical lines),
+  min_spacing=13.3 (плотнее, чем Coastal Pebble 29.7).
+- `thick_line_with_contours` в `center_composition`: `thickness=14` →
+  `thickness=28`. При sp=13.3 теперь 2 ряда заливки (был ≤1).
+- `scripts/draw_primitives.py` CLI default `--thick-fill-decoration`
+  синхронизирован.
+
+### Closed
+- **KI-13 (closed 0.2.8)** — Drawing primitives: 3/5 узнаваемы в 0.2.7.
+  Корневые причины (S-snake sparse, thick_line thin) устранены в 0.2.8.
+  Ожидает повторной визуальной проверки пользователем.
+- **KI-14 (fixed 0.2.8)** — S-snake плохо различима.
+- **KI-15 (fixed 0.2.8)** — Thick_line stadium не видна.
+
+### Changed — документация
+- `STATUS.md` — KI-13/14/15 закрыты, добавлены новые KI-14/15 fix-секции,
+  добавлены примитивы 0.2.8 в «Что работает».
+- `AGENTS.md` — file map расширен (4 новых примитива), test count
+  311 → 333.
+- `README.md` — раздел "Drawing primitives" обновлён: 9 фигур вместо 5.
+- `__init__.py` — re-exports arc/rectangle/polygon/grid. Version 0.2.7 → 0.2.8.
+- `pyproject.toml` — version 0.2.7 → 0.2.8.
+
+## [0.2.7] - 2026-07-09 — кратко
+
+Drawing primitives module (`src/hideout_art/primitives.py`) — 5 базовых
+фигур (`line`, `polyline`, `hollow_circle`, `filled_circle`, `s_snake`,
+`thick_line_with_contours`) + `center_composition`. `scripts/draw_primitives.py`
+CLI. 37 новых pytest cases. Визуальная проверка в игре: 3/5 узнаваемы →
+KI-13 (partial), KI-14 (S-snake), KI-15 (thick_line) заведены. KI-2/KI-12
+помечены wontfix. Фикс KI-14/15 — в 0.2.8.
 
 ## [0.2.6] - 2026-07-09 — кратко
 
@@ -110,7 +126,8 @@ geometric transforms, header rewriter, PNG preview, `img2hideout`, CLI
 (`inspect`/`layers`/`stats`/`preview`/`shift`/`transfer`/`img2hideout`),
 23 known hashes, docs, 33 pytest tests.
 
-[Unreleased]: https://github.com/vudirvp-sketch/poe2-hideout-art/compare/v0.2.7...HEAD
+[Unreleased]: https://github.com/vudirvp-sketch/poe2-hideout-art/compare/v0.2.8...HEAD
+[0.2.8]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.8
 [0.2.7]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.7
 [0.2.6]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.6
 [0.2.5]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.5

@@ -31,9 +31,12 @@ composition** you can import into the game.
 - **PNG preview** — top-down render, one colour per decoration type
 - **Image → hideout** — sample a PNG, map each pixel to the closest palette
   entry, emit a `.hideout` file
-- **Drawing primitives** (0.2.7) — `line` / `hollow_circle` / `filled_circle` /
-  `s_snake` / `thick_line_with_contours` directly in world coordinates, using
-  art decorations. Strictly additive — never removes existing placements.
+- **Drawing primitives** (0.2.7 core + 0.2.8 mosaic) — `line` /
+  `polyline` / `hollow_circle` / `filled_circle` / `s_snake` /
+  `thick_line_with_contours` directly in world coordinates (0.2.7),
+  plus `arc` / `rectangle` / `polygon` / `grid` for mosaics &
+  bas-relief (0.2.8). All use art decorations, strictly additive —
+  never removes existing placements.
 - **CLI** + **Python API** — same operations, two interfaces
 - **Pure stdlib core** — `matplotlib` / `pillow` are optional extras
 
@@ -105,11 +108,15 @@ h = image_to_hideout(
 h.to_file("portrait.hideout")
 ```
 
-### Drawing primitives (0.2.7)
+### Drawing primitives (0.2.7 core + 0.2.8 mosaic)
 
 Inject geometric shapes — drawn with art decorations — directly into an
 existing `.hideout` file. Useful when `img2hideout` rasterisation is too
-noisy for clean geometry (circles, lines, S-curves).
+noisy for clean geometry (circles, lines, S-curves, mosaics).
+
+**Core (0.2.7):** `line`, `polyline`, `hollow_circle`, `filled_circle`,
+`s_snake`, `thick_line_with_contours` (+ curated `center_composition`).
+**Mosaic / bas-relief (0.2.8):** `arc`, `rectangle`, `polygon`, `grid`.
 
 ```bash
 # CLI — strictly additive, never removes existing placements.
@@ -125,6 +132,7 @@ python scripts/draw_primitives.py \
 from hideout_art import (
     Hideout, center_composition, line, hollow_circle, filled_circle,
     s_snake, thick_line_with_contours, PrimitiveOptions,
+    arc, rectangle, polygon, grid,  # 0.2.8 mosaic primitives
 )
 
 h = Hideout.from_file("my.hideout")
@@ -133,9 +141,16 @@ h = Hideout.from_file("my.hideout")
 h.placements.extend(center_composition(780, 657))
 h.to_file("with_primitives.hideout")
 
-# Or build a single shape with custom decoration + spacing:
+# Or build single shapes with custom decoration + spacing:
 opts = PrimitiveOptions(decoration="Maraket Rubble")
 h.placements.extend(hollow_circle(800, 600, 25, opts))
+
+# 0.2.8 mosaic primitives — useful for bas-relief frames & tile patterns:
+h.placements.extend(rectangle(720, 580, 840, 720, opts))   # hollow border
+h.placements.extend(polygon(780, 657, 30, 6, opts))        # hexagon tile
+h.placements.extend(grid(720, 580, 840, 720,
+                         PrimitiveOptions(decoration="Coastal Pebble"),
+                         cols=5, rows=5))                   # 5x5 mosaic grid
 ```
 
 Spacing is derived automatically from `DECORATION_FOOTPRINT_CATALOG` —
@@ -143,10 +158,10 @@ override with `PrimitiveOptions(spacing_override=...)` if you need tighter
 or looser placement. Only `ART_TYPES` decorations are accepted; functional
 objects are rejected.
 
-See [`STATUS.md`](STATUS.md) → KI-13/14/15 — визуальная проверка в игре
-показала: 3/5 фигур узнаваемы (vertical lines, hollow circle, filled
-circle), 2/5 нужно доработать (S-snake, thick_line при thickness=14).
-Следующая итерация: починить декораторы для этих двух фигур.
+See [`STATUS.md`](STATUS.md) → KI-14/15: в 0.2.8 исправлены S-snake
+(декоратор Sand Tussock → Maraket Rubble) и thick_line (thickness 14 → 28,
+fill Coastal Pebble → Long Grass). Ожидает повторной визуальной проверки
+пользователем.
 
 ## How a `.hideout` file is laid out
 
@@ -185,7 +200,7 @@ See [`docs/format.md`](docs/format.md) for the full spec. Short version:
 | Combine several compositions side-by-side | `recombine` (Python API) |
 | Visualise a hideout before re-importing | `preview` |
 | Generate new art from a PNG | `img2hideout` |
-| Draw geometric shapes (lines, circles, S-curves) with decorations | `primitives.py` + `scripts/draw_primitives.py` (0.2.7) |
+| Draw geometric shapes (lines, circles, S-curves, mosaics) with decorations | `primitives.py` + `scripts/draw_primitives.py` (0.2.7 core + 0.2.8 mosaic) |
 | Catalogue new decorations from observed hashes | PR to `constants.py` |
 
 ## What you **can't** do

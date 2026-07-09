@@ -84,16 +84,18 @@ def main(argv: list[str] | None = None) -> int:
         help="Decoration for filled circle (default: %(default)s).",
     )
     p.add_argument(
-        "--s-snake-decoration", default="Sand Tussock",
-        help="Decoration for S-snake (default: %(default)s).",
+        "--s-snake-decoration", default="Maraket Rubble",
+        help="Decoration for S-snake (default: %(default)s). KI-14 fix (0.2.8): "
+             "was 'Sand Tussock' (too sparse).",
     )
     p.add_argument(
         "--thick-outline-decoration", default="Small Coastal Stone",
         help="Decoration for thick line outline (default: %(default)s).",
     )
     p.add_argument(
-        "--thick-fill-decoration", default="Coastal Pebble",
-        help="Decoration for thick line fill (default: %(default)s).",
+        "--thick-fill-decoration", default="Long Grass",
+        help="Decoration for thick line fill (default: %(default)s). KI-15 fix "
+             "(0.2.8): was 'Coastal Pebble' (invisible at thickness=14).",
     )
     p.add_argument(
         "--spacing-override", type=float, default=None,
