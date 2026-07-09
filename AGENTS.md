@@ -20,7 +20,7 @@ everything lives and where the surprises are.
 | Look up a decoration's placement footprint | `src/hideout_art/constants.py` → `DECORATION_FOOTPRINT_CATALOG` |
 | Re-measure footprints after adding placements to `исходники/` | `scripts/measure_decorations.py` |
 | Pixel-sample real RGB under placements | `scripts/sample_pixels.py` (closes KI-11) |
-| Draw geometric shapes directly in world coords | `src/hideout_art/primitives.py` + `scripts/draw_primitives.py` (0.2.7 core 5 фигур; 0.2.8 +4 mosaic/bas-relief; 0.2.9 +4 mosaic v2/portrait-grade + `mosaic_composition`) |
+| Draw geometric shapes directly in world coords | `src/hideout_art/primitives.py` + `scripts/draw_primitives.py` (0.2.7 core 5 фигур; 0.2.8 +4 mosaic/bas-relief; 0.2.9 +4 mosaic v2/portrait-grade [FROZEN KI-17]; 0.3.0 +`clean_composition` — 7 simplest contours + fills) |
 | Add a new geometric transform | `src/hideout_art/transforms.py` |
 | Extend `img2hideout` (dither, alpha, etc.) | `src/hideout_art/img2hideout.py` |
 | Add a CLI subcommand | `src/hideout_art/cli.py` (register in `build_parser()`) |
@@ -119,23 +119,25 @@ minimal.
   Pure stdlib.
 - **`img2hideout.py`** — image → `Hideout`. Optional dependency on
   pillow.
-- **`primitives.py`** (0.2.7 core + 0.2.8 mosaic + 0.2.9 mosaic v2) — drawing primitives.
+- **`primitives.py`** (0.2.7 core + 0.2.8 mosaic + 0.2.9 mosaic v2 [FROZEN] + 0.3.0 clean) — drawing primitives.
   Core (0.2.7): `line`, `polyline`, `hollow_circle`, `filled_circle`,
   `s_snake`, `thick_line_with_contours`, + curated `center_composition`.
   Mosaic/bas-relief (0.2.8): `arc`, `rectangle`, `polygon`, `grid`.
-  Mosaic v2/portrait-grade (0.2.9 NEW): `bezier_curve` (quadratic Bezier
-  for organic curves — smiles, eyebrows, fingers), `thick_ring` (annular
-  ring outline+fill — glasses lenses, eyes), `thick_arc` (thick arc band —
-  glasses temples, brackets), `crosshatch` (diagonal hatch — beards, hair,
-  textures, uses Liang-Barsky clipping), + curated `mosaic_composition`
-  (demonstrates the 4 new primitives in a separate canvas zone, NOT
-  overlapping `center_composition` so KI-14/15 re-verify stays clean).
+  Mosaic v2/portrait-grade (0.2.9, FROZEN per KI-17): `bezier_curve`,
+  `thick_ring`, `thick_arc`, `crosshatch`, + curated `mosaic_composition`.
+  Код и тесты остаются, но в канонический `.hideout` НЕ добавляются —
+  0.2.9 output был визуально шумным в игре.
+  Clean composition (0.3.0 NEW, KI-17 response): `clean_composition` —
+  7 простейших single-decoration контуров и заливок (hollow_circle,
+  filled_circle, rectangle, polygon ×2, arc, grid). Каждая фигура
+  использует ОДНУ декорацию (Long Grass для контуров, Maraket Rubble
+  для заливок — самые плотные в каталоге, sp≈13.3..13.6 wu). Без
+  смешивания outline+fill внутри одной формы.
   Pure stdlib. Uses `safe_spacing()` for per-decoration density.
-  Never mutates input Hideout. KI-13/14/15 закрыты в 0.2.8: S-snake
-  использует Maraket Rubble (был Sand Tussock), thick_line thickness=28
-  + Long Grass fill (было 14 + Coastal Pebble). KI-16 (0.2.9, open):
-  mosaic v2 примитивы не проверены в игре. Рецепт портрета — в
-  `docs/mosaic_recipe.md`.
+  Never mutates input Hideout. KI-13/14/15 закрыты в 0.2.8. KI-16
+  superseded 0.3.0 (перекрыт KI-17). KI-17/18 (0.3.0, open): mosaic v2
+  даёт визуальный мусор, clean_composition ждёт visual-verify. Рецепт
+  портрета — в `docs/mosaic_recipe.md`.
 - **`cli.py`** — argparse-based CLI. One file per command, registered
   in `build_parser()`. `_resolve_bounds()` handles `--bounds` named
   shortcuts (e.g. `canal`) and explicit `x_min,y_min,x_max,y_max`.
@@ -184,11 +186,11 @@ minimal.
   specific entries (Beech Tree, Cordilina, Marble Table), and a
   ground-truth check that `samples` matches real placement counts in
   `исходники/*.hideout`.
-- **`test_primitives.py`** (0.2.7 + 0.2.8 + 0.2.9) — 89 cases total: `safe_spacing`
-  validation, geometry tests для всех 13 фигур (5 core + 4 mosaic + 4 mosaic v2),
-  `center_composition` + `mosaic_composition` end-to-end, KI-14/15 regression
-  guards, round-trip.
-- **Total test count: 363** (362 pass, 1 skipped).
+- **`test_primitives.py`** (0.2.7 + 0.2.8 + 0.2.9 + 0.3.0) — 98 cases total: `safe_spacing`
+  validation, geometry tests для всех 13 фигур (5 core + 4 mosaic + 4 mosaic v2)
+  + clean_composition, `center_composition` + `mosaic_composition` +
+  `clean_composition` end-to-end, KI-14/15 regression guards, round-trip.
+- **Total test count: 372** (371 pass, 1 skipped).
 - **`data/sample.hideout`** — tiny synthetic fixture (< 1 KB).
   Contains one of each: a functional object, an art-layer decoration
   with rotation, an art-layer decoration with `flip_x`, an unknown
@@ -261,18 +263,19 @@ One-off dev scripts. Anything experimental goes here, not in
 - **`sample_all.py`** (0.2.6) — convenience wrapper that runs
   `sample_pixels.py` on all 7 `исходники/` screenshot+hideout pairs
   and consolidates into `scripts/sampled_all.json`.
-- **`draw_primitives.py`** (0.2.7, defaults updated 0.2.8, mosaic flag 0.2.9) — injects the
-  curated 5-shape composition (`center_composition` from `primitives.py`)
-  into the centre of an existing `.hideout` file. Strictly additive —
-  never removes placements. Optional `--bounds-check` fails if any new
-  placement falls outside Canal Hideout bounds. Optional `--preview`
-  renders a PNG. 0.2.8 KI-14/15 fix baked into defaults:
-  `--s-snake-decoration=Maraket Rubble`, `--thick-fill-decoration=Long Grass`.
-  0.2.9 NEW: `--with-mosaic` flag adds the 4 mosaic v2 primitives
-  (`mosaic_composition`) in a separate canvas zone below the core shapes.
-  Per-shape decoration overrides: `--bezier-decoration`,
-  `--ring-outline-decoration`, `--ring-fill-decoration`,
-  `--arc-outline-decoration`, `--arc-fill-decoration`, `--hatch-decoration`.
+- **`draw_primitives.py`** (0.2.7, defaults updated 0.2.8, mosaic flag 0.2.9, clean flag 0.3.0) — injects
+  drawing primitives into the centre of an existing `.hideout` file. Strictly
+  additive — never removes placements. Optional `--bounds-check` fails if any
+  new placement falls outside Canal Hideout bounds. Optional `--preview`
+  renders a PNG. Three mutually-exclusive composition modes:
+  - default: `center_composition` (5 core primitives, 0.2.7+0.2.8).
+  - `--with-mosaic`: also append `mosaic_composition` (0.2.9 mosaic v2 — FROZEN
+    per KI-17, produces noisy output in-game).
+  - `--clean`: ONLY `clean_composition` (0.3.0, KI-17 response — 7 simplest
+    single-decoration contours + fills). RECOMMENDED for visual verification.
+  Per-shape decoration overrides: `--contour-decoration`, `--fill-decoration`
+  (for `--clean`); `--bezier-decoration`, `--ring-{outline,fill}-decoration`,
+  `--arc-{outline,fill}-decoration`, `--hatch-decoration` (for `--with-mosaic`).
 - **`render_primitives_preview.py`** (0.2.7) — thicker preview PNG
   renderer with per-decoration colour coding, Canal Hideout canvas
   outline, centre marker, and legend. Used for visual sanity check

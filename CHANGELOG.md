@@ -7,6 +7,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-10
+
+### Added
+- **`clean_composition(center_x, center_y, *, contour_decoration="Long Grass",
+  fill_decoration="Maraket Rubble", spacing_override=None)`** в
+  `src/hideout_art/primitives.py` — KI-17 response. 7 простейших
+  single-decoration контуров и заливок:
+  - Row 1 (контуры, Long Grass, sp≈13.3 wu): `hollow_circle` r=14,
+    `rectangle` 24×24, `polygon` (triangle) r=14, `arc` (полукруг) r=12.
+  - Row 2 (заливки, Maraket Rubble, sp≈13.6 wu): `filled_circle` r=10,
+    `polygon` (hexagon) r=12, `grid` 3×3 в окне 30×30.
+  - Каждая фигура использует РОВНО ОДНУ декорацию — без смешивания
+    outline+fill внутри одной формы (в отличие от 0.2.9 `thick_ring` /
+    `thick_arc`).
+  - 35 placements всего (19 contour + 16 fill). Помещается в Canal
+    Hideout bounds (700, 540, 860, 775) при center (780, 657).
+- **CLI флаг `--clean`** в `scripts/draw_primitives.py` — генерирует
+  ТОЛЬКО `clean_composition` (без `center_composition`, без
+  `mosaic_composition`). Per-shape decoration overrides:
+  `--contour-decoration`, `--fill-decoration`. `--clean` и
+  `--with-mosaic` взаимоисключающие.
+- **9 новых pytest cases** в `tests/test_primitives.py`:
+  `TestCleanComposition` —
+  `test_uses_only_known_art_decorations`,
+  `test_uses_exactly_two_decorations_by_default`,
+  `test_all_placements_within_canal_hideout_bounds`,
+  `test_no_duplicate_placements_per_decoration`,
+  `test_default_produces_35_placements`,
+  `test_row1_and_row2_do_not_overlap`,
+  `test_no_exotic_primitives_used`,
+  `test_round_trip_through_hideout`,
+  `test_respects_custom_decorations`.
+- **Артефакт**: `download/чистый холст clean.hideout` (65 placements =
+  30 functional/boundary + 35 clean). Превью:
+  `download/чистый холст clean.{preview,colored}.png`.
+- **Исходник**: `download/чистый холст.hideout` (30 placements — только
+  functional + NPC + 11 Cordilina boundary + Petrified Cave Figure).
+  Получен вычиткой v0.2.9 файла и удалением всех art placements.
+
+### Changed
+- `__init__.py` — re-exports `clean_composition`. Version 0.2.9 → 0.3.0.
+- `pyproject.toml` — version 0.2.9 → 0.3.0.
+
+### Known Issues
+- **KI-17 (open 0.3.0)** — v0.2.9 mosaic v2 (bezier/thick_ring/thick_arc/
+  crosshatch) дают визуальный «мусор» на холсте. Смесь outline_opts +
+  fill_opts, плотный crosshatch и bezier_curve сливаются в шумное пятно.
+  Решение 0.3.0: откат к single-decoration контурам и заливкам
+  (`clean_composition`). Код 0.2.9 остаётся в `primitives.py`
+  (тесты проходят), но в канонический `.hideout` не добавляется.
+- **KI-18 (open 0.3.0)** — `clean_composition` не проверена в игре.
+  `download/чистый холст clean.hideout` ждёт visual-verify от
+  пользователя. Ожидаем 7/7 узнаваемых простых контуров и заливок.
+- **KI-16 (superseded 0.3.0)** — Mosaic v2 не проверены в игре.
+  Перекрыт KI-17: проверка состоялась (негативный результат).
+
 ## [0.2.9] - 2026-07-10
 
 ### Added
@@ -164,7 +220,9 @@ geometric transforms, header rewriter, PNG preview, `img2hideout`, CLI
 (`inspect`/`layers`/`stats`/`preview`/`shift`/`transfer`/`img2hideout`),
 23 known hashes, docs, 33 pytest tests.
 
-[Unreleased]: https://github.com/vudirvp-sketch/poe2-hideout-art/compare/v0.2.8...HEAD
+[Unreleased]: https://github.com/vudirvp-sketch/poe2-hideout-art/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.3.0
+[0.2.9]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.9
 [0.2.8]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.8
 [0.2.7]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.7
 [0.2.6]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.6

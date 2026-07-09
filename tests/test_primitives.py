@@ -32,6 +32,7 @@ from hideout_art.primitives import (
     arc,
     bezier_curve,
     center_composition,
+    clean_composition,
     crosshatch,
     filled_circle,
     grid,
@@ -892,3 +893,144 @@ class TestMosaicComposition:
         for p in mc:
             assert p.y > cc_max_y, \
                 f"mosaic point {p} not below center_composition (max_y={cc_max_y})"
+
+
+# --------------------------------------------------------------------------- #
+# clean_composition (0.3.0) — KI-17 response: simplest contours + fills
+# --------------------------------------------------------------------------- #
+class TestCleanComposition:
+    """Tests for the 0.3.0 clean_composition.
+
+    Each shape uses exactly ONE decoration (no mixed outline+fill).
+    Layout: row 1 = 4 contour shapes (Long Grass); row 2 = 3 fill/contour
+    shapes (Maraket Rubble). Total = 7 shapes, 35 placements at default
+    spacing.
+    """
+
+    def test_uses_only_known_art_decorations(self):
+        out = clean_composition(780, 657)
+        assert len(out) > 0
+        for p in out:
+            assert p.hash in KNOWN_HASHES.values(), \
+                f"unknown hash {p.hash} for placement {p}"
+            assert p.name in ART_TYPES, \
+                f"{p.name!r} not in ART_TYPES"
+
+    def test_uses_exactly_two_decorations_by_default(self):
+        """clean_composition must use exactly two decorations: contour
+        (Long Grass) for row 1, fill (Maraket Rubble) for row 2.
+        This is the KI-17 fix: no mixed outline+fill inside one shape,
+        no exotic decorations (Cave Coral, Seaweed, Small Coastal Stone
+        which dominated 0.2.9 output)."""
+        out = clean_composition(780, 657)
+        names = {p.name for p in out}
+        assert names == {"Long Grass", "Maraket Rubble"}, \
+            f"expected {{'Long Grass', 'Maraket Rubble'}}, got {names}"
+
+    def test_all_placements_within_canal_hideout_bounds(self):
+        cx, cy = 780, 657
+        out = clean_composition(cx, cy)
+        x_min, y_min, x_max, y_max = CANAL_HIDEOUT_BOUNDS
+        for p in out:
+            assert x_min <= p.x <= x_max, \
+                f"{p.name} x={p.x} outside canvas x∈[{x_min},{x_max}]"
+            assert y_min <= p.y <= y_max, \
+                f"{p.name} y={p.y} outside canvas y∈[{y_min},{y_max}]"
+
+    def test_no_duplicate_placements_per_decoration(self):
+        """No two placements with the same (name, x, y) — the dedup
+        invariant shared with center_composition / mosaic_composition."""
+        from collections import Counter
+        out = clean_composition(780, 657)
+        by_name: dict[str, list[tuple[int, int]]] = {}
+        for p in out:
+            by_name.setdefault(p.name, []).append((p.x, p.y))
+        for name, coords in by_name.items():
+            dupes = {k: v for k, v in Counter(coords).items() if v > 1}
+            assert not dupes, f"{name} has duplicates: {dupes}"
+
+    def test_default_produces_35_placements(self):
+        """Default spacing gives 35 placements: 19 contour (Long Grass)
+        + 16 fill (Maraket Rubble). Locking the count catches regressions
+        in shape sizing or spacing math."""
+        out = clean_composition(780, 657)
+        assert len(out) == 35, \
+            f"expected 35 placements (19 contour + 16 fill), got {len(out)}"
+        from collections import Counter
+        c = Counter(p.name for p in out)
+        assert c["Long Grass"] == 19, f"Long Grass count: {c['Long Grass']}"
+        assert c["Maraket Rubble"] == 16, f"Maraket Rubble count: {c['Maraket Rubble']}"
+
+    def test_row1_and_row2_do_not_overlap(self):
+        """Row 1 (contour, y = cy-42) and row 2 (fill, y = cy+42) must
+        be vertically separated by at least 50 wu — no shape from row 1
+        may share x-band with a shape from row 2 at the same y range.
+        Concretely: min y of row 2 > max y of row 1 + 30 (safe gap)."""
+        out = clean_composition(780, 657)
+        row1 = [p for p in out if p.name == "Long Grass"]
+        row2 = [p for p in out if p.name == "Maraket Rubble"]
+        assert row1 and row2, "both rows must be non-empty"
+        # Row 1 shapes max y = cy - 42 + max shape half-height
+        #   hollow_circle r=14 → max y = cy - 42 + 14 = cy - 28
+        #   rectangle 24×24 → max y = cy - 42 + 12 = cy - 30
+        #   triangle r=14, point up → max y = cy - 42 + 14 = cy - 28
+        #   arc r=12, half up → max y = cy - 42 + 12 = cy - 30
+        # → row 1 max y ≈ cy - 28 = 629
+        # Row 2 shapes min y = cy + 42 - max shape half-height
+        #   filled_circle r=10 → min y = cy + 42 - 10 = cy + 32 = 689
+        #   hexagon r=12 → min y = cy + 42 - 12 = cy + 30 = 687
+        #   grid 30×30 → min y = cy + 42 - 15 = cy + 27 = 684
+        # → row 2 min y ≈ cy + 27 = 684
+        # Gap = 684 - 629 = 55 wu. Test with safety margin.
+        row1_max_y = max(p.y for p in row1)
+        row2_min_y = min(p.y for p in row2)
+        gap = row2_min_y - row1_max_y
+        assert gap >= 50, \
+            f"row1/row2 gap too small: {gap} (row1_max_y={row1_max_y}, row2_min_y={row2_min_y})"
+
+    def test_no_exotic_primitives_used(self):
+        """KI-17 response: clean_composition must NOT contain placements
+        from bezier_curve, thick_ring, thick_arc, crosshatch, s_snake,
+        or thick_line_with_contours. Verify by checking that the
+        decoration set excludes Seaweed / Cave Coral / Small Coastal
+        Stone (the signatures of 0.2.9 mosaic v2 output)."""
+        out = clean_composition(780, 657)
+        names = {p.name for p in out}
+        forbidden = {"Seaweed", "Cave Coral", "Small Coastal Stone", "Coastal Pebble"}
+        overlap = names & forbidden
+        assert not overlap, \
+            f"clean_composition uses forbidden 0.2.9 decorations: {overlap}"
+
+    def test_round_trip_through_hideout(self, tmp_path):
+        """Append clean_composition to a tiny synthetic .hideout, write
+        to disk, re-parse — count must match. Same pattern as
+        TestCenterComposition.test_round_trip_through_hideout."""
+        # Build a minimal .hideout file.
+        sample = tmp_path / "sample.hideout"
+        sample.write_text(
+            '{"version":1,"language":"English","hideout_name":"Test",'
+            '"hideout_hash":60415,"doodads":{"Stash":'
+            '{"hash":3230065491,"x":780,"y":657,"r":0,"fv":0}}}',
+            encoding="utf-8",
+        )
+        h = Hideout.from_file(sample)
+        before = len(h)
+        h.placements.extend(clean_composition(780, 657))
+        out_path = tmp_path / "with_clean.hideout"
+        h.to_file(out_path)
+        h2 = Hideout.from_file(out_path)
+        assert len(h2) == len(h), \
+            f"round-trip mismatch: wrote {len(h)}, re-parsed {len(h2)}"
+        assert len(h2) == before + 35
+
+    def test_respects_custom_decorations(self):
+        """User can override both contour and fill decorations — both
+        must be applied, and the count must remain 35."""
+        out = clean_composition(
+            780, 657,
+            contour_decoration="Cave Coral",
+            fill_decoration="Seaweed",
+        )
+        names = {p.name for p in out}
+        assert names == {"Cave Coral", "Seaweed"}, f"got {names}"
+        assert len(out) == 35  # same count, different decorations

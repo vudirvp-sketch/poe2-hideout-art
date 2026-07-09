@@ -1227,3 +1227,138 @@ def mosaic_composition(
     ))
 
     return out
+
+
+# --------------------------------------------------------------------------- #
+# Convenience: CLEAN composition (0.3.0) — simplest contours + fills
+# --------------------------------------------------------------------------- #
+def clean_composition(
+    center_x: float,
+    center_y: float,
+    *,
+    contour_decoration: str = "Long Grass",
+    fill_decoration: str = "Maraket Rubble",
+    spacing_override: float | None = None,
+) -> list[Placement]:
+    """Build a CLEAN composition of 7 simplest primitives around a centre.
+
+    Each shape uses exactly ONE decoration (no mixed outline+fill inside
+    one shape). All shapes are either pure contours (perimeter only) or
+    pure fills (solid disk / lattice) — never both at once.
+
+    This is the 0.3.0 response to KI-17: the 0.2.9 mosaic v2 output
+    (bezier_curve + thick_ring + thick_arc + crosshatch in one canvas)
+    produced a noisy "mush" that did not visually parse in-game. The
+    clean composition is the simplest possible visual-verify test bed —
+    one decoration per shape, plenty of empty canvas between shapes, no
+    overlapping primitives.
+
+    Layout (relative to ``center_x, center_y``)::
+
+        Row 1 (y = cy - 42):  contour shapes
+            [hollow_circle] [rectangle] [triangle] [arc-half]
+
+        Row 2 (y = cy + 42):  fill shapes
+            [filled_circle] [hexagon-contour] [3x3-grid-fill]
+
+    All 7 shapes fit inside Canal Hideout bounds ``(700, 540, 860, 775)``
+    when the centre is ``(780, 657)`` — composition bbox is roughly
+    x∈[715, 845], y∈[595, 715].
+
+    Parameters
+    ----------
+    center_x, center_y:
+        Centre of the composition in world coordinates. For Canal
+        Hideout use ``(780, 657)``.
+    contour_decoration:
+        Decoration for the 4 contour shapes in row 1 (hollow_circle,
+        rectangle, triangle, arc). Default: ``"Long Grass"`` — densest
+        in the catalog (min_spacing_wu=13.3) for the thinnest lines.
+    fill_decoration:
+        Decoration for the 3 fill/contour shapes in row 2 (filled_circle,
+        hexagon, grid). Default: ``"Maraket Rubble"`` (min_spacing_wu=13.6,
+        similar density, contrasting brown for visual distinction from
+        row 1).
+    spacing_override:
+        Optional override for the auto-derived spacing. Leave ``None`` to
+        use ``DECORATION_FOOTPRINT_CATALOG.min_spacing_wu`` — already the
+        thinnest possible.
+
+    Design rules
+    ------------
+    * ONE decoration per shape — never mix outline + fill inside one
+      shape. Shapes that traditionally need both (e.g. thick_band) are
+      deliberately excluded.
+    * Pure contour shapes: ``hollow_circle``, ``rectangle``, ``polygon``,
+      ``arc``. Pure fill shapes: ``filled_circle``, ``grid``.
+    * Each row is horizontally separated by ~40 wu so shapes do not
+      visually overlap (Long Grass spacing is 13.3, so 40 wu gap = 3+
+      empty tiles between shape edges).
+    * Rows are vertically separated by 84 wu (2× the row height + gap).
+    * No shape uses ``bezier_curve``, ``thick_ring``, ``thick_arc``,
+      ``crosshatch``, ``s_snake``, or ``thick_line_with_contours`` —
+      these remain in the module for advanced use but are intentionally
+      absent from the clean test bed.
+    """
+    cx = float(center_x)
+    cy = float(center_y)
+
+    def opts(name: str) -> PrimitiveOptions:
+        return PrimitiveOptions(
+            decoration=name,
+            spacing_override=spacing_override,
+        )
+
+    out: list[Placement] = []
+
+    # ---- Row 1: contours (y = cy - 42) ----
+    row1_y = cy - 42.0
+
+    # (1) hollow_circle — pure contour. r=14, Long Grass.
+    out.extend(hollow_circle(cx - 60.0, row1_y, 14.0,
+                             opts(contour_decoration)))
+
+    # (2) rectangle — pure hollow outline. 24×24 square, Long Grass.
+    out.extend(rectangle(cx - 20.0 - 12.0, row1_y - 12.0,
+                         cx - 20.0 + 12.0, row1_y + 12.0,
+                         opts(contour_decoration)))
+
+    # (3) polygon — triangle (3 sides), circumradius 14, Long Grass.
+    #     Rotated so the flat side is on the bottom (point up).
+    out.extend(polygon(cx + 20.0, row1_y, 14.0, 3,
+                       opts(contour_decoration),
+                       rotation_deg=90.0))
+
+    # (4) arc — half-circle (0..180°), radius 12, Long Grass.
+    #     Sweeps the upper half plane → looks like a dome/bowl.
+    out.extend(arc(cx + 60.0, row1_y, 12.0, 0.0, 180.0,
+                   opts(contour_decoration)))
+
+    # ---- Row 2: fills + one contour (y = cy + 42) ----
+    row2_y = cy + 42.0
+
+    # (5) filled_circle — pure fill. r=10, Maraket Rubble.
+    #     Position: cx - 45. Spans x ∈ [cx-55, cx-35]. Rightmost point
+    #     at (cx-35, row2_y) is 23 wu from the hexagon's leftmost vertex
+    #     at (cx-12, row2_y) — safe clearance.
+    out.extend(filled_circle(cx - 45.0, row2_y, 10.0,
+                             opts(fill_decoration)))
+
+    # (6) polygon — hexagon (6 sides), circumradius 12, Maraket Rubble.
+    #     Pure contour (no fill) — demonstrates a second polygon shape
+    #     in a contrasting decoration. Spans x ∈ [cx-12, cx+12].
+    out.extend(polygon(cx, row2_y, 12.0, 6,
+                       opts(fill_decoration)))
+
+    # (7) grid — 3×3 pure fill lattice in a 30×30 box, Maraket Rubble.
+    #     include_border=True → 9 points uniformly spaced at 15 wu
+    #     intervals (safely above min_spacing_wu=13.6).
+    #     Position: cx + 50. Grid spans x ∈ [cx+35, cx+65]. Leftmost
+    #     point at (cx+35, row2_y) is 23 wu from the hexagon's rightmost
+    #     vertex at (cx+12, row2_y) — safe clearance.
+    out.extend(grid(cx + 50.0 - 15.0, row2_y - 15.0,
+                    cx + 50.0 + 15.0, row2_y + 15.0,
+                    opts(fill_decoration),
+                    cols=3, rows=3, include_border=True))
+
+    return out

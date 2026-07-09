@@ -21,6 +21,7 @@ from .primitives import (
     arc,
     bezier_curve,
     center_composition,
+    clean_composition,
     crosshatch,
     filled_circle,
     grid,
@@ -39,7 +40,7 @@ from .primitives import (
 from .transforms import mirror_x, mirror_y, rotate, shift
 from .writer import write_hideout
 
-__version__ = "0.2.9"
+__version__ = "0.3.0"
 __all__ = [
     "Hideout",
     "Placement",
@@ -68,10 +69,13 @@ __all__ = [
     "polygon",
     "grid",
     # Primitives (0.2.9) — mosaic v2 / portrait-grade shapes.
+    # FROZEN per KI-17 — kept in code, NOT in canonical .hideout.
     "bezier_curve",
     "thick_ring",
     "thick_arc",
     "crosshatch",
     "mosaic_composition",
+    # Primitives (0.3.0) — CLEAN composition (KI-17 response).
+    "clean_composition",
     "__version__",
 ]
