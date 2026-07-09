@@ -178,12 +178,11 @@ Override per-call with `--spacing-override N` if you need tighter or
 looser placement. Beware: tighter than `min_spacing_wu` may cause
 visible sprite overlap in-game (KI-10).
 
-### KI-13 caveat
+### Статус проверки в игре
 
-The primitives are round-trip verified (parse → write → parse equality,
-no duplicate placements, all within Canal Hideout bounds) but NOT yet
-visually verified in-game. See `STATUS.md` → KI-13 for the checklist
-of things to check on first import.
+Визуальная проверка (0.2.7, 2 скриншота): 3/5 фигур узнаваемы (vertical
+lines, hollow circle, filled circle), 2/5 нужно доработать (S-snake,
+thick_line). См. `STATUS.md` → KI-13/14/15.
 
 ## `render_primitives_preview.py` — colour-coded preview (0.2.7)
 

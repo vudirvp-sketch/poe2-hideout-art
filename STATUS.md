@@ -11,151 +11,139 @@
 - Геометрические трансформации: `shift`, `rotate`, `mirror_x`, `mirror_y`,
   `recombine`.
 - Превью в PNG (matplotlib, по одной точке на размещение).
-- Конвейер `img2hideout`:
-  - базовый режим совместим с 0.1.0 побайтово;
-  - alpha-канал PNG, 3 цветовых метрики, Floyd-Steinberg dithering;
-  - jitter, `step`/`tile_size`, `bounds` (включая `--bounds canal`),
-  - `resample`, `--preview` в CLI.
+- Конвейер `img2hideout` (alpha-канал, 3 цветовых метрики, Floyd-Steinberg
+  dithering, jitter, `step`/`tile_size`, `bounds`, `resample`, `--preview`).
 - CLI: `inspect`, `layers`, `stats`, `preview`, `shift`, `transfer`,
   `img2hideout`.
-- Каталог хешей: **47 известных декораций** (11 функциональных + 8 NPC +
-  4 исходных art + 5 Maraket/Coastal Pebble + 18 Canal из «исходники/» +
-  1 Seaweed).
-- Геометрия Canal Hideout: `CANAL_HIDEOUT_HASH = 60415`,
-  `CANAL_HIDEOUT_BOUNDS = (700, 540, 860, 775)`.
-- Каталог размеров декораций `DECORATION_FOOTPRINT_CATALOG` покрывает все
-  28 art-декораций.
-- Pixel-sampling: `scripts/sample_pixels.py` + `scripts/sample_all.json`
-  (закрывает KI-11). Ground-truth RGB для 25 из 28 art-декораций.
-- **Drawing primitives (0.2.7, НОВОЕ):** модуль `src/hideout_art/primitives.py`
-  + скрипт `scripts/draw_primitives.py`. Рисует 5 базовых фигур
-  декорациями прямо в world-координатах:
-  - `line` — прямая линия между двумя точками;
-  - `hollow_circle` — контур круга;
-  - `filled_circle` — круг с заливкой (концентрические кольца);
-  - `s_snake` — S-образная синусоида (вертикальная, один период);
-  - `thick_line_with_contours` — «стадион» с контуром + заливкой.
-  - `center_composition` — курируемая композиция из всех 5 фигур.
-  Все примитивы соблюдают `DECORATION_FOOTPRINT_CATALOG.min_spacing_wu`,
-  используют только `ART_TYPES`, не мутируют входной Hideout. Применено к
-  пользовательскому `чистый холст.hideout` → 18 functional + 52 art = 70
-  placements, round-trip OK.
+- Каталог хешей: **47 известных декораций** (11 functional + 8 NPC +
+  28 art). `DECORATION_FOOTPRINT_CATALOG` покрывает все 28 art-декораций.
+- Pixel-sampling (`scripts/sample_pixels.py`) — ground-truth RGB для 25
+  из 28 art-декораций.
+- **Drawing primitives (0.2.7)** — модуль `src/hideout_art/primitives.py`
+  + `scripts/draw_primitives.py`. Рисует 5 базовых фигур декорациями
+  прямо в world-координатах: `line`, `hollow_circle`, `filled_circle`,
+  `s_snake`, `thick_line_with_contours`, + курируемая `center_composition`.
+- **Визуальная проверка в игре (0.2.7, NEW)** — пользователь импортировал
+  `чистый холст с примитивами.hideout` в PoE2, сделал 2 скриншота.
+  Результат: 3/5 фигур узнаваемы, 2/5 нужно доработать (см. KI-13 ниже).
 - Тесты: **310 pass, 1 skipped** (37 новых в `tests/test_primitives.py`).
 
 ## Известные проблемы (Known Issues)
 
-Все ранее задокументированные KI-1..KI-11 закрыты. Активные:
+Все ранее задокументированные KI-1..KI-11 закрыты или low-priority. Активные:
 
-| KI  | Статус      | Что                                                |
-|-----|-------------|----------------------------------------------------|
-| KI-2 | partial 0.2.6 | 5/6 TODO закрыты. Остался `skin` — Sand Tussock подтверждён pixel-sampling как тёмный olive-tan (112,99,79), НЕ skin tone. Нужна новая peach/tan декорация. |
-| KI-10 | new 0.2.3 | Каталог измеряет placement footprint, не sprite bounds. |
-| KI-12 | new 0.2.6 | Marble-серия: pixel-sampled RGB (76-196 brown range) радикально отличается от VLM-оценок (210-230 light gray). Только Marble Table placement 1 даёт bright cream (237,208,169). Нужна manual калибровка или больший sampling radius для Marble-декораций. |
-| KI-13 | new 0.2.7 | Drawing primitives готовы, но НЕ проверены в игре. Известные подзадачи: (a) sprite overlap при tight spacing может скрывать фигуры; (b) Long Grass имеет alpha-подобную траву — может быть плохо видна; (c) толщина thick_line ограничена min_spacing декорации fill. |
+| KI  | Статус        | Приоритет | Что                                                                |
+|-----|---------------|-----------|--------------------------------------------------------------------|
+| KI-2 | wontfix 0.2.7 | low       | Skin-роль. Решено: точное попадание в RGB не нужно, главное — различимость. Текущая палитра достаточна. |
+| KI-10 | open 0.2.3   | low       | Каталог измеряет placement footprint, не sprite bounds.            |
+| KI-12 | wontfix 0.2.7 | low      | Marble-серия pixel-sampling даёт brown вместо gray. Не критично — переход на другие убежища решит проблему. |
+| KI-13 | partial 0.2.7 | **high** | Drawing primitives: 3/5 фигур узнаваемы в игре, 2/5 нужно доработать (см. ниже). |
+| KI-14 | new 0.2.7    | **high** | S-snake из Sand Tussock плохо различима — нужен более контрастный декоратор. |
+| KI-15 | new 0.2.7    | **high** | Thick_line при thickness=14 не видна — нужно увеличить thickness до 28-30 + использовать Long Grass для fill. |
 
-### KI-2 (обновлено 0.2.6) — холодная палитра 2B
+### KI-13 (partial 0.2.7) — Drawing primitives: 3/5 узнаваемы
 
-| Роль | Декорация | RGB | Источник |
-|------|-----------|-----|----------|
-| white | Marble Fountain | (110,103,76) brown | PIXEL 0.2.6 — НЕ белый, Marble-серия проблемна (KI-12) |
-| silver | Marble Table | (196,170,136) cream | PIXEL 0.2.6 — ближе к cream, не silver |
-| gray | Marble Bench | (79,64,45) brown | PIXEL 0.2.6 — НЕ gray |
-| gray alt | Marble Walls | (76,68,52) brown | PIXEL 0.2.6 — НЕ gray |
-| black | Small Coastal Stone | (81,80,60) dark | PIXEL 0.2.6, подтверждает VLM 0.2.5 (85,75,70) |
-| red | Maraket Rubble | (125,112,87) brown | PIXEL 0.2.6 — НЕ reddish (VLM 0.2.5 (153,78,68) был шумным) |
-| skin | TODO_SKIN_DECORATION | (228,200,178) | НЕ найдено — Sand Tussock (112,99,79) слишком тёмный olive-tan |
+Визуальная проверка в игре (2 скриншота от пользователя) показала:
 
-**Что закроет KI-2 полностью:** новая peach/tan декорация из другого
-убежища. Текущие 28 art-декораций не содержат подходящего peach/tan
-цвета.
+**Хорошо видны (3/5):**
+- ✅ **3 вертикальные линии (Long Grass)** — хорошо видны, форма узнаваема.
+  Опровергает опасение KI-13(b) о Long Grass visibility.
+- ✅ **Полый круг (Maraket Rubble)** — виден, немного фрагментирован, но
+  узнаваем.
+- ✅ **Заполненный круг (Coastal Pebble)** — виден, узнаваем.
 
-### KI-10 (0.2.3) — placement vs sprite bounds
+**Плохо видны (2/5):**
+- ❌ **S-snake (Sand Tussock)** — частично видна, форма НЕ узнаваема.
+  Sand Tussock слишком мелкий/неплотный для кривой. См. KI-14.
+- ❌ **Thick line stadium (Small Coastal Stone outline + Coastal Pebble fill)**
+  — частично видна, форма НЕ узнаваема. Thickness=14 слишком мала при
+  spacing декораций. См. KI-15.
+
+**Опровержения:**
+- (a) Sprite overlap при tight spacing — НЕ подтверждено. Spacing из
+  каталога работает корректно, перекрытий нет.
+- (b) Long Grass visibility — НЕ подтверждено. Long Grass отлично виден
+  на полу Canal Hideout.
+
+### KI-14 (new 0.2.7) — S-snake плохо различима
+
+Sand Tussock — мелкая тёмная трава, при S-образной кривой (height=60,
+width=25) размещения расположены слишком редко, чтобы прочитать форму.
+
+**Что закроет KI-14:**
+- Заменить декоратор S-snake на более контрастный/плотный:
+  `Maraket Rubble` (sp=13.6, reddish-brown) или
+  `Small Coastal Stone` (sp=15, dark).
+- Либо увеличить amplitude (width=40-50) и уменьшить spacing до 10-12.
+- Либо использовать `polyline` с большей плотностью точек.
+
+### KI-15 (new 0.2.7) — Thick_line stadium не видна
+
+При `thickness=14` и fill декорации `Coastal Pebble` (min_spacing=15.5)
+заливка содержит ≤1 ряд точек — контур не выделяется на фоне заливки.
+Outline из `Small Coastal Stone` (sp=15) тоже сливается с фоном пола.
+
+**Что закроет KI-15:**
+- Увеличить `thickness` до 28-30 (2× spacing fill-декорации).
+- Использовать `Long Grass` (sp=13.3) для fill — он контрастно выделяется
+  на полу (см. KI-13 vertical lines).
+- Для outline оставить `Small Coastal Stone` или `Maraket Rubble`.
+
+### KI-10 (open 0.2.3) — placement vs sprite bounds
 
 `DECORATION_FOOTPRINT_CATALOG` измеряет **placement footprint** (upper
 bound на основе min pairwise distance), не реальные sprite bounds. Видимая
-крона дерева выходит за placement-тайл. Все наблюдения — при `r=0`. Для
-step-калибровки `img2hideout` placement footprint достаточен; для
-визуального перекрытия нужны внутриигровые замеры sprite.
+крона дерева выходит за placement-тайл. Для step-калибровки `img2hideout`
+достаточно; для визуального перекрытия нужны внутриигровые замеры sprite.
+**Низкий приоритет** — текущая работа не требует точных sprite bounds.
 
-### KI-12 (0.2.6) — Marble-серия pixel-sampling
+### KI-2 (wontfix 0.2.7) — skin-роль в палитре 2B
 
-Pixel sampling показал, что Marble Bench/Walls/Fountain все дают тёмные
-brown (76-110), а не светло-серые (210-230) как VLM сообщал в 0.2.4.
-Только Marble Table placement 1 даёт bright cream (237,208,169).
-Возможные причины:
-1. Placement точка попадает на тень под Marble объектом, а не на
-   мраморную поверхность.
-2. Marble декорации имеют большую dark base + light top, и sampling
-   radius 4 wu центрирован на нижней части.
+Решено: точное попадание в RGB (228,200,178) не нужно. Главное —
+различимость фигур на полу. Текущие 5 из 6 ролей в `palette_2b.json`
+достаточны для portrait-режима. Если понадобится тёплый accent —
+использовать `Maraket Treasures` (gold) или `Maraket Samovar` (copper).
 
-**Что закроет KI-12:** manual калибровка через `--calibration` с 3+
-anchors + больший `--sample-radius-wu` (8-12), либо опция
-`--sample-offset-y-wu` для смещения sampling window вверх (на bright top
-surface Marble). Шаблон: `scripts/calibrations/<stem>.json` с 3+ anchors.
+### KI-12 (wontfix 0.2.7) — Marble-серия pixel-sampling
 
-### KI-13 (0.2.7) — Drawing primitives не проверены в игре
+Pixel sampling показал brown (76-110) вместо ожидаемого light gray (210-230)
+для Marble Bench/Walls/Fountain. Только Marble Table даёт bright cream.
+Причина: sampling window попадает на тень под объектом. **Не критично** —
+при переходе на другие убежища (с чистыми Marble декорациями) проблема
+уйдёт. Manual calibration (`scripts/calibrations/<stem>.json` с 3+ anchors
++ `--sample-offset-y-wu`) остаётся как fallback, но не в приоритете.
 
-Реализованы 5 примитивов в `src/hideout_art/primitives.py` и применены к
-`чистый холст.hideout` (см. `download/чистый холст с примитивами.hideout`).
-Открывается в парсере, round-trip OK, все 52 art-размещения в пределах
-`CANAL_HIDEOUT_BOUNDS`. Но визуальная проверка в самом PoE2 ещё не
-проведена. Подвопросы:
-- (a) **Sprite overlap.** При spacing = `min_spacing_wu` из каталога
-  видимые спрайты могут перекрываться, скрывая форму. Если фигуры
-  сливаются в кашу → увеличить `--spacing-override` до 1.5× catalog min.
-- (b) **Long Grass visibility.** Травяные декорации имеют alpha-подобный
-  спрайт — могут быть плохо видны на полу. Если вертикальные линии
-  невидимы → заменить на `Slender Seedling` или `Maraket Rubble`.
-- (c) **Thick line thickness cap.** Толщина `thick_line_with_contours`
-  ограничена min spacing декорации fill: при `thickness < min_spacing`
-  заливка содержит ≤1 ряд точек. Для более толстых линий использовать
-  декорации с малым spacing (`Long Grass` sp=13.3, `Maraket Rubble`
-  sp=13.6) или увеличить `thickness` до 2-3× spacing.
-- (d) **Sprite bounds (KI-10).** Placement footprint ≠ sprite bounds —
-  видимый размер декорации может превышать 1 тайл. Для плотных фигур
-  нужны внутриигровые замеры.
+## Что улучшать дальше (приоритеты следующей итерации)
 
-**Что закроет KI-13:** импорт `чистый холст с примитивами.hideout` в
-игру, скриншот, верификация что все 5 фигур узнаваемы. При проблемах —
-тюнить `--spacing-override`, заменять декорации, увеличивать размеры.
-
-## Что улучшать дальше (не в этой итерации)
-
-- **Manual calibration JSON для каждого скриншота.** Auto-calibration
-  достаточно точна, но для Marble-серии (KI-12) нужна manual калибровка
-  с интерактивным выбором anchor точек. Закроет KI-12.
-- **Multi-pass: outline + fill для img2hideout.** Сначала контур, потом
-  заливка — узнаваемость фигур сильно вырастет. Реализуется в
-  `img2hideout.py` через `outline_color` + двухпроходной рендер. На
-  контуре — только small-декорации (1 тайл), на fill — средние/крупные.
-  Использует `DECORATION_FOOTPRINT_CATALOG`. Drawing primitives (0.2.7)
-  — это предтеча: `thick_line_with_contours` уже реализует outline+fill
-  паттерн, его логику можно обобщить.
-- **Drawing primitives v2.** После визуальной проверки KI-13: добавить
-  `arc`, `bezier_curve`, `polygon`, `text` (через bitmap font). Сейчас
-  только базовые 5 фигур.
-- **Замер sprite bounds.** Расширить каталог полем `sprite_bounds_wu`
-  отдельно от placement footprint. Закроет KI-10 и улучшит точность
-  drawing primitives.
-- **Новая peach/tan декорация для 'skin' role.** Найти в другом убежище
-  декорацию с RGB ~ (228,200,178). Закроет KI-2.
-- **Поддержка нескольких убежищ.** Сейчас `NAMED_BOUNDS` содержит только
-  `canal`. Добавлять новые по мере появления экспортов.
-- **SVG / Lua экспорт** — для ручной доводки.
+1. **Fix KI-14 + KI-15 (главный приоритет).** Обновить `center_composition`
+   в `primitives.py`:
+   - S-snake: декоратор `Maraket Rubble` вместо `Sand Tussock`.
+   - Thick line: `thickness=28`, fill `Long Grass`, outline `Small Coastal
+     Stone` (или `Maraket Rubble`).
+   - Перегенерировать `чистый холст с примитивами.hideout`.
+   - Повторить визуальную проверку (5/5 фигур должны быть узнаваемы).
+2. **Multi-pass img2hideout: outline + fill.** Реализуется в `img2hideout.py`
+   через `outline_color` + двухпроходной рендер. Готовый паттерн —
+   `thick_line_with_contours` в `primitives.py`.
+3. **Sprite bounds (KI-10).** Расширить `DECORATION_FOOTPRINT_CATALOG`
+   полем `sprite_bounds_wu` отдельно от placement footprint.
+4. **Drawing primitives v2.** После KI-14/15: добавить `arc`, `bezier_curve`,
+   `polygon`, `text` (через bitmap font).
+5. **Поддержка нескольких убежищ.** Сейчас `NAMED_BOUNDS` содержит только
+   `canal`. Добавлять новые по мере появления экспортов.
 
 ## Базовые принципы при правках
 
 1. **Сначала в STATUS.md, потом фикс.** Новый баг → новый KI-N → потом код.
 2. **Никогда не ломать существующие тесты.** Все новые опции — opt-in.
 3. **Никогда не выдумывать хеши.** Нет в `KNOWN_HASHES` → помечаем unknown.
-4. **RGB-значения — с указанием источника и даты.** VLM-замеры помечать
-   `VLM <version>, <date>`. Pixel-sampled — `PIXEL <version>, <date>`.
-   Если VLM и PIXEL конфликтуют — доверять PIXEL (KI-11 закрыт).
+4. **RGB-значения — с указанием источника и даты.** `VLM <version>, <date>`
+   или `PIXEL <version>, <date>`. При конфликте доверять PIXEL.
 5. **Документация короткая.** Этот файл — не больше 130 строк.
 6. **Каталог размеров — sync с исходниками.** При добавлении размещений
    в `исходники/` перезапускать `scripts/measure_decorations.py` и
-   обновлять `DECORATION_FOOTPRINT_CATALOG`. Тест
-   `test_sample_counts_match_real_exports` упадёт при рассинхроне.
+   обновлять `DECORATION_FOOTPRINT_CATALOG`.
 7. **Drawing primitives — только ART_TYPES.** Никогда не использовать
-   functional-объекты в примитивах (см. `safe_spacing` в `primitives.py`
-   — он валидирует).
+   functional-объекты в примитивах (см. `safe_spacing` в `primitives.py`).
+8. **Точное попадание в RGB — НЕ нужно.** Главное — различимость фигур
+   на полу. Не тратить время на pixel-perfect color matching.

@@ -143,7 +143,10 @@ override with `PrimitiveOptions(spacing_override=...)` if you need tighter
 or looser placement. Only `ART_TYPES` decorations are accepted; functional
 objects are rejected.
 
-See [`STATUS.md`](STATUS.md) → KI-13 for the in-game verification caveat.
+See [`STATUS.md`](STATUS.md) → KI-13/14/15 — визуальная проверка в игре
+показала: 3/5 фигур узнаваемы (vertical lines, hollow circle, filled
+circle), 2/5 нужно доработать (S-snake, thick_line при thickness=14).
+Следующая итерация: починить декораторы для этих двух фигур.
 
 ## How a `.hideout` file is laid out
 

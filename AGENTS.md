@@ -119,15 +119,12 @@ minimal.
   Pure stdlib.
 - **`img2hideout.py`** — image → `Hideout`. Optional dependency on
   pillow.
-- **`primitives.py`** (0.2.7) — drawing primitives that place art
-  decorations along geometric shapes (line, hollow_circle, filled_circle,
-  s_snake, thick_line_with_contours). Pure stdlib. Uses
-  `DECORATION_FOOTPRINT_CATALOG.min_spacing_wu` via `safe_spacing()` to
-  respect per-decoration placement density. Never mutates the input
-  Hideout — returns fresh `list[Placement]`. See `center_composition`
-  for a curated 5-shape layout, and `scripts/draw_primitives.py` for the
-  CLI that injects it into an existing `.hideout` file. See KI-13 in
-  `STATUS.md` for the "needs in-game verification" caveat.
+- **`primitives.py`** (0.2.7) — drawing primitives (`line`,
+  `hollow_circle`, `filled_circle`, `s_snake`, `thick_line_with_contours`,
+  `center_composition`). Pure stdlib. Uses `safe_spacing()` for per-
+  decoration density. Never mutates input Hideout. See KI-13/14/15 in
+  `STATUS.md` — 3/5 фигур узнаваемы в игре, 2/5 (S-snake, thick_line)
+  нужно доработать.
 - **`cli.py`** — argparse-based CLI. One file per command, registered
   in `build_parser()`. `_resolve_bounds()` handles `--bounds` named
   shortcuts (e.g. `canal`) and explicit `x_min,y_min,x_max,y_max`.
@@ -141,20 +138,12 @@ minimal.
   confidence levels. See KI-10 in `STATUS.md` for the placement-vs-
   sprite-bounds limitation. This is the file most PRs touch.
 
-  **RGB values in comments** (0.2.4 + 0.2.5 + 0.2.6): Two RGB sources
-  now coexist:
-  - **VLM** (glm-4.6v, 0.2.4/0.2.5) — first-pass estimates, NOISY (KI-11).
-  - **PIXEL** (0.2.6, `scripts/sample_pixels.py`) — ground truth from
-    screenshot pixel sampling under each placement.
-  When they conflict, trust PIXEL. See `_pixel_sampling_summary_0_2_6`
-  in `examples/palette_2b.json` for the full comparison table. Notable:
-  - Sand Tussock PIXEL (112,99,79) resolves VLM 0.2.1 (78,52,46) vs
-    VLM 0.2.5 (180,160,120) conflict — both VLM passes were wrong.
-  - Maraket Rubble PIXEL (125,112,87) is NEUTRAL brown, not reddish
-    as VLM 0.2.5 (153,78,68) claimed.
-  - Marble-серия PIXEL (76-196) is much darker than VLM (210-230) —
-    KI-12, sampling likely hit shadow. VLM values retained in
-    palette_2b.json until manual calibration resolves KI-12.
+  **RGB values in comments** — два источника: VLM (noisy, 0.2.4-0.2.5)
+  и PIXEL (ground truth, 0.2.6+, `scripts/sample_pixels.py`). При
+  конфликте доверять PIXEL. Полная таблица — в
+  `examples/palette_2b.json` → `_pixel_sampling_summary_0_2_6`.
+  Marble-серия проблемна (KI-12, wontfix) — pixel-sampling попадает на
+  тень, VLM значения сохранены в palette_2b.json как fallback.
 
 ### `tests/`
 
@@ -184,14 +173,10 @@ minimal.
   specific entries (Beech Tree, Cordilina, Marble Table), and a
   ground-truth check that `samples` matches real placement counts in
   `исходники/*.hideout`.
-- **`test_primitives.py`** (0.2.7) — 37 cases for the drawing-primitives
-  module: `safe_spacing` validation, `line`/`polyline` geometry,
-  `hollow_circle`/`filled_circle` point counts and radii, `s_snake`
-  shape bounds, `thick_line_with_contours` perimeter + fill separation
-  + dedup, `center_composition` end-to-end (uses only ART_TYPES, fits
-  Canal Hideout bounds, no duplicates, all 5 shapes present,
-  relocatable), and a round-trip parse → write → parse test.
-- **Total test count: 311** (310 pass, 1 skipped — see `STATUS.md`).
+- **`test_primitives.py`** (0.2.7) — 37 cases: `safe_spacing` validation,
+  geometry tests для всех 5 фигур, `center_composition` end-to-end,
+  round-trip.
+- **Total test count: 311** (310 pass, 1 skipped).
 - **`data/sample.hideout`** — tiny synthetic fixture (< 1 KB).
   Contains one of each: a functional object, an art-layer decoration
   with rotation, an art-layer decoration with `flip_x`, an unknown
