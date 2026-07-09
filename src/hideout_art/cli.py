@@ -163,6 +163,7 @@ def _cmd_img2hideout(args: argparse.Namespace) -> int:
         resample=args.resample,
         hideout_name=args.hideout_name or "Imported",
         hideout_hash=args.hideout_hash or 0,
+        language=args.language,
     )
     write_hideout(h, args.output)
     print(f"Wrote {args.output}  ({len(h)} placements, {len(h.layers())} decoration types)")
@@ -288,6 +289,12 @@ def build_parser() -> argparse.ArgumentParser:
                         "importing into the game.")
     p.add_argument("--hideout-name")
     p.add_argument("--hideout-hash", type=int)
+    p.add_argument("--language", default="English",
+                   help="Language for the .hideout file header and decoration "
+                        "names. Default 'English'. Pass 'Russian' to emit "
+                        "Russian decoration names (matches what real user "
+                        "exports look like when exported from a Russian PoE2 "
+                        "client). Hashes are language-independent.")
     p.set_defaults(fn=_cmd_img2hideout)
 
     return ap

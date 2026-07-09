@@ -315,3 +315,74 @@ DECORATION_FOOTPRINT_CATALOG: dict[str, DecorationFootprint] = {
 FOOTPRINT_CONFIDENCE_LEVELS: frozenset[str] = frozenset({
     "high", "medium", "low", "single", "none",
 })
+
+
+# --------------------------------------------------------------------------- #
+# Localised in-game names (added 0.6.1)
+# --------------------------------------------------------------------------- #
+# PoE2 .hideout files store decoration names in the client's language
+# (see docs/format.md §"language"). When the user passes language="Russian"
+# to ``image_to_hideout``, the resulting .hideout file should use Russian
+# names so that the game's importer recognises them. The hash is what
+# really resolves the asset, but matching the language avoids any
+# ambiguity and matches what real user exports look like.
+#
+# Built by scanning all ``исходники/*.hideout`` for art placements and
+# matching their names against ``KNOWN_HASHES`` (see scripts/extract_ru_names.py).
+# Fringe Moss is missing because it never appears in исходники/ — its
+# English name is kept verbatim if encountered.
+ENGLISH_TO_RUSSIAN: dict[str, str] = {
+    "Long Grass":            "Высокая трава",
+    "Falling Sand":          "Летающий песок",
+    "Sand Tussock":          "Песчаный кустарник",
+    "Maraket Rubble":        "Маракетские обломки",
+    "Maraket Treasures":     "Маракетские сокровища",
+    "Maraket Samovar":       "Маракетский самовар",
+    "Maraket Ornament":      "Маракетское украшение",
+    "Coastal Pebble":        "Береговая галька",
+    "Cordilina":             "Кордилина",
+    "Petrified Cave Figure": "Окаменевшая фигура из пещеры",
+    "Coastal Bush":          "Береговой кустарник",
+    "Small Coastal Stone":   "Маленький береговой камень",
+    "Medium Coastal Stone":  "Средний береговой камень",
+    "Slender Seedling":      "Тонкосемянник",
+    "Log":                   "Бревно",
+    "Beech Tree":            "Буковое дерево",
+    "Pile of Leaves":        "Куча листьев",
+    "Cave Fossil":           "Пещерное ископаемое",
+    "Cave Coral":            "Пещерный коралл",
+    "Summit Brazier":        "Жаровня с вершины",
+    "Marble Bench":          "Мраморная скамья",
+    "Marble Table":          "Мраморный стол",
+    "Marble Walls":          "Мраморные стены",
+    "Marble Fountain":       "Мраморный фонтан",
+    "Camp Crate":            "Ящик из лагеря",
+    "Camp Gear":             "Снаряжение из лагеря",
+    "Seaweed":               "Морская водоросль",
+}
+
+# Registry of per-language translation tables. Add new languages here.
+# Lookup falls back to the English name if no translation is known
+# (so the .hideout file is still valid, just with mixed-language names).
+NAME_TRANSLATIONS: dict[str, dict[str, str]] = {
+    "Russian": ENGLISH_TO_RUSSIAN,
+}
+
+
+def localize_name(name: str, language: str | None) -> str:
+    """Translate an English canonical decoration name to the given language.
+
+    Returns ``name`` unchanged when:
+      * ``language`` is None or "English"
+      * No translation table is registered for the language
+      * The name is not in the table (e.g. "Fringe Moss" for Russian)
+
+    This is a soft lookup — it never raises, so the writer can call it
+    unconditionally.
+    """
+    if not language or language == "English":
+        return name
+    table = NAME_TRANSLATIONS.get(language)
+    if table is None:
+        return name
+    return table.get(name, name)

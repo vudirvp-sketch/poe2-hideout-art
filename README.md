@@ -37,8 +37,14 @@ docs/format.md        # Спецификация формата .hideout
   *.jpg               # Скриншот того же состава в игре (как декор выглядит)
 DECO_CATALOG.md       # Каталог декора: что есть, hash, fv-диапазоны, размер
 STATUS.md             # Текущее состояние + Known Issues
-examples/             # Примеры палитр (пока пусто)
-tests/                # Тесты библиотеки
+examples/             # Палитры + тестовые изображения
+  palette_canal_warm.json   # 8 декоров от cream до dark
+  test_icon_heart.png       # Простая иконка 200×250
+  test_portrait.png         # Портрет 400×281 для теста
+download/             # Сгенерированные .hideout + preview PNG
+  heart.hideout             # 44 placement'а (сердце)
+  portrait.hideout          # 53 placement'а (портрет)
+tests/                # Тесты библиотеки (341 pass)
 ```
 
 ---
@@ -46,15 +52,20 @@ tests/                # Тесты библиотеки
 ## Быстрый старт
 
 ```bash
-# Установка (пока только из репозитория)
-pip install -e .
+# Установка
+pip install -e .[image,preview]
 
 # Прочитать .hideout
-python -m hideout_art info исходники/галька.hideout
+python -m hideout_art inspect исходники/галька.hideout
 
-# Превратить картинку в .hideout
+# Превратить картинку в .hideout (с российской локализацией)
 python -m hideout_art img2hideout myphoto.png -o myphoto.hideout \
-    --bounds canal --width 80
+    --palette examples/palette_canal_warm.json \
+    --bounds canal --width 80 --tile-size 12 \
+    --bg 255 255 255 --no-alpha \
+    --color-metric redmean \
+    --language Russian --hideout-hash 60415 \
+    --hideout-name "Imported"
 ```
 
 ---

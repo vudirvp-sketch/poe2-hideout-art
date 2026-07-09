@@ -1,0 +1,29 @@
+img2hideout v1 sanity report (v0.6.1)
+============================================================
+
+Image:        /home/z/my-project/poe2-hideout-art/examples/test_icon_heart.png
+target_width: 60 px
+Output:       /home/z/my-project/poe2-hideout-art/download/heart.hideout
+Preview:      /home/z/my-project/poe2-hideout-art/download/heart.preview.png
+Placements:   44
+BBox:         (719, 558, 815, 642)  (in canal bounds: True)
+Per-decor counts:
+     40  Снаряжение из лагеря
+      3  Мраморный стол
+      1  Маленький береговой камень
+
+Image:        /home/z/my-project/poe2-hideout-art/examples/test_portrait.png
+target_width: 80 px
+Output:       /home/z/my-project/poe2-hideout-art/download/portrait.hideout
+Preview:      /home/z/my-project/poe2-hideout-art/download/portrait.preview.png
+Placements:   53
+BBox:         (719, 544, 851, 628)  (in canal bounds: True)
+Per-decor counts:
+     21  Снаряжение из лагеря
+     10  Пещерный коралл
+      8  Пещерное ископаемое
+      5  Маленький береговой камень
+      3  Мраморный стол
+      3  Песчаный кустарник
+      2  Маракетские обломки
+      1  Береговая галька

@@ -1,0 +1,12 @@
+{
+  "entries": [
+    {"color": [196, 170, 136], "decoration": "Marble Table",        "weight": 1.0},
+    {"color": [170, 144, 114], "decoration": "Cave Coral",          "weight": 1.0},
+    {"color": [159, 136, 109], "decoration": "Cave Fossil",         "weight": 1.0},
+    {"color": [127, 111, 86],  "decoration": "Coastal Pebble",      "weight": 1.0},
+    {"color": [125, 112, 87],  "decoration": "Maraket Rubble",      "weight": 1.0},
+    {"color": [112, 99, 79],   "decoration": "Sand Tussock",        "weight": 1.0},
+    {"color": [81, 80, 60],    "decoration": "Small Coastal Stone", "weight": 1.0},
+    {"color": [70, 66, 56],    "decoration": "Camp Gear",           "weight": 1.0}
+  ]
+}

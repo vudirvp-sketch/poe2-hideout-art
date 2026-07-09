@@ -45,7 +45,7 @@ from __future__ import annotations
 import random
 from pathlib import Path
 
-from .constants import KNOWN_HASHES, ROTATION_MODULUS
+from .constants import KNOWN_HASHES, ROTATION_MODULUS, localize_name
 from .palette import ColorEntry, Palette, default_palette
 from .parser import Hideout, Placement
 
@@ -356,7 +356,7 @@ def image_to_hideout(
                 fv_val = rng.randint(0, max(0, jitter_variants - 1))
 
             placements.append(Placement(
-                name=entry.decoration,
+                name=localize_name(entry.decoration, language),
                 hash=KNOWN_HASHES[entry.decoration],
                 x=x,
                 y=y,

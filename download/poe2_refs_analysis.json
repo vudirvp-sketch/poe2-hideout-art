@@ -1,0 +1,914 @@
+[
+  {
+    "file": "Кордилой обозначил условные границы полотна а окаменевшей фигурой из пещер --- условный центр плюс-минус.hideout",
+    "hideout_name": "Убежище в каналах",
+    "hideout_hash": 60415,
+    "total_placements": 30,
+    "functional_count": 18,
+    "artistic_count": 12,
+    "distinct_artistic_doodads": 2,
+    "global_bbox": {
+      "x_range": [
+        707,
+        854
+      ],
+      "y_range": [
+        541,
+        772
+      ],
+      "x_span": 147,
+      "y_span": 231
+    },
+    "doodad_stats": {
+      "Кордилина": {
+        "hash": 1082688452,
+        "count": 11,
+        "distinct_xy": 11,
+        "dup_xy_count": 0,
+        "x_range": [
+          707,
+          854
+        ],
+        "y_range": [
+          541,
+          772
+        ],
+        "x_span": 147,
+        "y_span": 231,
+        "fv_distribution": {
+          "0": 11
+        },
+        "r_distribution": {
+          "0": 11
+        },
+        "r_zero_count": 11,
+        "r_zero_pct": 100.0
+      },
+      "Окаменевшая фигура из пещер": {
+        "hash": 2014424642,
+        "count": 1,
+        "distinct_xy": 1,
+        "dup_xy_count": 0,
+        "x_range": [
+          790,
+          790
+        ],
+        "y_range": [
+          635,
+          635
+        ],
+        "x_span": 0,
+        "y_span": 0,
+        "fv_distribution": {
+          "0": 1
+        },
+        "r_distribution": {
+          "0": 1
+        },
+        "r_zero_count": 1,
+        "r_zero_pct": 100.0
+      }
+    }
+  },
+  {
+    "file": "водоросли и летающий песок.hideout",
+    "hideout_name": "Убежище в каналах",
+    "hideout_hash": 60415,
+    "total_placements": 26,
+    "functional_count": 18,
+    "artistic_count": 8,
+    "distinct_artistic_doodads": 2,
+    "global_bbox": {
+      "x_range": [
+        736,
+        821
+      ],
+      "y_range": [
+        628,
+        710
+      ],
+      "x_span": 85,
+      "y_span": 82
+    },
+    "doodad_stats": {
+      "Летающий песок": {
+        "hash": 3853073345,
+        "count": 1,
+        "distinct_xy": 1,
+        "dup_xy_count": 0,
+        "x_range": [
+          795,
+          795
+        ],
+        "y_range": [
+          669,
+          669
+        ],
+        "x_span": 0,
+        "y_span": 0,
+        "fv_distribution": {
+          "0": 1
+        },
+        "r_distribution": {
+          "0": 1
+        },
+        "r_zero_count": 1,
+        "r_zero_pct": 100.0
+      },
+      "Морская водоросль": {
+        "hash": 1015947674,
+        "count": 7,
+        "distinct_xy": 7,
+        "dup_xy_count": 0,
+        "x_range": [
+          736,
+          821
+        ],
+        "y_range": [
+          628,
+          710
+        ],
+        "x_span": 85,
+        "y_span": 82,
+        "fv_distribution": {
+          "7": 1,
+          "0": 1,
+          "2": 1,
+          "1": 1,
+          "3": 1,
+          "5": 1,
+          "11": 1
+        },
+        "r_distribution": {
+          "0": 7
+        },
+        "r_zero_count": 7,
+        "r_zero_pct": 100.0
+      }
+    }
+  },
+  {
+    "file": "всякое.hideout",
+    "hideout_name": "Убежище в каналах",
+    "hideout_hash": 60415,
+    "total_placements": 37,
+    "functional_count": 18,
+    "artistic_count": 19,
+    "distinct_artistic_doodads": 6,
+    "global_bbox": {
+      "x_range": [
+        740,
+        816
+      ],
+      "y_range": [
+        604,
+        694
+      ],
+      "x_span": 76,
+      "y_span": 90
+    },
+    "doodad_stats": {
+      "Бревно": {
+        "hash": 2780985165,
+        "count": 2,
+        "distinct_xy": 2,
+        "dup_xy_count": 0,
+        "x_range": [
+          775,
+          775
+        ],
+        "y_range": [
+          676,
+          694
+        ],
+        "x_span": 0,
+        "y_span": 18,
+        "fv_distribution": {
+          "5": 1,
+          "0": 1
+        },
+        "r_distribution": {
+          "0": 2
+        },
+        "r_zero_count": 2,
+        "r_zero_pct": 100.0
+      },
+      "Буковое дерево": {
+        "hash": 2796444611,
+        "count": 2,
+        "distinct_xy": 2,
+        "dup_xy_count": 0,
+        "x_range": [
+          809,
+          810
+        ],
+        "y_range": [
+          644,
+          666
+        ],
+        "x_span": 1,
+        "y_span": 22,
+        "fv_distribution": {
+          "0": 1,
+          "1": 1
+        },
+        "r_distribution": {
+          "0": 2
+        },
+        "r_zero_count": 2,
+        "r_zero_pct": 100.0
+      },
+      "Высокая трава": {
+        "hash": 2219637749,
+        "count": 5,
+        "distinct_xy": 5,
+        "dup_xy_count": 0,
+        "x_range": [
+          786,
+          816
+        ],
+        "y_range": [
+          613,
+          630
+        ],
+        "x_span": 30,
+        "y_span": 17,
+        "fv_distribution": {
+          "0": 1,
+          "1": 1,
+          "2": 1,
+          "3": 1,
+          "4": 1
+        },
+        "r_distribution": {
+          "0": 5
+        },
+        "r_zero_count": 5,
+        "r_zero_pct": 100.0
+      },
+      "Куча листьев": {
+        "hash": 4294658310,
+        "count": 5,
+        "distinct_xy": 5,
+        "dup_xy_count": 0,
+        "x_range": [
+          740,
+          771
+        ],
+        "y_range": [
+          614,
+          662
+        ],
+        "x_span": 31,
+        "y_span": 48,
+        "fv_distribution": {
+          "0": 1,
+          "1": 1,
+          "2": 1,
+          "3": 1,
+          "4": 1
+        },
+        "r_distribution": {
+          "0": 5
+        },
+        "r_zero_count": 5,
+        "r_zero_pct": 100.0
+      },
+      "Ящик из лагеря": {
+        "hash": 2156404357,
+        "count": 4,
+        "distinct_xy": 4,
+        "dup_xy_count": 0,
+        "x_range": [
+          769,
+          792
+        ],
+        "y_range": [
+          604,
+          661
+        ],
+        "x_span": 23,
+        "y_span": 57,
+        "fv_distribution": {
+          "0": 1,
+          "1": 1,
+          "2": 1,
+          "3": 1
+        },
+        "r_distribution": {
+          "0": 4
+        },
+        "r_zero_count": 4,
+        "r_zero_pct": 100.0
+      },
+      "Снаряжение из лагеря": {
+        "hash": 412387213,
+        "count": 1,
+        "distinct_xy": 1,
+        "dup_xy_count": 0,
+        "x_range": [
+          745,
+          745
+        ],
+        "y_range": [
+          633,
+          633
+        ],
+        "x_span": 0,
+        "y_span": 0,
+        "fv_distribution": {
+          "3": 1
+        },
+        "r_distribution": {
+          "0": 1
+        },
+        "r_zero_count": 1,
+        "r_zero_pct": 100.0
+      }
+    }
+  },
+  {
+    "file": "галька.hideout",
+    "hideout_name": "Убежище в каналах",
+    "hideout_hash": 60415,
+    "total_placements": 27,
+    "functional_count": 18,
+    "artistic_count": 9,
+    "distinct_artistic_doodads": 1,
+    "global_bbox": {
+      "x_range": [
+        743,
+        821
+      ],
+      "y_range": [
+        624,
+        714
+      ],
+      "x_span": 78,
+      "y_span": 90
+    },
+    "doodad_stats": {
+      "Береговая галька": {
+        "hash": 2365064644,
+        "count": 9,
+        "distinct_xy": 9,
+        "dup_xy_count": 0,
+        "x_range": [
+          743,
+          821
+        ],
+        "y_range": [
+          624,
+          714
+        ],
+        "x_span": 78,
+        "y_span": 90,
+        "fv_distribution": {
+          "0": 1,
+          "1": 1,
+          "2": 1,
+          "3": 1,
+          "4": 1,
+          "5": 1,
+          "6": 1,
+          "7": 1,
+          "8": 1
+        },
+        "r_distribution": {
+          "0": 9
+        },
+        "r_zero_count": 9,
+        "r_zero_pct": 100.0
+      }
+    }
+  },
+  {
+    "file": "еще камни и растения.hideout",
+    "hideout_name": "Убежище в каналах",
+    "hideout_hash": 60415,
+    "total_placements": 34,
+    "functional_count": 18,
+    "artistic_count": 16,
+    "distinct_artistic_doodads": 2,
+    "global_bbox": {
+      "x_range": [
+        726,
+        825
+      ],
+      "y_range": [
+        614,
+        725
+      ],
+      "x_span": 99,
+      "y_span": 111
+    },
+    "doodad_stats": {
+      "Средний береговой камень": {
+        "hash": 369950199,
+        "count": 9,
+        "distinct_xy": 9,
+        "dup_xy_count": 0,
+        "x_range": [
+          726,
+          801
+        ],
+        "y_range": [
+          624,
+          705
+        ],
+        "x_span": 75,
+        "y_span": 81,
+        "fv_distribution": {
+          "0": 1,
+          "1": 1,
+          "2": 1,
+          "3": 1,
+          "4": 1,
+          "5": 1,
+          "6": 1,
+          "7": 1,
+          "8": 1
+        },
+        "r_distribution": {
+          "0": 9
+        },
+        "r_zero_count": 9,
+        "r_zero_pct": 100.0
+      },
+      "Тонкосемянник": {
+        "hash": 532751457,
+        "count": 7,
+        "distinct_xy": 7,
+        "dup_xy_count": 0,
+        "x_range": [
+          765,
+          825
+        ],
+        "y_range": [
+          614,
+          725
+        ],
+        "x_span": 60,
+        "y_span": 111,
+        "fv_distribution": {
+          "0": 1,
+          "3": 1,
+          "4": 1,
+          "5": 1,
+          "6": 1,
+          "7": 1,
+          "8": 1
+        },
+        "r_distribution": {
+          "0": 7
+        },
+        "r_zero_count": 7,
+        "r_zero_pct": 100.0
+      }
+    }
+  },
+  {
+    "file": "еще элементы.hideout",
+    "hideout_name": "Убежище в каналах",
+    "hideout_hash": 60415,
+    "total_placements": 36,
+    "functional_count": 18,
+    "artistic_count": 18,
+    "distinct_artistic_doodads": 7,
+    "global_bbox": {
+      "x_range": [
+        747,
+        827
+      ],
+      "y_range": [
+        613,
+        698
+      ],
+      "x_span": 80,
+      "y_span": 85
+    },
+    "doodad_stats": {
+      "Пещерное ископаемое": {
+        "hash": 2206403756,
+        "count": 8,
+        "distinct_xy": 8,
+        "dup_xy_count": 0,
+        "x_range": [
+          752,
+          810
+        ],
+        "y_range": [
+          627,
+          698
+        ],
+        "x_span": 58,
+        "y_span": 71,
+        "fv_distribution": {
+          "0": 1,
+          "1": 1,
+          "2": 1,
+          "3": 1,
+          "4": 1,
+          "5": 1,
+          "6": 1,
+          "7": 1
+        },
+        "r_distribution": {
+          "0": 7,
+          "4330": 1
+        },
+        "r_zero_count": 7,
+        "r_zero_pct": 87.5
+      },
+      "Пещерный коралл": {
+        "hash": 2359120247,
+        "count": 1,
+        "distinct_xy": 1,
+        "dup_xy_count": 0,
+        "x_range": [
+          747,
+          747
+        ],
+        "y_range": [
+          677,
+          677
+        ],
+        "x_span": 0,
+        "y_span": 0,
+        "fv_distribution": {
+          "1": 1
+        },
+        "r_distribution": {
+          "0": 1
+        },
+        "r_zero_count": 1,
+        "r_zero_pct": 100.0
+      },
+      "Жаровня с вершины": {
+        "hash": 2623109233,
+        "count": 4,
+        "distinct_xy": 4,
+        "dup_xy_count": 0,
+        "x_range": [
+          747,
+          772
+        ],
+        "y_range": [
+          613,
+          661
+        ],
+        "x_span": 25,
+        "y_span": 48,
+        "fv_distribution": {
+          "2": 1,
+          "3": 1,
+          "4": 1,
+          "5": 1
+        },
+        "r_distribution": {
+          "0": 4
+        },
+        "r_zero_count": 4,
+        "r_zero_pct": 100.0
+      },
+      "Мраморная скамья": {
+        "hash": 534959854,
+        "count": 1,
+        "distinct_xy": 1,
+        "dup_xy_count": 0,
+        "x_range": [
+          768,
+          768
+        ],
+        "y_range": [
+          673,
+          673
+        ],
+        "x_span": 0,
+        "y_span": 0,
+        "fv_distribution": {
+          "3": 1
+        },
+        "r_distribution": {
+          "0": 1
+        },
+        "r_zero_count": 1,
+        "r_zero_pct": 100.0
+      },
+      "Мраморный стол": {
+        "hash": 4056218057,
+        "count": 2,
+        "distinct_xy": 2,
+        "dup_xy_count": 0,
+        "x_range": [
+          807,
+          819
+        ],
+        "y_range": [
+          653,
+          697
+        ],
+        "x_span": 12,
+        "y_span": 44,
+        "fv_distribution": {
+          "0": 1,
+          "1": 1
+        },
+        "r_distribution": {
+          "0": 2
+        },
+        "r_zero_count": 2,
+        "r_zero_pct": 100.0
+      },
+      "Мраморные стены": {
+        "hash": 1380152311,
+        "count": 1,
+        "distinct_xy": 1,
+        "dup_xy_count": 0,
+        "x_range": [
+          822,
+          822
+        ],
+        "y_range": [
+          677,
+          677
+        ],
+        "x_span": 0,
+        "y_span": 0,
+        "fv_distribution": {
+          "0": 1
+        },
+        "r_distribution": {
+          "0": 1
+        },
+        "r_zero_count": 1,
+        "r_zero_pct": 100.0
+      },
+      "Мраморный фонтан": {
+        "hash": 525963527,
+        "count": 1,
+        "distinct_xy": 1,
+        "dup_xy_count": 0,
+        "x_range": [
+          827,
+          827
+        ],
+        "y_range": [
+          633,
+          633
+        ],
+        "x_span": 0,
+        "y_span": 0,
+        "fv_distribution": {
+          "0": 1
+        },
+        "r_distribution": {
+          "0": 1
+        },
+        "r_zero_count": 1,
+        "r_zero_pct": 100.0
+      }
+    }
+  },
+  {
+    "file": "камни и кустарники.hideout",
+    "hideout_name": "Убежище в каналах",
+    "hideout_hash": 60415,
+    "total_placements": 34,
+    "functional_count": 18,
+    "artistic_count": 16,
+    "distinct_artistic_doodads": 3,
+    "global_bbox": {
+      "x_range": [
+        735,
+        809
+      ],
+      "y_range": [
+        618,
+        719
+      ],
+      "x_span": 74,
+      "y_span": 101
+    },
+    "doodad_stats": {
+      "Береговой кустарник": {
+        "hash": 2984478824,
+        "count": 4,
+        "distinct_xy": 4,
+        "dup_xy_count": 0,
+        "x_range": [
+          772,
+          809
+        ],
+        "y_range": [
+          653,
+          719
+        ],
+        "x_span": 37,
+        "y_span": 66,
+        "fv_distribution": {
+          "0": 1,
+          "1": 1,
+          "2": 1,
+          "3": 1
+        },
+        "r_distribution": {
+          "0": 4
+        },
+        "r_zero_count": 4,
+        "r_zero_pct": 100.0
+      },
+      "Маленький береговой камень": {
+        "hash": 1122244925,
+        "count": 5,
+        "distinct_xy": 5,
+        "dup_xy_count": 0,
+        "x_range": [
+          735,
+          801
+        ],
+        "y_range": [
+          618,
+          656
+        ],
+        "x_span": 66,
+        "y_span": 38,
+        "fv_distribution": {
+          "0": 1,
+          "1": 1,
+          "2": 1,
+          "3": 1,
+          "4": 1
+        },
+        "r_distribution": {
+          "0": 5
+        },
+        "r_zero_count": 5,
+        "r_zero_pct": 100.0
+      },
+      "Песчаный кустарник": {
+        "hash": 146816198,
+        "count": 7,
+        "distinct_xy": 7,
+        "dup_xy_count": 0,
+        "x_range": [
+          735,
+          787
+        ],
+        "y_range": [
+          637,
+          701
+        ],
+        "x_span": 52,
+        "y_span": 64,
+        "fv_distribution": {
+          "0": 1,
+          "1": 1,
+          "2": 1,
+          "3": 1,
+          "4": 1,
+          "5": 1,
+          "6": 1
+        },
+        "r_distribution": {
+          "0": 7
+        },
+        "r_zero_count": 7,
+        "r_zero_pct": 100.0
+      }
+    }
+  },
+  {
+    "file": "укрошения, хорошие подложки будто и обломки.hideout",
+    "hideout_name": "Убежище в каналах",
+    "hideout_hash": 60415,
+    "total_placements": 36,
+    "functional_count": 18,
+    "artistic_count": 18,
+    "distinct_artistic_doodads": 4,
+    "global_bbox": {
+      "x_range": [
+        751,
+        834
+      ],
+      "y_range": [
+        612,
+        692
+      ],
+      "x_span": 83,
+      "y_span": 80
+    },
+    "doodad_stats": {
+      "Маракетские обломки": {
+        "hash": 3012657298,
+        "count": 11,
+        "distinct_xy": 11,
+        "dup_xy_count": 0,
+        "x_range": [
+          751,
+          792
+        ],
+        "y_range": [
+          612,
+          688
+        ],
+        "x_span": 41,
+        "y_span": 76,
+        "fv_distribution": {
+          "0": 1,
+          "1": 1,
+          "2": 1,
+          "3": 1,
+          "4": 1,
+          "5": 1,
+          "6": 1,
+          "7": 1,
+          "8": 1,
+          "9": 1,
+          "10": 1
+        },
+        "r_distribution": {
+          "0": 11
+        },
+        "r_zero_count": 11,
+        "r_zero_pct": 100.0
+      },
+      "Маракетские сокровища": {
+        "hash": 1078696835,
+        "count": 1,
+        "distinct_xy": 1,
+        "dup_xy_count": 0,
+        "x_range": [
+          800,
+          800
+        ],
+        "y_range": [
+          622,
+          622
+        ],
+        "x_span": 0,
+        "y_span": 0,
+        "fv_distribution": {
+          "12": 1
+        },
+        "r_distribution": {
+          "0": 1
+        },
+        "r_zero_count": 1,
+        "r_zero_pct": 100.0
+      },
+      "Маракетский самовар": {
+        "hash": 57228444,
+        "count": 2,
+        "distinct_xy": 2,
+        "dup_xy_count": 0,
+        "x_range": [
+          809,
+          815
+        ],
+        "y_range": [
+          637,
+          650
+        ],
+        "x_span": 6,
+        "y_span": 13,
+        "fv_distribution": {
+          "1": 1,
+          "0": 1
+        },
+        "r_distribution": {
+          "0": 2
+        },
+        "r_zero_count": 2,
+        "r_zero_pct": 100.0
+      },
+      "Маракетское украшение": {
+        "hash": 2125171205,
+        "count": 4,
+        "distinct_xy": 4,
+        "dup_xy_count": 0,
+        "x_range": [
+          784,
+          834
+        ],
+        "y_range": [
+          658,
+          692
+        ],
+        "x_span": 50,
+        "y_span": 34,
+        "fv_distribution": {
+          "16": 1,
+          "17": 1,
+          "18": 1,
+          "19": 1
+        },
+        "r_distribution": {
+          "0": 4
+        },
+        "r_zero_count": 4,
+        "r_zero_pct": 100.0
+      }
+    }
+  }
+]
