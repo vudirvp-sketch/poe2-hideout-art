@@ -21,6 +21,8 @@ declared in `pyproject.toml`.
 | `measure_decorations.py` | Measure decoration placement footprints from `исходники/*.hideout` (re-run when new decorations are added; output goes to `decoration_footprints.json`, gitignored) |
 | `sample_pixels.py` | **(0.2.6)** Sample real pixel RGB under each art placement — closes KI-11. Auto or manual world→pixel calibration, diagnostic overlay PNG, JSON report. See usage below. |
 | `sample_all.py` | **(0.2.6)** Convenience wrapper: runs `sample_pixels.py` on all 7 `исходники/` screenshot+hideout pairs and consolidates into `sampled_all.json`. |
+| `draw_primitives.py` | **(0.2.7)** Inject the curated 5-shape drawing-primitives composition (vertical lines + hollow circle + filled circle + S-snake + thick line with contours) into the centre of an existing `.hideout` file. Strictly additive. See usage below. |
+| `render_primitives_preview.py` | **(0.2.7)** Render a colour-coded PNG preview of a hideout with per-decoration legend, Canal Hideout canvas outline, and centre marker. |
 
 ## `sample_pixels.py` — pixel sampling for ground-truth RGB
 
@@ -113,6 +115,93 @@ python scripts/sample_all.py
 
 Consolidates results to `scripts/sampled_all.json` — the source for
 the `_pixel_sampling_summary_0_2_6` block in `examples/palette_2b.json`.
+
+## `draw_primitives.py` — drawing primitives in world coords (0.2.7)
+
+When `img2hideout` rasterises a PNG, geometric shapes (circles, lines,
+S-curves) become noisy dot clouds after palette quantisation. This
+script draws them *directly* in world coordinates using art decorations,
+so each shape is clean and recognisable in-game.
+
+The script uses `src/hideout_art/primitives.py` — see that module for
+the per-shape API (line, hollow_circle, filled_circle, s_snake,
+thick_line_with_contours, center_composition).
+
+### Quick start
+
+```bash
+python scripts/draw_primitives.py \
+    "чистый холст.hideout" \
+    -o "чистый холст с примитивами.hideout" \
+    --center 780 657 \
+    --bounds-check \
+    --preview preview.png
+```
+
+This loads the source hideout (18 placements — Canal Hideout functional
+objects + NPCs), appends 52 art placements for the 5 primitives, and
+writes a 70-placement output file. All new placements are inside
+`CANAL_HIDEOUT_BOUNDS = (700, 540, 860, 775)` — `--bounds-check` fails
+otherwise.
+
+### The 5 primitives (curated `center_composition`)
+
+| Shape | Default decoration | Position (relative to centre) |
+|---|---|---|
+| 3 vertical parallel lines (length 80 wu) | Long Grass | top-left, x = cx−60..−45 |
+| Hollow circle (radius 18 wu) | Maraket Rubble | top-centre, (cx, cy−50) |
+| Filled circle (radius 14 wu) | Coastal Pebble | top-right, (cx+45, cy−50) |
+| S-snake (height 60, width 25 wu) | Sand Tussock | bottom-left, (cx−45, cy+35) |
+| Thick line with contours (length 50, thickness 14 wu) | Small Coastal Stone (outline) + Coastal Pebble (fill) | bottom-right, (cx+5..+55, cy+35) |
+
+### Options
+
+- `--center X Y` (default: 780 657) — centre of the composition.
+- `--bounds-check` — fail if any new placement falls outside Canal
+  Hideout bounds.
+- `--preview PATH` — render a default PNG preview.
+- `--<shape>-decoration NAME` — override the decoration for any shape
+  (e.g. `--line-decoration Maraket Rubble`).
+- `--spacing-override N` — override the auto-derived placement spacing
+  (in wu) for ALL primitives. Default: per-decoration `min_spacing_wu`
+  from `DECORATION_FOOTPRINT_CATALOG`.
+
+### Spacing
+
+Each decoration has a measured `min_spacing_wu` in
+`DECORATION_FOOTPRINT_CATALOG` — the closest observed pair distance in
+`исходники/*.hideout`. The primitives use this as the placement spacing
+so neighbouring decorations sit at the same density the user observed
+in real exports. Decorations without observed samples fall back to 15 wu.
+
+Override per-call with `--spacing-override N` if you need tighter or
+looser placement. Beware: tighter than `min_spacing_wu` may cause
+visible sprite overlap in-game (KI-10).
+
+### KI-13 caveat
+
+The primitives are round-trip verified (parse → write → parse equality,
+no duplicate placements, all within Canal Hideout bounds) but NOT yet
+visually verified in-game. See `STATUS.md` → KI-13 for the checklist
+of things to check on first import.
+
+## `render_primitives_preview.py` — colour-coded preview (0.2.7)
+
+A thicker PNG preview than the default `hideout-art preview` command.
+Renders:
+
+- Each art decoration as a distinct colour dot (one colour per hash).
+- Each functional object as a blue square with a name label.
+- The Canal Hideout canvas outline as a grey rectangle.
+- The composition centre as a red crosshair.
+
+Useful for visually checking primitive layouts before importing in-game.
+
+```bash
+python scripts/render_primitives_preview.py \
+    "чистый холст с примитивами.hideout" \
+    preview.png
+```
 
 ## What's gitignored
 

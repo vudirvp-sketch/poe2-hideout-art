@@ -31,6 +31,9 @@ composition** you can import into the game.
 - **PNG preview** — top-down render, one colour per decoration type
 - **Image → hideout** — sample a PNG, map each pixel to the closest palette
   entry, emit a `.hideout` file
+- **Drawing primitives** (0.2.7) — `line` / `hollow_circle` / `filled_circle` /
+  `s_snake` / `thick_line_with_contours` directly in world coordinates, using
+  art decorations. Strictly additive — never removes existing placements.
 - **CLI** + **Python API** — same operations, two interfaces
 - **Pure stdlib core** — `matplotlib` / `pillow` are optional extras
 
@@ -102,6 +105,46 @@ h = image_to_hideout(
 h.to_file("portrait.hideout")
 ```
 
+### Drawing primitives (0.2.7)
+
+Inject geometric shapes — drawn with art decorations — directly into an
+existing `.hideout` file. Useful when `img2hideout` rasterisation is too
+noisy for clean geometry (circles, lines, S-curves).
+
+```bash
+# CLI — strictly additive, never removes existing placements.
+python scripts/draw_primitives.py \
+    "чистый холст.hideout" \
+    -o "чистый холст с примитивами.hideout" \
+    --center 780 657 \
+    --bounds-check \
+    --preview preview.png
+```
+
+```python
+from hideout_art import (
+    Hideout, center_composition, line, hollow_circle, filled_circle,
+    s_snake, thick_line_with_contours, PrimitiveOptions,
+)
+
+h = Hideout.from_file("my.hideout")
+# Add the curated 5-shape composition (vertical lines + hollow circle +
+# filled circle + S-snake + thick line with contours) centred at (780, 657).
+h.placements.extend(center_composition(780, 657))
+h.to_file("with_primitives.hideout")
+
+# Or build a single shape with custom decoration + spacing:
+opts = PrimitiveOptions(decoration="Maraket Rubble")
+h.placements.extend(hollow_circle(800, 600, 25, opts))
+```
+
+Spacing is derived automatically from `DECORATION_FOOTPRINT_CATALOG` —
+override with `PrimitiveOptions(spacing_override=...)` if you need tighter
+or looser placement. Only `ART_TYPES` decorations are accepted; functional
+objects are rejected.
+
+See [`STATUS.md`](STATUS.md) → KI-13 for the in-game verification caveat.
+
 ## How a `.hideout` file is laid out
 
 See [`docs/format.md`](docs/format.md) for the full spec. Short version:
@@ -139,6 +182,7 @@ See [`docs/format.md`](docs/format.md) for the full spec. Short version:
 | Combine several compositions side-by-side | `recombine` (Python API) |
 | Visualise a hideout before re-importing | `preview` |
 | Generate new art from a PNG | `img2hideout` |
+| Draw geometric shapes (lines, circles, S-curves) with decorations | `primitives.py` + `scripts/draw_primitives.py` (0.2.7) |
 | Catalogue new decorations from observed hashes | PR to `constants.py` |
 
 ## What you **can't** do

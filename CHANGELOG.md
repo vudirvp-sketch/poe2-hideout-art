@@ -7,6 +7,83 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.7] - 2026-07-09
+
+### Added
+- **Drawing primitives module** (`src/hideout_art/primitives.py`) —
+  closes the "Drawing primitives из декораций" item from the 0.2.5
+  roadmap. Five shape generators that place art decorations directly
+  in world coordinates:
+  - `line(x0, y0, x1, y1, opts)` — straight line between two points;
+  - `polyline(points, opts)` — chain of segments (used by S-snake);
+  - `hollow_circle(cx, cy, r, opts)` — perimeter points;
+  - `filled_circle(cx, cy, r, opts)` — concentric-ring disk fill;
+  - `s_snake(cx, cy, height, width, opts)` — one-period vertical sine;
+  - `thick_line_with_contours(x0..y1, thickness, outline_opts, fill_opts)`
+    — "stadium" shape with perimeter (outline) + cell-centred interior
+    (fill) decorations.
+  - `center_composition(cx, cy, ...)` — curated 5-shape layout that
+    fits Canal Hideout canvas when centred at (780, 657).
+  All primitives use only `ART_TYPES` decorations, respect
+  `DECORATION_FOOTPRINT_CATALOG.min_spacing_wu` via `safe_spacing()`,
+  return fresh `list[Placement]` (never mutate the input Hideout), and
+  dedup outline points at identical integer coordinates.
+- **`scripts/draw_primitives.py`** — CLI that loads a source
+  `.hideout`, appends the curated composition at the requested centre,
+  and writes the result. Strictly additive (never removes placements).
+  Options: `--center X Y`, `--bounds-check` (fail if outside Canal
+  Hideout), `--preview PATH`, per-primitive `--<shape>-decoration`
+  overrides, `--spacing-override`.
+- **`scripts/render_primitives_preview.py`** — thicker PNG preview
+  with per-decoration colour coding, Canal Hideout canvas outline,
+  centre marker, and legend.
+- **37 new pytest cases** in `tests/test_primitives.py` covering:
+  - `safe_spacing` validation (functional rejection, unknown rejection,
+    fallback for unsampled decorations);
+  - `line` geometry (endpoints, uniform spacing, diagonal, hash usage);
+  - `polyline` (empty, single, segment chaining, no vertex duplication);
+  - `hollow_circle` (minimum point count, on-circle radius, count =
+    circumference / spacing);
+  - `filled_circle` (centre included, no points outside radius, more
+    points than hollow);
+  - `s_snake` (point count, y range, x amplitude, endpoints on centreline);
+  - `thick_line_with_contours` (both decorations used, perimeter
+    geometry, no duplicate outline, fill strictly inside band, zero-
+    length degenerate case);
+  - `center_composition` (only ART_TYPES, within Canal bounds, no
+    duplicates, all 5 shapes present, relocatable, count in 40-80 range);
+  - end-to-end round-trip (parse → write → parse equality).
+- **Output deliverable**: `download/чистый холст с примитивами.hideout`
+  (70 placements = 18 functional + 52 art) generated from the user's
+  uploaded `чистый холст.hideout` by running `draw_primitives.py`
+  with `--center 780 657 --bounds-check`. Verified by round-trip parse.
+
+### Changed
+- `src/hideout_art/__init__.py` — re-exports `PrimitiveOptions`,
+  `safe_spacing`, `line`, `polyline`, `hollow_circle`, `filled_circle`,
+  `s_snake`, `thick_line_with_contours`, `center_composition`. Version
+  bumped 0.2.6 → 0.2.7.
+- `pyproject.toml` — version 0.2.6 → 0.2.7.
+- `STATUS.md` — new KI-13 (drawing primitives not yet verified in
+  game); "Что улучшать дальше" updated: "Drawing primitives v2" added
+  (arc, bezier, polygon, text); "Multi-pass" item now references the
+  `thick_line_with_contours` outline+fill pattern as a working
+  precedent. Test count 273 → 310 pass.
+- `AGENTS.md` — added `primitives.py` to file-by-file map; added
+  `draw_primitives.py` + `render_primitives_preview.py` to scripts
+  section; updated test count 274 → 311; added TL;DR table entry for
+  drawing primitives.
+- `README.md` — added "Drawing primitives" subsection under Features
+  with usage example.
+
+### Known Issues
+- **KI-13 (new 0.2.7)** — Drawing primitives implemented and round-trip
+  verified, but NOT yet visually verified in-game. Sub-questions:
+  sprite overlap at tight spacing, Long Grass visibility, thick-line
+  thickness cap, sprite bounds (KI-10 dependency). See `STATUS.md` for
+  the full checklist.
+- KI-2, KI-10, KI-12 unchanged.
+
 ## [0.2.6] - 2026-07-09
 
 ### Added
@@ -319,7 +396,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `img2hideout`, CLI (`inspect`/`layers`/`stats`/`preview`/`shift`/
   `transfer`/`img2hideout`), 23 known hashes, docs, 33 pytest tests.
 
-[Unreleased]: https://github.com/vudirvp-sketch/poe2-hideout-art/compare/v0.2.5...HEAD
+[Unreleased]: https://github.com/vudirvp-sketch/poe2-hideout-art/compare/v0.2.7...HEAD
+[0.2.7]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.7
+[0.2.6]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.6
 [0.2.5]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.5
 [0.2.4]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.4
 [0.2.3]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.3

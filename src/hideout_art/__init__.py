@@ -16,10 +16,21 @@ from .img2hideout import image_to_hideout
 from .palette import Palette, default_palette
 from .parser import Hideout, Placement
 from .preview import render_png
+from .primitives import (
+    PrimitiveOptions,
+    center_composition,
+    filled_circle,
+    hollow_circle,
+    line,
+    polyline,
+    s_snake,
+    safe_spacing,
+    thick_line_with_contours,
+)
 from .transforms import mirror_x, mirror_y, rotate, shift
 from .writer import write_hideout
 
-__version__ = "0.2.5"
+__version__ = "0.2.7"
 __all__ = [
     "Hideout",
     "Placement",
@@ -32,5 +43,15 @@ __all__ = [
     "Palette",
     "default_palette",
     "image_to_hideout",
+    # Primitives (0.2.7) — drawing shapes directly in world coordinates.
+    "PrimitiveOptions",
+    "safe_spacing",
+    "line",
+    "polyline",
+    "hollow_circle",
+    "filled_circle",
+    "s_snake",
+    "thick_line_with_contours",
+    "center_composition",
     "__version__",
 ]

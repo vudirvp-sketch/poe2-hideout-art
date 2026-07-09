@@ -20,6 +20,7 @@ everything lives and where the surprises are.
 | Look up a decoration's placement footprint | `src/hideout_art/constants.py` → `DECORATION_FOOTPRINT_CATALOG` |
 | Re-measure footprints after adding placements to `исходники/` | `scripts/measure_decorations.py` |
 | Pixel-sample real RGB under placements | `scripts/sample_pixels.py` (closes KI-11) |
+| Draw geometric shapes directly in world coords | `src/hideout_art/primitives.py` + `scripts/draw_primitives.py` (0.2.7) |
 | Add a new geometric transform | `src/hideout_art/transforms.py` |
 | Extend `img2hideout` (dither, alpha, etc.) | `src/hideout_art/img2hideout.py` |
 | Add a CLI subcommand | `src/hideout_art/cli.py` (register in `build_parser()`) |
@@ -118,6 +119,15 @@ minimal.
   Pure stdlib.
 - **`img2hideout.py`** — image → `Hideout`. Optional dependency on
   pillow.
+- **`primitives.py`** (0.2.7) — drawing primitives that place art
+  decorations along geometric shapes (line, hollow_circle, filled_circle,
+  s_snake, thick_line_with_contours). Pure stdlib. Uses
+  `DECORATION_FOOTPRINT_CATALOG.min_spacing_wu` via `safe_spacing()` to
+  respect per-decoration placement density. Never mutates the input
+  Hideout — returns fresh `list[Placement]`. See `center_composition`
+  for a curated 5-shape layout, and `scripts/draw_primitives.py` for the
+  CLI that injects it into an existing `.hideout` file. See KI-13 in
+  `STATUS.md` for the "needs in-game verification" caveat.
 - **`cli.py`** — argparse-based CLI. One file per command, registered
   in `build_parser()`. `_resolve_bounds()` handles `--bounds` named
   shortcuts (e.g. `canal`) and explicit `x_min,y_min,x_max,y_max`.
@@ -174,7 +184,14 @@ minimal.
   specific entries (Beech Tree, Cordilina, Marble Table), and a
   ground-truth check that `samples` matches real placement counts in
   `исходники/*.hideout`.
-- **Total test count: 274** (273 pass, 1 skipped — see `STATUS.md`).
+- **`test_primitives.py`** (0.2.7) — 37 cases for the drawing-primitives
+  module: `safe_spacing` validation, `line`/`polyline` geometry,
+  `hollow_circle`/`filled_circle` point counts and radii, `s_snake`
+  shape bounds, `thick_line_with_contours` perimeter + fill separation
+  + dedup, `center_composition` end-to-end (uses only ART_TYPES, fits
+  Canal Hideout bounds, no duplicates, all 5 shapes present,
+  relocatable), and a round-trip parse → write → parse test.
+- **Total test count: 311** (310 pass, 1 skipped — see `STATUS.md`).
 - **`data/sample.hideout`** — tiny synthetic fixture (< 1 KB).
   Contains one of each: a functional object, an art-layer decoration
   with rotation, an art-layer decoration with `flip_x`, an unknown
@@ -243,6 +260,16 @@ One-off dev scripts. Anything experimental goes here, not in
 - **`sample_all.py`** (0.2.6) — convenience wrapper that runs
   `sample_pixels.py` on all 7 `исходники/` screenshot+hideout pairs
   and consolidates into `scripts/sampled_all.json`.
+- **`draw_primitives.py`** (0.2.7) — injects the curated 5-shape
+  composition (`center_composition` from `primitives.py`) into the
+  centre of an existing `.hideout` file. Strictly additive — never
+  removes placements. Optional `--bounds-check` fails if any new
+  placement falls outside Canal Hideout bounds. Optional `--preview`
+  renders a PNG. See KI-13 for the in-game verification caveat.
+- **`render_primitives_preview.py`** (0.2.7) — thicker preview PNG
+  renderer with per-decoration colour coding, Canal Hideout canvas
+  outline, centre marker, and legend. Used for visual sanity check
+  of primitive layouts before importing in-game.
 
 ## When in doubt
 
