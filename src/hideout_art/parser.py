@@ -78,8 +78,15 @@ class Placement:
 
     @property
     def is_art(self) -> bool:
-        """Whether this decoration is in the artistic layer (see ART_TYPES)."""
-        return self.name in ART_TYPES
+        """Whether this decoration is in the artistic layer (see ART_TYPES).
+
+        Resolves via hash (language-independent) so that a Russian-named
+        placement such as ``"Береговая галька"`` is still classified as
+        art when its hash matches ``"Coastal Pebble"``. If the hash is
+        unknown, falls back to the original name (legacy behaviour).
+        """
+        canonical = HASH_TO_NAME.get(self.hash, self.name)
+        return canonical in ART_TYPES
 
     def as_dict(self) -> dict:
         return asdict(self)

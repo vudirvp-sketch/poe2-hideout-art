@@ -171,9 +171,13 @@ poe2-hideout-art/
 │   ├── test_parser.py
 │   ├── test_writer.py
 │   ├── test_transforms.py
+│   ├── test_img2hideout.py  # img2hideout smoke tests
+│   ├── test_new_hashes.py   # 0.2.1 hashes + tile_size + KI-9 fix
 │   └── data/sample.hideout  # tiny synthetic test fixture
 ├── examples/                # example palette JSON + sample inputs
-│   ├── palette.json
+│   ├── palette.json         # 4-colour Canal Hideout base palette
+│   ├── palette_warm.json    # 9-colour warm-tone palette (0.2.1, working)
+│   ├── palette_2b.json      # template for cool-tone portraits (TODOs)
 │   └── README.md
 ├── docs/
 │   ├── format.md            # full .hideout format spec

@@ -1,5 +1,5 @@
 {
-  "_comment": "Recommended palette for portraits that need a broader tonal range than the default 4-colour Canal palette. The default palette only covers pink/green/light-green/dark-brown — fine for abstract hearts, but NOT enough for a face or character like 2B from NieR. This template suggests the colour ROLES you need; the user must find the actual decoration in-game, place one, export the hideout, run `hideout-art inspect path/to/export.hideout` to read the hash, and add it to KNOWN_HASHES in src/hideout_art/constants.py. Until the TODOs are filled in, image_to_hideout() will refuse to load this palette (Palette.__post_init__ raises on unknown decoration names).",
+  "_comment": "TEMPLATE palette for cool-tone portraits (e.g. 2B from NieR:Automata) — needs pure white (dress), pure black (blindfold/hair), silver (sword blade), skin tone, and red (emblem). The original 4 Canal Hideout colours cover pink/green/light-green/dark-brown but are NOT enough for a face or character portrait. Until the TODOs are filled with real decoration names, image_to_hideout() will refuse to load this palette (Palette.__post_init__ raises on unknown decoration names). The 5 new warm-tone decorations added in 0.2.1 (Maraket Rubble/Treasures/Samovar/Ornament + Coastal Pebble) do NOT fill these cool-tone TODOs — they are warm tan/gray. For warm-tone art, use examples/palette_warm.json instead (it loads cleanly today).",
   "_how_to_fill": [
     "1. In the game, place ONE of each missing decoration in your hideout.",
     "2. Export the hideout to .hideout.",
@@ -11,13 +11,20 @@
     "8. Now `hideout-art img2hideout portrait.png --palette examples/palette_2b.json` works."
   ],
   "_colour_roles_needed_for_2b": {
-    "white":  "2B's dress, skin highlights, skirt trim. Look for snow, marble, bone, white flowers, pale sand.",
-    "black":  "2B's blindfold, hair, glove, boots. Look for charred wood, obsidian, ash, black sand, dark stone.",
-    "gray":   "Shadows on dress, sword blade, metal details. Look for stone rubble, gravel, ash pile, slate.",
-    "silver": "Sword blade highlights, metallic accents. Look for crystal, ice, polished stone.",
-    "skin":   "2B's skin (visible near eyes/neck). Look for pale tan sand, pale pink sand (already have Falling Sand), peach flower.",
-    "pink":   "Glow accents, lips. Already covered by Falling Sand.",
-    "red":    "Emblem on dress. Look for red flower, blood moss, ruby crystal, red candle."
+    "white":  "2B's dress, skin highlights, skirt trim. Look for snow, marble, bone, white flowers, pale sand. STILL MISSING — no white decoration found yet.",
+    "black":  "2B's blindfold, hair, glove, boots. Look for charred wood, obsidian, ash, black sand, dark stone. STILL MISSING — Sand Tussock (78,52,46) is the closest existing option but too brown.",
+    "gray":   "Shadows on dress, sword blade, metal details. Look for stone rubble, gravel, ash pile, slate. STILL MISSING — Maraket Samovar (148,133,115) is too warm; need cool neutral gray.",
+    "silver": "Sword blade highlights, metallic accents. Look for crystal, ice, polished stone. STILL MISSING.",
+    "skin":   "2B's skin (visible near eyes/neck). Look for pale tan sand, pale pink sand, peach flower. Falling Sand (248,187,208) is too pink — need peach/tan.",
+    "pink":   "Glow accents, lips. COVERED by Falling Sand.",
+    "red":    "Emblem on dress. Look for red flower, blood moss, ruby crystal, red candle. STILL MISSING."
+  },
+  "_available_warm_alternatives_in_0_2_1": {
+    "Maraket Rubble":     "warm tan/khaki (138,120,94) — usable for mid-tone warm fills, NOT for cool 2B gray",
+    "Maraket Treasures":  "dark warm gray (108,91,83) — too warm for 2B sword, but ok for warm shadow",
+    "Maraket Samovar":    "light warm gray (148,133,115) — too warm for 2B sword, but ok for warm highlight",
+    "Maraket Ornament":   "warm tan/khaki (136,120,97) — near-duplicate of Maraket Rubble",
+    "Coastal Pebble":     "warm tan/khaki (134,115,94) — near-duplicate of Maraket Rubble"
   },
   "entries": [
     {
@@ -46,42 +53,42 @@
     },
 
     {
-      "_role": "white (dress, highlights)",
+      "_role": "white (dress, highlights) — STILL MISSING, look in-game",
       "color": [240, 240, 240],
       "decoration": "TODO_WHITE_DECORATION",
       "weight": 1.0,
       "max_count": null
     },
     {
-      "_role": "black (blindfold, hair)",
+      "_role": "black (blindfold, hair) — STILL MISSING, Sand Tussock is closest but too brown",
       "color": [20, 20, 20],
       "decoration": "TODO_BLACK_DECORATION",
       "weight": 1.0,
       "max_count": null
     },
     {
-      "_role": "gray (shadows, sword)",
+      "_role": "gray (shadows, sword) — STILL MISSING cool neutral gray; Maraket Samovar is warm",
       "color": [128, 128, 128],
       "decoration": "TODO_GRAY_DECORATION",
       "weight": 1.0,
       "max_count": null
     },
     {
-      "_role": "silver (metallic accents)",
+      "_role": "silver (metallic accents) — STILL MISSING",
       "color": [200, 200, 215],
       "decoration": "TODO_SILVER_DECORATION",
       "weight": 1.0,
       "max_count": null
     },
     {
-      "_role": "skin tone (visible neck/face)",
+      "_role": "skin tone (visible neck/face) — STILL MISSING",
       "color": [228, 200, 178],
       "decoration": "TODO_SKIN_DECORATION",
       "weight": 1.0,
       "max_count": null
     },
     {
-      "_role": "red (emblem)",
+      "_role": "red (emblem) — STILL MISSING",
       "color": [180, 30, 30],
       "decoration": "TODO_RED_DECORATION",
       "weight": 1.0,

@@ -62,13 +62,50 @@ See `docs/img2hideout.md` for the full parameter reference.
 - **`scale` controls how spread out the composition is.** Larger scale
   = fewer overlaps but bigger footprint.
 
+## `palette_warm.json` (new in 0.2.1)
+
+A fully working 9-colour palette for warm-tone compositions — deserts,
+wood/stone textures, autumn scenes. Built from the original 4 Canal
+Hideout colours plus the 5 new Maraket/Coastal Pebble decorations
+discovered from user-provided exports:
+
+| Decoration          | RGB                | Role                       |
+|---------------------|--------------------|----------------------------|
+| Sand Tussock        | (78, 52, 46)       | deep shadow (darkest)      |
+| Maraket Treasures   | (108, 91, 83)      | dark warm gray             |
+| Maraket Rubble      | (138, 120, 94)     | warm tan/khaki (workhorse) |
+| Maraket Ornament    | (136, 120, 97)     | warm tan (textural alt)    |
+| Coastal Pebble      | (134, 115, 94)     | warm tan (noise alt)       |
+| Maraket Samovar     | (148, 133, 115)    | light warm gray            |
+| Long Grass          | (46, 125, 50)      | body green                 |
+| Fringe Moss         | (139, 195, 74)     | light green                |
+| Falling Sand        | (248, 187, 208)    | pink accent                |
+
+### Usage
+
+```bash
+hideout-art img2hideout desert.png -o desert.hideout \
+    --palette examples/palette_warm.json \
+    --tile-size 23 --width 80 --dither \
+    --hideout-name "Canal Hideout" --hideout-hash 60415 \
+    --preview
+```
+
 ## `palette_2b.json`
 
-A **template** for a 10-colour palette suitable for portraits —
+A **template** for a 10-colour palette suitable for cool-tone portraits —
 specifically, for a character like 2B from NieR: Automata. The default
 4-colour palette cannot render a portrait: it has no white, black, gray,
 silver, skin-tone, or red. This template defines the colour ROLES you
 need; the actual decoration names are left as `TODO_*` placeholders.
+
+**Note (0.2.1):** the 5 new warm-tone decorations added in 0.2.1 do NOT
+fill these cool-tone TODOs. They are warm tan/gray, not the neutral cool
+gray that 2B's sword/dress shadows require. For warm-tone art, use
+`palette_warm.json` (which loads cleanly today). To complete
+`palette_2b.json`, the user must find in-game: white (dress), black
+(blindfold), cool neutral gray (sword), silver (blade highlights),
+skin tone, red (emblem).
 
 ### Filling in the template
 

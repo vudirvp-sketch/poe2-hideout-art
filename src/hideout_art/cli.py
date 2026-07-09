@@ -120,6 +120,7 @@ def _cmd_img2hideout(args: argparse.Namespace) -> int:
         target_width=args.width,
         scale=args.scale,
         step=args.step,
+        tile_size=args.tile_size,
         origin_x=args.origin_x,
         origin_y=args.origin_y,
         alpha_threshold=args.alpha_threshold,
@@ -197,10 +198,16 @@ def build_parser() -> argparse.ArgumentParser:
                    help="Downscale image to this width (px). Default 120.")
     p.add_argument("--scale", type=int, default=2,
                    help="World units per pixel. Default 2.")
-    p.add_argument("--step", type=int, default=1,
+    p.add_argument("--step", type=int, default=None,
                    help="Place a decoration every Nth pixel in both x and y. "
                         "step=2 halves placement count and lets each decoration "
-                        "breathe. Default 1.")
+                        "breathe. Default 1. Mutually exclusive with --tile-size.")
+    p.add_argument("--tile-size", type=int, default=None,
+                   help="Decoration footprint in world units. When set, "
+                        "auto-computes step = round(tile_size / scale) so that "
+                        "one decoration is placed per game tile (no overlap, "
+                        "no gaps). Typical value: 23 (1 tile). Mutually "
+                        "exclusive with --step. Closes KI-1.")
     p.add_argument("--origin-x", type=int, default=700)
     p.add_argument("--origin-y", type=int, default=550)
     # Background / alpha

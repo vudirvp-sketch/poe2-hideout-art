@@ -146,7 +146,8 @@ def image_to_hideout(
     palette: Palette | None = None,
     target_width: int = 120,
     scale: int = 2,
-    step: int = 1,
+    step: int | None = None,
+    tile_size: int | None = None,
     origin_x: int = 700,
     origin_y: int = 550,
     background: tuple[int, int, int] | None = (0, 0, 0),
@@ -177,10 +178,18 @@ def image_to_hideout(
         ratio is preserved.
     scale : int
         World units per pixel. Larger = spread-out composition.
-    step : int
+    step : int or None
         Place a decoration every ``step``-th pixel in both x and y.
         ``step=2`` halves the placement count and lets each decoration
-        breathe (useful when decorations occupy a non-trivial tile area).
+        breathe. If ``None`` and ``tile_size`` is given, ``step`` is
+        auto-computed as ``max(1, round(tile_size / scale))`` so that
+        one decoration is placed per tile (no overlap, no gaps).
+    tile_size : int or None
+        Decoration footprint in world units. When set, overrides
+        ``step`` (see above). Use this when you know the decoration's
+        physical size — typically ~23 world units for a 1-tile
+        decoration (see ``DEFAULT_TILE_SIZE_WORLD_UNITS``). Lets the
+        system calibrate density automatically; closes KI-1.
     origin_x, origin_y : int
         World coordinate of the BOTTOM-LEFT pixel of the image (y grows
         upward, so the bottom row corresponds to ``origin_y``).
@@ -231,6 +240,27 @@ def image_to_hideout(
             "Pillow is required for image_to_hideout. "
             "Install with: pip install hideout-art[image]"
         ) from e
+
+    # ----- resolve step from tile_size (KI-1 calibration) -----------------
+    # If tile_size is given, auto-compute step so that adjacent placements
+    # are ~tile_size world units apart (i.e. one decoration per tile).
+    # If both step and tile_size are None, default step=1 (legacy behaviour).
+    if step is None:
+        if tile_size is not None:
+            if tile_size <= 0:
+                raise ValueError(
+                    f"tile_size must be > 0, got {tile_size}"
+                )
+            step = max(1, round(tile_size / scale))
+        else:
+            step = 1
+    elif tile_size is not None:
+        # Both explicitly set: prefer tile_size (it's the more physical
+        # parameter) but warn via ValueError so the user notices.
+        raise ValueError(
+            "Pass either 'step' or 'tile_size', not both. "
+            f"Got step={step}, tile_size={tile_size}."
+        )
 
     palette = palette or default_palette()
     rng = random.Random(jitter_seed if jitter_seed else None)

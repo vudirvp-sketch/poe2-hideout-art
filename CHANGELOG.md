@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-07-09
+
+### Added
+- 5 new decoration hashes from user-provided exports (closes KI-2 partially):
+  - `Maraket Rubble` (hash 3012657298) — warm tan/khaki ~(138,120,94)
+  - `Maraket Treasures` (hash 1078696835) — dark warm gray ~(108,91,83)
+  - `Maraket Samovar` (hash 57228444) — light warm gray ~(148,133,115)
+  - `Maraket Ornament` (hash 2125171205) — warm tan/khaki ~(136,120,97)
+  - `Coastal Pebble` (hash 2365064644) — warm tan/khaki ~(134,115,94)
+  - All 5 added to `ART_TYPES` (purely decorative).
+- `examples/palette_warm.json` — fully working 9-colour warm-tone palette
+  (4 original Canal colours + 5 new warm decorations). Loads cleanly
+  today; use it for desert/wood/stone/autumn scenes.
+- `tile_size` parameter in `image_to_hideout()` and `--tile-size` in CLI
+  (closes KI-1). Auto-computes `step = max(1, round(tile_size / scale))`
+  so that one decoration is placed per game tile — no overlap, no gaps.
+  Mutually exclusive with `step`.
+- `DEFAULT_TILE_SIZE_WORLD_UNITS = 23` constant in `constants.py`,
+  calibrated from observed placement deltas in user exports.
+- 26 new pytest tests (`tests/test_new_hashes.py` + 5 new tests in
+  `tests/test_img2hideout.py` for `tile_size`); total test count: 70.
+
+### Fixed
+- **KI-9** (new): `Placement.is_art` was checking `self.name in ART_TYPES`,
+  which failed for non-English `.hideout` exports (e.g. Russian
+  "Береговая галька" never matched English "Coastal Pebble"). Now
+  resolves via `HASH_TO_NAME.get(self.hash, self.name)` first, falling
+  back to the raw name for unknown hashes (legacy behaviour preserved).
+
+### Changed
+- `examples/palette_2b.json` — clarified that the 5 new warm-tone
+  decorations do NOT fill the cool-tone TODOs (white/black/silver/skin/red
+  still missing); added `_available_warm_alternatives_in_0_2_1` section
+  listing the new decorations and why they don't fit 2B's cool palette.
+- `STATUS.md` — rewritten: KI-1 and KI-9 marked fixed, KI-2 marked
+  partially fixed, "Что улучшать дальше" trimmed to 5 concrete items.
+- `docs/img2hideout.md` — added `--tile-size` documentation and a
+  "calibration" section explaining how `DEFAULT_TILE_SIZE_WORLD_UNITS`
+  was derived.
+
 ## [0.2.0] - 2026-07-09
 
 ### Added
@@ -66,6 +106,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   with a small synthetic fixture.
 - Example palette file at `examples/palette.json`.
 
-[Unreleased]: https://github.com/vudirvp-sketch/poe2-hideout-art/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/vudirvp-sketch/poe2-hideout-art/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.1
 [0.2.0]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.0
 [0.1.0]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.1.0

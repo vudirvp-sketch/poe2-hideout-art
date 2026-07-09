@@ -17,7 +17,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from hideout_art import Hideout
-from hideout_art.constants import HASH_TO_NAME
 
 
 def main(folder: str) -> int:

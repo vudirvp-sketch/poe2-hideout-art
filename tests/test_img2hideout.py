@@ -214,3 +214,80 @@ def test_default_args_match_legacy_behaviour(tmp_path: Path):
     # All r=0, fv=0 (no jitter)
     assert all(placement.r == 0 for placement in h.placements)
     assert all(placement.fv == 0 for placement in h.placements)
+
+
+# ---------------------------------------------------------------------------
+# tile_size auto-calibration (KI-1 fix, added in 0.2.1)
+# ---------------------------------------------------------------------------
+
+def test_tile_size_auto_computes_step(tmp_path: Path):
+    """tile_size=23, scale=2 → step=round(23/2)=12 (one decoration per tile)."""
+    img = _solid_image(48, 48, (46, 125, 50))
+    p = _write_png(img, tmp_path / "g.png")
+    h = image_to_hideout(p, palette=default_palette(),
+                         target_width=48, scale=2,
+                         tile_size=23,
+                         origin_x=0, origin_y=0,
+                         background=(0, 0, 0), background_threshold=10)
+    # Without tile_size, step=1 → 48*48=2304 placements.
+    # With tile_size=23, scale=2 → step=12 → ceil(48/12)=4 cols × 4 rows = 16.
+    assert len(h) == 16
+    # Verify spacing between adjacent placements is ~24 world units (= step*scale).
+    xs = sorted({placement.x for placement in h.placements})
+    if len(xs) >= 2:
+        gap = xs[1] - xs[0]
+        assert gap == 24  # step=12 * scale=2
+
+
+def test_tile_size_default_matches_step_one(tmp_path: Path):
+    """When neither step nor tile_size is given, behaviour matches step=1."""
+    img = _solid_image(3, 3, (46, 125, 50))
+    p = _write_png(img, tmp_path / "g.png")
+    h_default = image_to_hideout(p, palette=default_palette(),
+                                 target_width=3, scale=2,
+                                 origin_x=0, origin_y=0,
+                                 background=(0, 0, 0), background_threshold=10)
+    h_step1 = image_to_hideout(p, palette=default_palette(),
+                               target_width=3, scale=2, step=1,
+                               origin_x=0, origin_y=0,
+                               background=(0, 0, 0), background_threshold=10)
+    assert len(h_default) == len(h_step1) == 9
+    assert ([pl.as_dict() for pl in h_default] ==
+            [pl.as_dict() for pl in h_step1])
+
+
+def test_step_and_tile_size_are_mutually_exclusive(tmp_path: Path):
+    """Passing both step and tile_size must raise ValueError."""
+    img = _solid_image(4, 4, (46, 125, 50))
+    p = _write_png(img, tmp_path / "g.png")
+    with pytest.raises(ValueError, match="not both"):
+        image_to_hideout(p, palette=default_palette(),
+                         target_width=4, scale=2,
+                         step=2, tile_size=23,
+                         origin_x=0, origin_y=0,
+                         background=(0, 0, 0), background_threshold=10)
+
+
+def test_tile_size_must_be_positive(tmp_path: Path):
+    """tile_size <= 0 must raise ValueError."""
+    img = _solid_image(4, 4, (46, 125, 50))
+    p = _write_png(img, tmp_path / "g.png")
+    with pytest.raises(ValueError, match="tile_size must be > 0"):
+        image_to_hideout(p, palette=default_palette(),
+                         target_width=4, scale=2,
+                         tile_size=0,
+                         origin_x=0, origin_y=0,
+                         background=(0, 0, 0), background_threshold=10)
+
+
+def test_tile_size_with_small_scale_floors_to_one(tmp_path: Path):
+    """tile_size=23, scale=30 → step=max(1, round(23/30))=max(1, 1)=1."""
+    img = _solid_image(4, 4, (46, 125, 50))
+    p = _write_png(img, tmp_path / "g.png")
+    h = image_to_hideout(p, palette=default_palette(),
+                         target_width=4, scale=30,
+                         tile_size=23,
+                         origin_x=0, origin_y=0,
+                         background=(0, 0, 0), background_threshold=10)
+    # step=1 → 16 placements
+    assert len(h) == 16
