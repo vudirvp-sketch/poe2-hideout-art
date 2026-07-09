@@ -1,0 +1,30 @@
+img2hideout v0.6.2 sanity report (high density + bright palette)
+======================================================================
+
+Image:         /home/z/my-project/poe2-hideout-art/examples/test_icon_heart.png
+target_size:   40×50 px
+origin:        (740, 607)
+Output:        /home/z/my-project/poe2-hideout-art/download/heart_v062.hideout
+Preview:       /home/z/my-project/poe2-hideout-art/download/heart_v062.preview.png
+Preview zoom:  /home/z/my-project/poe2-hideout-art/download/heart_v062.preview_zoom.png
+Placements:    686
+BBox:          (744, 617, 814, 675)  (in canal bounds: True)
+Per-decor counts:
+    334  Летающий песок
+    240  Высокая трава
+     99  Песчаный кустарник
+     13  Мох с опушки
+
+Image:         /home/z/my-project/poe2-hideout-art/examples/test_portrait.png
+target_size:   55×38 px
+origin:        (725, 619)
+Output:        /home/z/my-project/poe2-hideout-art/download/portrait_v062.hideout
+Preview:       /home/z/my-project/poe2-hideout-art/download/portrait_v062.preview.png
+Preview zoom:  /home/z/my-project/poe2-hideout-art/download/portrait_v062.preview_zoom.png
+Placements:    873
+BBox:          (727, 619, 825, 683)  (in canal bounds: True)
+Per-decor counts:
+    350  Снаряжение из лагеря
+    314  Песчаный кустарник
+    141  Летающий песок
+     68  Мох с опушки

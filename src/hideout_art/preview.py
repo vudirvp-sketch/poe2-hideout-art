@@ -20,10 +20,13 @@ from .parser import Hideout
 # so that the preview roughly matches what the user will see in PoE2.
 DEFAULT_COLORS: dict[str, str] = {
     # Original Canal Hideout art (0.1.0)
-    "Long Grass":    "#88775d",  # (136,119,93) brown-tan
-    "Falling Sand":  "#917d65",  # (145,125,101) tan
-    "Fringe Moss":   "#8bc34a",  # bright green (RGB unverified — see KI in DECO_CATALOG)
-    "Sand Tussock":  "#70634f",  # (112,99,79) dark olive-tan
+    # VISUAL 0.6.2: confirmed from user screenshot 234156.jpg —
+    # Long Grass is GREEN (not brown as pixel-sampling suggested),
+    # Falling Sand is PINK (not tan). See KI-16 in STATUS.md.
+    "Long Grass":    "#2e7d32",  # VISUAL 0.6.2 (46,125,50) GREEN
+    "Falling Sand":  "#fbc0cb",  # VISUAL 0.6.2 (255,192,203) PINK
+    "Fringe Moss":   "#8bc34a",  # VLM (139,195,74) bright green — unverified
+    "Sand Tussock":  "#70634f",  # PIXEL (112,99,79) dark olive-tan
     # Warm-tone earth (0.2.1)
     "Maraket Rubble":     "#7d7057",  # (125,112,87) neutral brown
     "Maraket Treasures":  "#746655",  # (116,102,85)

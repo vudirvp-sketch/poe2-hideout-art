@@ -123,3 +123,53 @@ Stage Summary:
   делает скриншот, присылает. Оценка: узнаваемо или нет?
 - Multi-pass img2hideout — отложен (см. TODO-3 в STATUS.md).
 - Marble RGB fix (KI-12) — отложен (после ручных скриншотов).
+
+---
+Task ID: 5
+Agent: main (super-z)
+Task: v0.6.2 — HIGH DENSITY + BRIGHT PALETTE. Пользователь: "каша получилась и ничего не узнаваемо, используй более мелкие декораторы в качестве точек и линий! у тебя вон папка есть screenshots ---> там пример нормального плюс-минус рисунка."
+
+Work Log:
+- Прочитал 3 загруженных скриншота через VLM:
+  * 234156.jpg — РЕФЕРЕНС: СЕРДЦЕ из розового "Плавающего песка" сверху + зелёной "Высокой травы" снизу, плотно расставленных (сплошное пятно). Также мелкие детали: "Песчаный кустарник 2", "Мох с опушки" по контуру.
+  * 153625.jpg — розово-красное пятно вокруг портала, выложенное ОЧЕНЬ плотно мелкими объектами.
+  * 153458.jpg — функциональная сцена (кухня), не рисунок — не релевантно.
+- Диагноз ошибок v0.6.1:
+  1. Палитра palette_canal_warm.json — 8 тёмных brown/tan декоров. Нужно: яркие цвета (розовый/зелёный).
+  2. Плотность tile_size=12 → step=6 → placement каждые 12 wu. Нужно: step=1, scale=2 → каждые 2 wu (4-6× плотнее).
+  3. RGB в каталоге для Falling Sand (145,125,101 brown) и Long Grass (136,119,93 brown-tan) — НЕВЕРНЫЕ. Pixel-sampling 0.2.6 попал в тени/промежутки. VLM 0.2.5 был прав: розовый и зелёный.
+- Документировал KI-16 (RESOLVED) в STATUS.md.
+- Обновил constants.py:
+  * Falling Sand: VISUAL 0.6.2 (255,192,203) PINK — подтверждено скриншотом.
+  * Long Grass: VISUAL 0.6.2 (46,125,50) GREEN — подтверждено скриншотом.
+  * Комментарии обновлены: PIXEL был WRONG, VLM был прав.
+  * Fringe Moss добавлен в ENGLISH_TO_RUSSIAN карту ("Мох с опушки").
+- Обновил preview.py: цвета Long Grass=#2e7d32 (green), Falling Sand=#fbc0cb (pink).
+- Создал examples/palette_canal_bright.json — 5 ярких декоров:
+  Falling Sand (pink) + Long Grass (green) + Fringe Moss (light green) +
+  Sand Tussock (dark) + Camp Gear (very dark).
+- Обновил gen_test_images.py: сердце теперь розово-зелёное (м匹配ает референс 234156.jpg), не чёрное.
+- Переписал run_img2hideout_test.py:
+  * step=1, scale=2 (вместо tile_size=12) — максимальная плотность.
+  * Origin centered: вычисляется так, чтобы центр изображения попадал в центр canvas (780, 657).
+  * Добавлен _zoomed_preview() — рендер с зумом на bbox размещений.
+  * target_width=40 (heart), 55 (portrait).
+- Удалил старые v0.6.1 файлы из download/.
+- Прогон:
+  * heart_v062.hideout: 686 placement'ов, bbox (744,617,814,675), centered.
+    Распределение: 334 Летающий песок + 240 Высокая трава + 99 Песчаный кустарник + 13 Мох с опушки.
+  * portrait_v062.hideout: 873 placement'а, bbox (727,619,825,683), centered.
+    Распределение: 350 Снаряжение из лагеря + 314 Песчаный кустарник + 141 Летающий песок + 68 Мох с опушки.
+- VLM-верификация zoom preview:
+  * heart_v062.preview_zoom.png → VLM: "форма сердца, узнаваема, розовый+зелёный". ✅
+  * portrait_v062.preview_zoom.png → VLM: "форма человеческого лица/портрета, узнаваема". ✅
+- 341 тест pass, 1 skipped — regressий нет.
+
+Stage Summary:
+- v0.6.1 "каша" исправлена: bright palette + high density + centering + zoom preview.
+- VLM подтверждает узнаваемость в превью (сердце и портрет).
+- KI-16 (RGB Falling Sand/Long Grass) — RESOLVED: VLM был прав, pixel-sampling был wrong.
+- KI-17 (Fringe Moss hash) — новый Known Issue: hash не верифицирован в исходниках.
+- Ожидание: пользователь импортирует в PoE2 → скриншоты → оценка узнаваемости в игре.
+- Multi-pass img2hideout — отложен (TODO-2).
+- Расширение палитры — отложено (TODO-3).

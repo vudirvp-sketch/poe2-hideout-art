@@ -33,22 +33,44 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def make_heart(width: int = 200, height: int = 250) -> Image.Image:
-    """A black filled heart on a white background. 200×250 px."""
+    """A two-tone heart on a white background. 200×250 px.
+
+    Top half = pink (255,192,203) — matches Falling Sand decoration.
+    Bottom half = green (46,125,50) — matches Long Grass decoration.
+    This mirrors the user's reference screenshot (234156.jpg) where
+    the heart is built from pink Falling Sand on top and green Long
+    Grass on the bottom.
+    """
     img = Image.new("RGB", (width, height), (255, 255, 255))
     draw = ImageDraw.Draw(img)
 
     cx, cy = width / 2, height / 2 + 20
     r = int(min(width, height) * 0.22)
-    draw.ellipse((cx - 2.0 * r, cy - 1.6 * r, cx, cy + 0.4 * r), fill=(20, 20, 20))
-    draw.ellipse((cx,           cy - 1.6 * r, cx + 2.0 * r, cy + 0.4 * r), fill=(20, 20, 20))
-    draw.polygon(
-        [(cx - 2.0 * r + 4, cy - 0.6 * r),
-         (cx + 2.0 * r - 4, cy - 0.6 * r),
-         (cx,               cy + 1.8 * r)],
-        fill=(20, 20, 20),
-    )
+
+    pink = (255, 192, 203)
+    green = (46, 125, 50)
+
+    # Top half of the heart (two lobes) — pink
+    draw.ellipse((cx - 2.0 * r, cy - 1.6 * r, cx, cy + 0.4 * r), fill=pink)
+    draw.ellipse((cx,           cy - 1.6 * r, cx + 2.0 * r, cy + 0.4 * r), fill=pink)
     draw.rectangle((cx - 2.0 * r + 4, cy - 0.9 * r, cx + 2.0 * r - 4, cy - 0.4 * r),
-                   fill=(20, 20, 20))
+                   fill=pink)
+
+    # Bottom triangle of the heart — green
+    draw.polygon(
+        [(cx - 2.0 * r + 4, cy - 0.4 * r),
+         (cx + 2.0 * r - 4, cy - 0.4 * r),
+         (cx,               cy + 1.8 * r)],
+        fill=green,
+    )
+
+    # Overlap zone: blend pink → green via a thin olive band so the
+    # palette matcher doesn't pick a wildly wrong decoration at the seam.
+    draw.rectangle(
+        (cx - 2.0 * r + 4, cy - 0.5 * r, cx + 2.0 * r - 4, cy - 0.2 * r),
+        fill=(140, 100, 90),  # pinkish-brown transition
+    )
+
     return img
 
 

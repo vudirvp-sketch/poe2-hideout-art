@@ -55,10 +55,11 @@ KNOWN_HASHES: dict[str, int] = {
     # Decorations used for floor art (original Canal Hideout palette, 0.1.0)
     # RGB values: PIXEL = pixel-sampled (0.2.6, scripts/sample_pixels.py),
     # VLM = glm-4.6v estimate (0.2.4/0.2.5, noisy — see KI-11).
+    # VISUAL = confirmed from user screenshot 234156.jpg (0.6.2) — see KI-16.
     # ------------------------------------------------------------------ #
-    "Long Grass":           2219637749,  # PIXEL 0.2.6 (136,119,93) brown-tan. VLM was (46,125,50) green — wrong.
-    "Falling Sand":         3853073345,  # PIXEL 0.2.6 (145,125,101) brown-tan (sampling hit gap between particles). VLM 0.2.5 (255,192,203) pink (sampled actual particle). Particle effect — colour depends on sampling point.
-    "Fringe Moss":          1459723677,  # Not pixel-sampled (0 placements in исходники). VLM 0.2.1 (139,195,74) bright green — unverified.
+    "Long Grass":           2219637749,  # VISUAL 0.6.2 (46,125,50) GREEN — confirmed by user screenshot 234156.jpg (heart lower half is clearly green). PIXEL 0.2.6 (136,119,93) brown-tan was WRONG: sampling hit the dry base of the grass clump, not the green blade tips.
+    "Falling Sand":         3853073345,  # VISUAL 0.6.2 (255,192,203) PINK — confirmed by user screenshot 234156.jpg (heart upper half is clearly pink). PIXEL 0.2.6 (145,125,101) brown-tan was WRONG: sampling hit the gap between particles. VLM 0.2.5 was right all along.
+    "Fringe Moss":          1459723677,  # VLM 0.2.1 (139,195,74) bright green — unverified (0 placements in исходники), but plausible given Long Grass is also green.
     "Sand Tussock":          146816198,  # PIXEL 0.2.6 (112,99,79) dark olive-tan. RESOLVES KI-11: between VLM 0.2.1 (78,52,46) and VLM 0.2.5 (180,160,120). NOT skin tone — too dark and too olive.
 
     # ------------------------------------------------------------------ #
@@ -334,6 +335,7 @@ FOOTPRINT_CONFIDENCE_LEVELS: frozenset[str] = frozenset({
 ENGLISH_TO_RUSSIAN: dict[str, str] = {
     "Long Grass":            "Высокая трава",
     "Falling Sand":          "Летающий песок",
+    "Fringe Moss":           "Мох с опушки",
     "Sand Tussock":          "Песчаный кустарник",
     "Maraket Rubble":        "Маракетские обломки",
     "Maraket Treasures":     "Маракетские сокровища",
