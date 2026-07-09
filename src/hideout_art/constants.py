@@ -14,6 +14,10 @@ a Russian-named ``"Береговая галька"`` resolves via hash to ``"Co
 and is correctly classified as art.
 """
 
+from __future__ import annotations
+
+from typing import NamedTuple
+
 # (name) -> hash
 # Values extracted from real .hideout exports of "Canal Hideout"
 # (hideout_hash=60415). The catalogue grows in three layers:
@@ -188,3 +192,101 @@ CANAL_HIDEOUT_BOUNDS: tuple[int, int, int, int] = (700, 540, 860, 775)
 NAMED_BOUNDS: dict[str, tuple[int, int, int, int]] = {
     "canal": CANAL_HIDEOUT_BOUNDS,
 }
+
+
+# --------------------------------------------------------------------------- #
+# Decoration footprint catalogue (0.2.3)
+# --------------------------------------------------------------------------- #
+# Estimated PLACEMENT footprint for each decoration in ART_TYPES. Derived
+# from MIN pairwise Euclidean distance between same-hash placements across
+# all исходники/*.hideout exports (see scripts/measure_decorations.py).
+#
+# What this measures:
+#   * The MIN spacing observed is an UPPER BOUND on the placement tile
+#     footprint — if the user placed two Beech Trees 22 wu apart vertically
+#     without visible overlap in-game, the placement tile is at most 22 wu.
+#
+# What this does NOT measure (KI-10):
+#   * Sprite bounds. The visible canopy of a tree extends well beyond its
+#     placement tile. For img2hideout step calibration, the placement
+#     footprint is what matters; for visual overlap detection you would
+#     need in-game sprite measurement (not derivable from .hideout files).
+#   * Rotation-dependent footprint. All observations are at r=0; rotated
+#     placements may have different effective bounds.
+#
+# Confidence levels (by sample size):
+#   high    — >=5 placements (min distance is reliable)
+#   medium  — 3-4 placements
+#   low     — 2 placements (min distance is a noisy estimate — the only
+#             pair observed may have been placed far apart by coincidence)
+#   single  — 1 placement (cannot measure; footprint unknown)
+#   none    — decoration not present in исходники/ (no measurement possible)
+#
+# estimated_tile_footprint = ceil(min_spacing_wu / DEFAULT_TILE_SIZE_WORLD_UNITS * 2) / 2
+# (rounded UP to nearest 0.5 tile — err on the side of sparser placement.)
+#
+# Atziri Statue and other functional objects are deliberately excluded:
+# per user instruction, they are huge and will not participate in art
+# compositions. Only ART_TYPES entries are catalogued.
+
+class DecorationFootprint(NamedTuple):
+    """Placement footprint estimate for one decoration type."""
+
+    samples: int                                # placements observed in исходники/
+    min_spacing_wu: float | None                # closest pair observed (UPPER BOUND)
+    median_spacing_wu: float | None             # typical spacing (skewed by scatter)
+    estimated_tile_footprint: float | None      # min_spacing / DEFAULT_TILE_SIZE, rounded up to 0.5
+    confidence: str                             # high|medium|low|single|none
+
+
+DECORATION_FOOTPRINT_CATALOG: dict[str, DecorationFootprint] = {
+    # ----- original Canal Hideout art (0.1.0) -----
+    "Long Grass":            DecorationFootprint(5,  13.3, 17.3,  1.0, "high"),
+    "Falling Sand":          DecorationFootprint(0,  None, None,  None, "none"),
+    "Fringe Moss":           DecorationFootprint(0,  None, None,  None, "none"),
+    "Sand Tussock":          DecorationFootprint(7,  17.1, 38.9,  1.0, "high"),
+
+    # ----- warm-tone earth (0.2.1) -----
+    "Maraket Rubble":        DecorationFootprint(11, 13.6, 33.0,  1.0, "high"),
+    "Maraket Treasures":     DecorationFootprint(1,  None, None,  None, "single"),
+    "Maraket Samovar":       DecorationFootprint(2,  14.3, 14.3,  1.0, "low"),
+    "Maraket Ornament":      DecorationFootprint(4,  18.2, 32.1,  1.0, "medium"),
+    "Coastal Pebble":        DecorationFootprint(9,  29.7, 58.0,  1.5, "high"),
+
+    # ----- new Canal Hideout art (0.2.2) -----
+    # Boundary / marker
+    "Cordilina":             DecorationFootprint(11, 17.2, 144.8, 1.0, "high"),
+    "Petrified Cave Figure": DecorationFootprint(1,  None, None,  None, "single"),
+
+    # Coastal stones
+    "Coastal Bush":          DecorationFootprint(4,  24.2, 38.0,  1.5, "medium"),
+    "Small Coastal Stone":   DecorationFootprint(5,  20.2, 42.4,  1.0, "high"),
+    "Medium Coastal Stone":  DecorationFootprint(9,  25.1, 54.9,  1.5, "high"),
+
+    # Plants / foliage
+    "Slender Seedling":      DecorationFootprint(7,  18.9, 51.6,  1.0, "high"),
+    "Log":                   DecorationFootprint(2,  18.0, 18.0,  1.0, "low"),
+    "Beech Tree":            DecorationFootprint(2,  22.0, 22.0,  1.0, "low"),
+    "Pile of Leaves":        DecorationFootprint(5,  15.5, 25.5,  1.0, "high"),
+
+    # Cave / mountain
+    "Cave Fossil":           DecorationFootprint(8,  17.0, 41.4,  1.0, "high"),
+    "Cave Coral":            DecorationFootprint(1,  None, None,  None, "single"),
+    "Summit Brazier":        DecorationFootprint(4,  17.5, 28.2,  1.0, "medium"),
+
+    # Marble furniture (light gray/white — RGB still unmeasured, see KI-2)
+    "Marble Bench":          DecorationFootprint(1,  None, None,  None, "single"),
+    "Marble Table":          DecorationFootprint(2,  45.6, 45.6,  2.0, "low"),  # see KI-10: low-conf
+    "Marble Walls":          DecorationFootprint(1,  None, None,  None, "single"),
+    "Marble Fountain":       DecorationFootprint(1,  None, None,  None, "single"),
+
+    # Camp props
+    "Camp Crate":            DecorationFootprint(4,  15.7, 30.9,  1.0, "medium"),
+    "Camp Gear":             DecorationFootprint(1,  None, None,  None, "single"),
+}
+
+
+# Confidence level set — used by tests for validation.
+FOOTPRINT_CONFIDENCE_LEVELS: frozenset[str] = frozenset({
+    "high", "medium", "low", "single", "none",
+})

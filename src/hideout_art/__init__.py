@@ -19,7 +19,7 @@ from .preview import render_png
 from .transforms import mirror_x, mirror_y, rotate, shift
 from .writer import write_hideout
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 __all__ = [
     "Hideout",
     "Placement",

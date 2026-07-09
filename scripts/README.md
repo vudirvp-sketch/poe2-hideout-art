@@ -17,5 +17,6 @@ declared in `pyproject.toml`.
 |---|---|
 | `bulk_preview.py` | Render PNGs for every `.hideout` in a folder |
 | `scrape_hashes.py` | Walk a folder of exports and print unknown hashes |
+| `measure_decorations.py` | Measure decoration placement footprints from `исходники/*.hideout` (re-run when new decorations are added; output goes to `decoration_footprints.json`, gitignored) |
 
 These are illustrative; add your own as needed.

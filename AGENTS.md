@@ -17,6 +17,8 @@ everything lives and where the surprises are.
 | Find the parser entrypoint | `src/hideout_art/parser.py` → `Hideout.from_file()` |
 | Find the writer | `src/hideout_art/writer.py` → `write_hideout()` |
 | Add a new decoration hash | `src/hideout_art/constants.py` → `KNOWN_HASHES` |
+| Look up a decoration's placement footprint | `src/hideout_art/constants.py` → `DECORATION_FOOTPRINT_CATALOG` |
+| Re-measure footprints after adding placements to `исходники/` | `scripts/measure_decorations.py` |
 | Add a new geometric transform | `src/hideout_art/transforms.py` |
 | Extend `img2hideout` (dither, alpha, etc.) | `src/hideout_art/img2hideout.py` |
 | Add a CLI subcommand | `src/hideout_art/cli.py` (register in `build_parser()`) |
@@ -121,9 +123,12 @@ minimal.
 - **`constants.py`** — `KNOWN_HASHES` (46 entries), `HASH_TO_NAME`,
   `ART_TYPES` (27 entries), the magic-number constants
   (`ROTATION_MODULUS`, `FV_FLIP_X_BIT`, `FV_VARIANT_MASK`),
-  `DEFAULT_TILE_SIZE_WORLD_UNITS = 23`, and Canal Hideout geometry:
-  `CANAL_HIDEOUT_HASH = 60415`, `CANAL_HIDEOUT_BOUNDS = (700, 540, 860, 775)`,
-  `NAMED_BOUNDS = {"canal": ...}`. This is the file most PRs touch.
+  `DEFAULT_TILE_SIZE_WORLD_UNITS = 23`, Canal Hideout geometry
+  (`CANAL_HIDEOUT_HASH = 60415`, `CANAL_HIDEOUT_BOUNDS = (700, 540, 860, 775)`,
+  `NAMED_BOUNDS`), and **`DECORATION_FOOTPRINT_CATALOG`** (0.2.3) —
+  placement footprint estimates for all 27 art decorations, with
+  confidence levels. See KI-10 in `STATUS.md` for the placement-vs-
+  sprite-bounds limitation. This is the file most PRs touch.
 
 ### `tests/`
 
@@ -138,6 +143,12 @@ minimal.
 - **`test_new_hashes.py`** — 0.2.1 warm hashes + 0.2.2 new Canal hashes
   + `CANAL_HIDEOUT_BOUNDS` + `--bounds canal` CLI resolver + KI-9 fix
   (Russian-name → English-canonical via hash). 140 cases total.
+- **`test_footprints.py`** (0.2.3) — 94 cases for
+  `DECORATION_FOOTPRINT_CATALOG`: structural integrity, confidence↔
+  samples consistency, spacing↔footprint math, regression tests for
+  specific entries (Beech Tree, Cordilina, Marble Table), and a
+  ground-truth check that `samples` matches real placement counts in
+  `исходники/*.hideout`.
 - **`data/sample.hideout`** — tiny synthetic fixture (< 1 KB).
   Contains one of each: a functional object, an art-layer decoration
   with rotation, an art-layer decoration with `flip_x`, an unknown
@@ -189,7 +200,12 @@ by filename substring). Contents:
 ### `scripts/`
 
 One-off dev scripts. Anything experimental goes here, not in
-`src/hideout_art/`.
+`src/hideout_art/`. Notable:
+
+- **`measure_decorations.py`** (0.2.3) — re-derives
+  `DECORATION_FOOTPRINT_CATALOG` from `исходники/*.hideout`. Re-run
+  whenever new placements are added, then update `constants.py`
+  (`test_sample_counts_match_real_exports` will fail if you forget).
 
 ## When in doubt
 

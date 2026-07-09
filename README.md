@@ -166,13 +166,15 @@ poe2-hideout-art/
 │   ├── palette.py           # colour -> decoration mapping
 │   ├── img2hideout.py       # PNG -> Hideout (pillow, optional)
 │   ├── cli.py               # `hideout-art` CLI entry point
-│   └── constants.py         # known hashes, ART_TYPES, CANAL_HIDEOUT_BOUNDS
+│   └── constants.py         # known hashes, ART_TYPES, CANAL_HIDEOUT_BOUNDS,
+│                            # DECORATION_FOOTPRINT_CATALOG (0.2.3)
 ├── tests/                   # pytest test suite
 │   ├── test_parser.py
 │   ├── test_writer.py
 │   ├── test_transforms.py
 │   ├── test_img2hideout.py  # img2hideout smoke tests
 │   ├── test_new_hashes.py   # 0.2.1/0.2.2 hashes + bounds + KI-9 fix
+│   ├── test_footprints.py   # 0.2.3 decoration footprint catalog tests
 │   └── data/sample.hideout  # tiny synthetic test fixture
 ├── examples/                # example palette JSON + sample inputs
 │   ├── palette.json         # 4-colour Canal Hideout base palette
@@ -181,12 +183,16 @@ poe2-hideout-art/
 │   └── README.md
 ├── исходники/               # (0.2.2) user-provided reference exports:
 │   │                          5 .hideout files + matching screenshots,
-│   │                          source of the 18 new hashes and the
-│   │                          Canal Hideout canvas bounds calibration
+│   │                          source of the 18 new hashes, the Canal
+│   │                          Hideout canvas bounds calibration, and the
+│   │                          DECORATION_FOOTPRINT_CATALOG measurements
 ├── docs/
 │   ├── format.md            # full .hideout format spec
 │   └── screenshots/         # preview PNGs for the README
 ├── scripts/                 # one-off dev/exploration scripts
+│   ├── bulk_preview.py      # render PNGs for every .hideout in a folder
+│   ├── scrape_hashes.py     # find unknown hashes in a folder of exports
+│   └── measure_decorations.py  # (0.2.3) re-derive DECORATION_FOOTPRINT_CATALOG
 ├── pyproject.toml           # PEP 621 packaging + ruff config
 ├── README.md
 ├── CHANGELOG.md
