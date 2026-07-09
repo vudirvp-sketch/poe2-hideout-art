@@ -166,19 +166,23 @@ poe2-hideout-art/
 │   ├── palette.py           # colour -> decoration mapping
 │   ├── img2hideout.py       # PNG -> Hideout (pillow, optional)
 │   ├── cli.py               # `hideout-art` CLI entry point
-│   └── constants.py         # known hashes, magic numbers, ART_TYPES
+│   └── constants.py         # known hashes, ART_TYPES, CANAL_HIDEOUT_BOUNDS
 ├── tests/                   # pytest test suite
 │   ├── test_parser.py
 │   ├── test_writer.py
 │   ├── test_transforms.py
 │   ├── test_img2hideout.py  # img2hideout smoke tests
-│   ├── test_new_hashes.py   # 0.2.1 hashes + tile_size + KI-9 fix
+│   ├── test_new_hashes.py   # 0.2.1/0.2.2 hashes + bounds + KI-9 fix
 │   └── data/sample.hideout  # tiny synthetic test fixture
 ├── examples/                # example palette JSON + sample inputs
 │   ├── palette.json         # 4-colour Canal Hideout base palette
 │   ├── palette_warm.json    # 9-colour warm-tone palette (0.2.1, working)
 │   ├── palette_2b.json      # template for cool-tone portraits (TODOs)
 │   └── README.md
+├── исходники/               # (0.2.2) user-provided reference exports:
+│   │                          5 .hideout files + matching screenshots,
+│   │                          source of the 18 new hashes and the
+│   │                          Canal Hideout canvas bounds calibration
 ├── docs/
 │   ├── format.md            # full .hideout format spec
 │   └── screenshots/         # preview PNGs for the README

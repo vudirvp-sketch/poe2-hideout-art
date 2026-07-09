@@ -11,13 +11,13 @@
     "8. Now `hideout-art img2hideout portrait.png --palette examples/palette_2b.json` works."
   ],
   "_colour_roles_needed_for_2b": {
-    "white":  "2B's dress, skin highlights, skirt trim. Look for snow, marble, bone, white flowers, pale sand. STILL MISSING — no white decoration found yet.",
+    "white":  "2B's dress, skin highlights, skirt trim. Look for snow, marble, bone, white flowers, pale sand. STILL MISSING — strongest 0.2.2 candidates: Marble Bench / Marble Table / Marble Walls / Marble Fountain (need RGB sampling).",
     "black":  "2B's blindfold, hair, glove, boots. Look for charred wood, obsidian, ash, black sand, dark stone. STILL MISSING — Sand Tussock (78,52,46) is the closest existing option but too brown.",
-    "gray":   "Shadows on dress, sword blade, metal details. Look for stone rubble, gravel, ash pile, slate. STILL MISSING — Maraket Samovar (148,133,115) is too warm; need cool neutral gray.",
-    "silver": "Sword blade highlights, metallic accents. Look for crystal, ice, polished stone. STILL MISSING.",
+    "gray":   "Shadows on dress, sword blade, metal details. Look for stone rubble, gravel, ash pile, slate. STILL MISSING — Maraket Samovar (148,133,115) is too warm; 0.2.2 Cave Fossil / Cave Coral may work as cool light gray (need RGB sampling).",
+    "silver": "Sword blade highlights, metallic accents. Look for crystal, ice, polished stone. STILL MISSING — 0.2.2 Marble Fountain (with water) may work (need RGB sampling).",
     "skin":   "2B's skin (visible near eyes/neck). Look for pale tan sand, pale pink sand, peach flower. Falling Sand (248,187,208) is too pink — need peach/tan.",
     "pink":   "Glow accents, lips. COVERED by Falling Sand.",
-    "red":    "Emblem on dress. Look for red flower, blood moss, ruby crystal, red candle. STILL MISSING."
+    "red":    "Emblem on dress. Look for red flower, blood moss, ruby crystal, red candle. STILL MISSING — 0.2.2 Summit Brazier (fire) could work as warm red/orange (need RGB sampling)."
   },
   "_available_warm_alternatives_in_0_2_1": {
     "Maraket Rubble":     "warm tan/khaki (138,120,94) — usable for mid-tone warm fills, NOT for cool 2B gray",
@@ -25,6 +25,27 @@
     "Maraket Samovar":    "light warm gray (148,133,115) — too warm for 2B sword, but ok for warm highlight",
     "Maraket Ornament":   "warm tan/khaki (136,120,97) — near-duplicate of Maraket Rubble",
     "Coastal Pebble":     "warm tan/khaki (134,115,94) — near-duplicate of Maraket Rubble"
+  },
+  "_0_2_2_candidates_needing_rgb_sampling": {
+    "_comment": "These 18 new Canal decorations were added in 0.2.2 from user-provided exports. RGB values are ESTIMATED from screenshots — please send a clean screenshot to calibrate. The Marble series and Cave Fossil are the most promising candidates for the 2B cool palette.",
+    "Marble Bench":      "light gray marble — top candidate for 2B 'white' role",
+    "Marble Table":      "light gray marble — alternate for 'white'",
+    "Marble Walls":      "light gray marble — alternate for 'white' or 'gray'",
+    "Marble Fountain":   "light gray marble + water — candidate for 'silver'",
+    "Cave Fossil":       "light gray/white ammonite — candidate for 'white' or 'gray'",
+    "Cave Coral":        "pale gray/pink coral — candidate for 'gray' or 'skin'",
+    "Summit Brazier":    "stone brazier (fire = warm orange) — candidate for 'red' if lit",
+    "Pile of Leaves":    "autumn warm tones — not for 2B but useful for warm palettes",
+    "Log":               "brown bark — not for 2B",
+    "Beech Tree":        "large tree — not for 2B (also LARGE footprint)",
+    "Cordilina":         "green plant — not for 2B",
+    "Petrified Cave Figure": "large statue — not for 2B (also LARGE footprint)",
+    "Coastal Bush":      "warm green-tan bush — not for 2B",
+    "Small Coastal Stone":  "small stone — too small for art use",
+    "Medium Coastal Stone": "medium stone — could be 'gray' alt, need RGB",
+    "Slender Seedling":  "bushy shrub — not for 2B",
+    "Camp Crate":        "wooden crate — too warm for 2B",
+    "Camp Gear":         "bedroll/sack — too warm for 2B"
   },
   "entries": [
     {

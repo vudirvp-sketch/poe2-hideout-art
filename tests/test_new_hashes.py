@@ -1,4 +1,10 @@
-"""Tests for the new (0.2.1) hashes and palette entries."""
+"""Tests for hashes, palette entries, and bounds discovered across iterations.
+
+Covers:
+  * 0.2.1 — 5 warm-tone Maraket/Coastal Pebble hashes + tile_size + KI-9 fix.
+  * 0.2.2 — 18 new hashes from "исходники/" folder + CANAL_HIDEOUT_BOUNDS +
+    ``--bounds canal`` CLI shortcut.
+"""
 
 from __future__ import annotations
 
@@ -8,21 +14,25 @@ import pytest
 
 from hideout_art.constants import (
     ART_TYPES,
+    CANAL_HIDEOUT_BOUNDS,
+    CANAL_HIDEOUT_HASH,
     DEFAULT_TILE_SIZE_WORLD_UNITS,
     HASH_TO_NAME,
     KNOWN_HASHES,
+    NAMED_BOUNDS,
 )
 from hideout_art.palette import Palette
 from hideout_art.parser import Hideout, Placement
 
 EXAMPLES = Path(__file__).resolve().parent.parent / "examples"
+ISXODNIKI = Path(__file__).resolve().parent.parent / "исходники"
 
 
 # ---------------------------------------------------------------------------
-# KNOWN_HASHES — new entries from user-provided exports
+# 0.2.1 — warm-tone Maraket/Coastal Pebble hashes
 # ---------------------------------------------------------------------------
 
-NEW_ENTRIES = {
+WARM_ENTRIES = {
     "Maraket Rubble":     3012657298,
     "Maraket Treasures":  1078696835,
     "Maraket Samovar":     57228444,
@@ -31,80 +41,304 @@ NEW_ENTRIES = {
 }
 
 
-@pytest.mark.parametrize("name,hv", sorted(NEW_ENTRIES.items()))
-def test_new_hash_registered(name: str, hv: int):
+@pytest.mark.parametrize("name,hv", sorted(WARM_ENTRIES.items()))
+def test_warm_hash_registered(name: str, hv: int):
     assert KNOWN_HASHES.get(name) == hv
     assert HASH_TO_NAME.get(hv) == name
 
 
-@pytest.mark.parametrize("name", sorted(NEW_ENTRIES.keys()))
-def test_new_hashes_are_art(name: str):
-    """All 5 new decorations are decorative — must be in ART_TYPES."""
+@pytest.mark.parametrize("name", sorted(WARM_ENTRIES.keys()))
+def test_warm_hashes_are_art(name: str):
     assert name in ART_TYPES
 
 
-def test_no_collisions_with_existing_hashes():
-    """Each new hash must be unique across the whole catalogue."""
+# ---------------------------------------------------------------------------
+# 0.2.2 — 18 new Canal Hideout hashes from "исходники/" folder
+# ---------------------------------------------------------------------------
+
+NEW_022_ENTRIES = {
+    # Boundary / marker
+    "Cordilina":              1082688452,
+    "Petrified Cave Figure":  2014424642,
+    # Coastal stones
+    "Coastal Bush":           2984478824,
+    "Small Coastal Stone":    1122244925,
+    "Medium Coastal Stone":    369950199,
+    # Plants / foliage
+    "Slender Seedling":       532751457,
+    "Log":                    2780985165,
+    "Beech Tree":             2796444611,
+    "Pile of Leaves":         4294658310,
+    # Cave / mountain
+    "Cave Fossil":            2206403756,
+    "Cave Coral":             2359120247,
+    "Summit Brazier":         2623109233,
+    # Marble furniture
+    "Marble Bench":            534959854,
+    "Marble Table":           4056218057,
+    "Marble Walls":           1380152311,
+    "Marble Fountain":         525963527,
+    # Camp props
+    "Camp Crate":             2156404357,
+    "Camp Gear":               412387213,
+}
+
+# Expected source .hideout file in исходники/ for each new hash.
+# (decoration_name -> filename substring). Used by the parsing tests below.
+NEW_022_SOURCES = {
+    "Cordilina":              "Кордилой обозначил",
+    "Petrified Cave Figure":  "Кордилой обозначил",
+    "Coastal Bush":           "камни и кустарники",
+    "Small Coastal Stone":    "камни и кустарники",
+    "Medium Coastal Stone":   "еще камни и растения",
+    "Slender Seedling":       "еще камни и растения",
+    "Log":                    "всякое",
+    "Beech Tree":             "всякое",
+    "Pile of Leaves":         "всякое",
+    "Camp Crate":             "всякое",
+    "Camp Gear":              "всякое",
+    "Cave Fossil":            "еще элементы",
+    "Cave Coral":             "еще элементы",
+    "Summit Brazier":         "еще элементы",
+    "Marble Bench":           "еще элементы",
+    "Marble Table":           "еще элементы",
+    "Marble Walls":           "еще элементы",
+    "Marble Fountain":        "еще элементы",
+}
+
+
+@pytest.mark.parametrize("name,hv", sorted(NEW_022_ENTRIES.items()))
+def test_new_022_hash_registered(name: str, hv: int):
+    """Each new 0.2.2 hash must be in KNOWN_HASHES and reversible."""
+    assert KNOWN_HASHES.get(name) == hv
+    assert HASH_TO_NAME.get(hv) == name
+
+
+@pytest.mark.parametrize("name", sorted(NEW_022_ENTRIES.keys()))
+def test_new_022_hashes_are_art(name: str):
+    """All 18 new decorations are decorative — must be in ART_TYPES."""
+    assert name in ART_TYPES
+
+
+def test_new_022_hashes_no_collisions_with_warm():
+    """0.2.2 hashes must not collide with 0.2.1 warm hashes or original Canal hashes."""
     all_hashes = list(KNOWN_HASHES.values())
-    for hv in NEW_ENTRIES.values():
-        assert all_hashes.count(hv) == 1
+    for hv in NEW_022_ENTRIES.values():
+        assert all_hashes.count(hv) == 1, f"hash {hv} appears more than once"
+
+
+def test_total_known_hash_count():
+    """Sanity check: catalogue grew from 28 (0.2.1) to 46 (0.2.2)."""
+    assert len(KNOWN_HASHES) == 46
 
 
 # ---------------------------------------------------------------------------
-# Parsing the user-provided exports (uploaded as uploads/)
+# Parsing the "исходники/" .hideout files
 # ---------------------------------------------------------------------------
 
-UPLOAD_DIR = Path("/home/z/my-project/upload")
-HAS_UPLOADS = UPLOAD_DIR.is_dir()
+HAS_ISXODNIKI = ISXODNIKI.is_dir()
 
 
-@pytest.mark.skipif(not HAS_UPLOADS, reason="no upload/ directory present")
-def test_parse_user_export_ukrasheniya():
-    """First user export: 36 placements, 4 unknown hashes (now known)."""
-    h = Hideout.from_file(UPLOAD_DIR / "укрошения, хорошие подложки будто и обломки.hideout")
-    assert len(h) == 36
-    unknown = h.find_unknown_hashes()
-    # After adding the 5 new hashes, none should be unknown anymore.
-    assert not unknown, f"unexpected unknown hashes: {list(unknown.keys())}"
+def _find_isxodnik(substr: str) -> Path | None:
+    """Find a file in исходники/ whose name contains the substring."""
+    if not HAS_ISXODNIKI:
+        return None
+    matches = list(ISXODNIKI.glob("*.hideout"))
+    for p in matches:
+        if substr in p.name:
+            return p
+    return None
 
 
-@pytest.mark.skipif(not HAS_UPLOADS, reason="no upload/ directory present")
-def test_parse_user_export_galka():
-    """Second user export: 27 placements, 1 unknown hash (now known)."""
-    h = Hideout.from_file(UPLOAD_DIR / "галька.hideout")
-    assert len(h) == 27
-    unknown = h.find_unknown_hashes()
-    assert not unknown, f"unexpected unknown hashes: {list(unknown.keys())}"
+@pytest.mark.skipif(not HAS_ISXODNIKI, reason="no исходники/ folder present")
+@pytest.mark.parametrize("name", sorted(NEW_022_ENTRIES.keys()))
+def test_new_022_hash_present_in_source_export(name: str):
+    """Each new 0.2.2 hash must actually appear in its claimed source .hideout file."""
+    hv = NEW_022_ENTRIES[name]
+    src_substr = NEW_022_SOURCES[name]
+    p = _find_isxodnik(src_substr)
+    assert p is not None, f"source file with substring '{src_substr}' not found"
+    h = Hideout.from_file(p)
+    hashes_seen = {pl.hash for pl in h.placements}
+    assert hv in hashes_seen, (
+        f"hash {hv} ({name}) not found in {p.name}; "
+        f"hashes present: {sorted(hashes_seen)}"
+    )
 
 
-@pytest.mark.skipif(not HAS_UPLOADS, reason="no upload/ directory present")
-def test_user_export_art_classification():
-    """Placements with the new hashes must be classified as art.
+@pytest.mark.skipif(not HAS_ISXODNIKI, reason="no исходники/ folder present")
+def test_parse_isxodnik_boundary_file_no_unknowns():
+    """The boundary-outline file must parse cleanly with NO unknown hashes.
 
-    The .hideout file stores Russian names ("Береговая галька"), but
-    ``is_art`` resolves via hash to the canonical English name
-    ("Coastal Pebble") which IS in ART_TYPES — so is_art must be True.
+    This file places 11 Cordilina + 1 Petrified Cave Figure around the
+    Canal Hideout playable perimeter. After 0.2.2, both hashes are known,
+    so ``find_unknown_hashes()`` must return an empty dict.
     """
-    h = Hideout.from_file(UPLOAD_DIR / "галька.hideout")
-    pebble_placements = [p for p in h if p.hash == KNOWN_HASHES["Coastal Pebble"]]
-    assert len(pebble_placements) == 9
-    # Original Russian name preserved verbatim by the parser
-    assert all(p.name == "Береговая галька" for p in pebble_placements)
-    # But is_art correctly resolves via hash → Coastal Pebble ∈ ART_TYPES
-    assert all(p.is_art for p in pebble_placements)
+    p = _find_isxodnik("Кордилой обозначил")
+    assert p is not None
+    h = Hideout.from_file(p)
+    unknown = h.find_unknown_hashes()
+    assert not unknown, f"unexpected unknown hashes: {list(unknown.keys())}"
+    # Sanity: 11 Cordilinas + 1 Petrified Cave Figure + 18 base items (functional + NPCs)
+    cordilina = [pl for pl in h if pl.hash == KNOWN_HASHES["Cordilina"]]
+    petrified = [pl for pl in h if pl.hash == KNOWN_HASHES["Petrified Cave Figure"]]
+    assert len(cordilina) == 11
+    assert len(petrified) == 1
+
+
+@pytest.mark.skipif(not HAS_ISXODNIKI, reason="no исходники/ folder present")
+@pytest.mark.parametrize("substr", [
+    "камни и кустарники",
+    "еще камни и растения",
+    "еще элементы",
+    "всякое",
+    "Кордилой обозначил",
+])
+def test_parse_isxodnik_file_no_unknowns(substr: str):
+    """Every исходники .hideout must parse with no unknown hashes (post-0.2.2)."""
+    p = _find_isxodnik(substr)
+    assert p is not None
+    h = Hideout.from_file(p)
+    unknown = h.find_unknown_hashes()
+    assert not unknown, (
+        f"{p.name}: unexpected unknown hashes: {list(unknown.keys())}"
+    )
+
+
+@pytest.mark.skipif(not HAS_ISXODNIKI, reason="no исходники/ folder present")
+def test_isxodnik_files_use_canal_hideout_hash():
+    """All исходники .hideout files target Canal Hideout (hash 60415)."""
+    for substr in [
+        "камни и кустарники",
+        "еще камни и растения",
+        "еще элементы",
+        "всякое",
+        "Кордилой обозначил",
+    ]:
+        p = _find_isxodnik(substr)
+        assert p is not None
+        h = Hideout.from_file(p)
+        assert h.hideout_hash == CANAL_HIDEOUT_HASH, (
+            f"{p.name}: hideout_hash={h.hideout_hash}, expected {CANAL_HIDEOUT_HASH}"
+        )
 
 
 # ---------------------------------------------------------------------------
-# palette_warm.json — new working palette
+# Cross-validation: Russian in-game names resolve to canonical English via hash
+# ---------------------------------------------------------------------------
+
+# Russian names observed in исходники .hideout files, mapped to the canonical
+# English name they SHOULD resolve to via HASH_TO_NAME. This is the KI-9
+# guarantee: language-independent art classification.
+RUSSIAN_NAME_TO_CANONICAL = {
+    "Высокая трава":      "Long Grass",       # hash 2219637749
+    "Песчаный кустарник": "Sand Tussock",     # hash 146816198
+    "Береговая галька":   "Coastal Pebble",   # hash 2365064644 (from earlier export)
+}
+
+
+@pytest.mark.skipif(not HAS_ISXODNIKI, reason="no исходники/ folder present")
+@pytest.mark.parametrize("ru_name,en_name", sorted(RUSSIAN_NAME_TO_CANONICAL.items()))
+def test_russian_name_resolves_to_english_via_hash(ru_name: str, en_name: str):
+    """A Russian-named placement must resolve to its canonical English name
+    via hash lookup. This is the core KI-9 invariant.
+    """
+    # Find a placement with this Russian name in any исходники file
+    found = False
+    for substr in ["всякое", "камни и кустарники", "еще камни и растения",
+                   "еще элементы", "Кордилой обозначил"]:
+        p = _find_isxodnik(substr)
+        if p is None:
+            continue
+        h = Hideout.from_file(p)
+        for pl in h.placements:
+            if pl.name == ru_name:
+                canonical = HASH_TO_NAME.get(pl.hash)
+                assert canonical == en_name, (
+                    f"Russian '{ru_name}' has hash {pl.hash} which resolves "
+                    f"to '{canonical}', expected '{en_name}'"
+                )
+                found = True
+                break
+        if found:
+            break
+    if not found:
+        pytest.skip(f"Russian name '{ru_name}' not present in any исходники file")
+
+
+# ---------------------------------------------------------------------------
+# CANAL_HIDEOUT_BOUNDS — geometry from the user's boundary outline
+# ---------------------------------------------------------------------------
+
+def test_canal_hideout_bounds_is_4_tuple():
+    """CANAL_HIDEOUT_BOUNDS must be a 4-tuple of ints."""
+    assert isinstance(CANAL_HIDEOUT_BOUNDS, tuple)
+    assert len(CANAL_HIDEOUT_BOUNDS) == 4
+    for v in CANAL_HIDEOUT_BOUNDS:
+        assert isinstance(v, int)
+
+
+def test_canal_hideout_bounds_is_well_formed():
+    """x_min < x_max, y_min < y_max; canvas is at least 50 wu wide/tall."""
+    x_min, y_min, x_max, y_max = CANAL_HIDEOUT_BOUNDS
+    assert x_min < x_max
+    assert y_min < y_max
+    assert (x_max - x_min) >= 50
+    assert (y_max - y_min) >= 50
+
+
+def test_canal_hideout_bounds_wraps_user_outline():
+    """CANAL_HIDEOUT_BOUNDS must contain all 11 Cordilina placements from
+    the user's boundary outline file (the source of the calibration).
+    """
+    if not HAS_ISXODNIKI:
+        pytest.skip("no исходники/ folder present")
+    p = _find_isxodnik("Кордилой обозначил")
+    assert p is not None
+    h = Hideout.from_file(p)
+    cordilina = [pl for pl in h if pl.hash == KNOWN_HASHES["Cordilina"]]
+    assert len(cordilina) == 11
+    x_min, y_min, x_max, y_max = CANAL_HIDEOUT_BOUNDS
+    for pl in cordilina:
+        assert x_min <= pl.x <= x_max, f"x={pl.x} outside [{x_min},{x_max}]"
+        assert y_min <= pl.y <= y_max, f"y={pl.y} outside [{y_min},{y_max}]"
+
+
+def test_named_bounds_registry_contains_canal():
+    """NAMED_BOUNDS must include 'canal' → CANAL_HIDEOUT_BOUNDS."""
+    assert "canal" in NAMED_BOUNDS
+    assert NAMED_BOUNDS["canal"] == CANAL_HIDEOUT_BOUNDS
+
+
+def test_named_bounds_lookup_is_case_insensitive_via_cli_resolver():
+    """The CLI resolver (mirrored here) must accept 'canal' / 'CANAL' / 'Canal'."""
+    # We test the resolver function directly by importing it from cli.
+    from hideout_art.cli import _resolve_bounds
+    assert _resolve_bounds("canal") == CANAL_HIDEOUT_BOUNDS
+    assert _resolve_bounds("CANAL") == CANAL_HIDEOUT_BOUNDS
+    assert _resolve_bounds("Canal") == CANAL_HIDEOUT_BOUNDS
+
+
+def test_named_bounds_resolver_rejects_unknown_name():
+    """Unknown --bounds name must return None (CLI prints an error and exits 2)."""
+    from hideout_art.cli import _resolve_bounds
+    assert _resolve_bounds("unknown_name") is None
+
+
+def test_named_bounds_resolver_accepts_explicit_coords():
+    """Explicit 'x_min,y_min,x_max,y_max' must still work alongside named bounds."""
+    from hideout_art.cli import _resolve_bounds
+    assert _resolve_bounds("100,200,300,400") == (100, 200, 300, 400)
+
+
+# ---------------------------------------------------------------------------
+# palette_warm.json — working palette (0.2.1)
 # ---------------------------------------------------------------------------
 
 def test_palette_warm_loads():
     """palette_warm.json is a fully working palette — must load cleanly."""
     p = Palette.from_json_file(EXAMPLES / "palette_warm.json")
     assert len(p.entries) == 9
-    # Every entry's decoration must exist in KNOWN_HASHES (the Palette
-    # constructor itself enforces this, so just reaching this assertion
-    # means the palette is valid).
     for e in p.entries:
         assert e.decoration in KNOWN_HASHES
 
@@ -175,3 +409,28 @@ def test_is_art_false_for_known_functional_object():
         x=0, y=0, r=0, fv=0,
     )
     assert p.is_art is False
+
+
+@pytest.mark.skipif(not HAS_ISXODNIKI, reason="no исходники/ folder present")
+def test_is_art_true_for_all_new_022_decorations_in_exports():
+    """Every placement of a 0.2.2 decoration in исходники files must be
+    classified as art (via hash, regardless of Russian name).
+    """
+    seen = set()
+    for substr in ["всякое", "камни и кустарники", "еще камни и растения",
+                   "еще элементы", "Кордилой обозначил"]:
+        p = _find_isxodnik(substr)
+        if p is None:
+            continue
+        h = Hideout.from_file(p)
+        for pl in h.placements:
+            if pl.hash in NEW_022_ENTRIES.values():
+                assert pl.is_art is True, (
+                    f"placement of {HASH_TO_NAME.get(pl.hash)} (name='{pl.name}') "
+                    f"should be art but is_art={pl.is_art}"
+                )
+                seen.add(pl.hash)
+    # Sanity: we must have seen at least one placement for each new hash
+    assert seen == set(NEW_022_ENTRIES.values()), (
+        f"missing hashes: {set(NEW_022_ENTRIES.values()) - seen}"
+    )

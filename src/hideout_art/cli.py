@@ -20,11 +20,40 @@ import argparse
 import sys
 
 from . import __version__
+from .constants import NAMED_BOUNDS
 from .img2hideout import image_to_hideout
 from .palette import Palette, default_palette
 from .parser import Hideout
 from .preview import render_png
 from .writer import write_hideout
+
+
+def _resolve_bounds(spec: str) -> tuple[int, int, int, int] | None:
+    """Resolve a --bounds spec to a (x_min, y_min, x_max, y_max) tuple.
+
+    Accepted forms:
+      * "<name>"                 — named bounds, see NAMED_BOUNDS (e.g. "canal")
+      * "x_min,y_min,x_max,y_max" — explicit numeric rectangle
+    """
+    spec = spec.strip()
+    # Named bounds (single token, no commas).
+    if "," not in spec:
+        if spec.lower() in NAMED_BOUNDS:
+            return NAMED_BOUNDS[spec.lower()]
+        print(f"ERROR: unknown --bounds name '{spec}'. "
+              f"Known names: {sorted(NAMED_BOUNDS)}", file=sys.stderr)
+        return None
+    parts = [p.strip() for p in spec.split(",")]
+    if len(parts) != 4:
+        print("ERROR: --bounds must be 'x_min,y_min,x_max,y_max' "
+              f"or a named shortcut {sorted(NAMED_BOUNDS)}", file=sys.stderr)
+        return None
+    try:
+        return tuple(int(p) for p in parts)  # type: ignore[return-value]
+    except ValueError:
+        print(f"ERROR: --bounds values must be integers, got {parts!r}",
+              file=sys.stderr)
+        return None
 
 
 def _cmd_inspect(args: argparse.Namespace) -> int:
@@ -108,11 +137,9 @@ def _cmd_img2hideout(args: argparse.Namespace) -> int:
 
     bounds = None
     if args.bounds:
-        parts = [p.strip() for p in args.bounds.split(",")]
-        if len(parts) != 4:
-            print("ERROR: --bounds must be 'x_min,y_min,x_max,y_max'", file=sys.stderr)
+        bounds = _resolve_bounds(args.bounds)
+        if bounds is None:
             return 2
-        bounds = tuple(int(p) for p in parts)
 
     h = image_to_hideout(
         args.image,
@@ -243,9 +270,12 @@ def build_parser() -> argparse.ArgumentParser:
                    help="Max variant index when jittering (0..N-1). Default 8.")
     # Bounds
     p.add_argument("--bounds", default=None,
-                   help="Clip placements to a world-coord rectangle: "
-                        "'x_min,y_min,x_max,y_max'. Placements outside are "
-                        "skipped. Use to respect hideout boundaries.")
+                   help="Clip placements to a world-coord rectangle. Two forms: "
+                        "named shortcut (e.g. 'canal' for Canal Hideout's "
+                        "playable canvas, see NAMED_BOUNDS in constants.py), "
+                        "or explicit 'x_min,y_min,x_max,y_max'. Placements "
+                        "outside the rectangle are skipped. Use to respect "
+                        "hideout boundaries.")
     # Resample
     p.add_argument("--resample", default="bicubic",
                    choices=["nearest", "bilinear", "bicubic", "lanczos"],

@@ -99,13 +99,22 @@ specifically, for a character like 2B from NieR: Automata. The default
 silver, skin-tone, or red. This template defines the colour ROLES you
 need; the actual decoration names are left as `TODO_*` placeholders.
 
-**Note (0.2.1):** the 5 new warm-tone decorations added in 0.2.1 do NOT
-fill these cool-tone TODOs. They are warm tan/gray, not the neutral cool
-gray that 2B's sword/dress shadows require. For warm-tone art, use
-`palette_warm.json` (which loads cleanly today). To complete
-`palette_2b.json`, the user must find in-game: white (dress), black
-(blindfold), cool neutral gray (sword), silver (blade highlights),
-skin tone, red (emblem).
+**Note (0.2.2):** the 18 new decorations added in 0.2.2 include a
+**Marble series** (Bench, Table, Walls, Fountain) and **Cave Fossil** —
+all visually light gray/white in screenshots. These are the strongest
+candidates yet for the "white" and "gray" TODOs in `palette_2b.json`.
+However, their **exact in-game RGB has not been measured**. To close
+KI-2 fully:
+
+1. In the game, place one each of `Marble Bench`, `Marble Table`,
+   `Marble Walls`, `Marble Fountain`, `Cave Fossil` in your hideout.
+2. Take a screenshot.
+3. Send the screenshot — we'll sample median RGB and fill the TODOs.
+
+The 5 warm-tone decorations added in 0.2.1 (Maraket Rubble/Treasures/
+Samovar/Ornament + Coastal Pebble) do NOT fill these cool-tone TODOs.
+They are warm tan/gray, not the neutral cool gray that 2B's sword/dress
+shadows require. For warm-tone art, use `palette_warm.json`.
 
 ### Filling in the template
 

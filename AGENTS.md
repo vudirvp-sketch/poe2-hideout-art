@@ -116,10 +116,14 @@ minimal.
 - **`img2hideout.py`** — image → `Hideout`. Optional dependency on
   pillow.
 - **`cli.py`** — argparse-based CLI. One file per command, registered
-  in `build_parser()`.
-- **`constants.py`** — `KNOWN_HASHES`, `HASH_TO_NAME`, `ART_TYPES`,
-  and the magic-number constants (`ROTATION_MODULUS`, `FV_FLIP_X_BIT`,
-  `FV_VARIANT_MASK`). This is the file most PRs touch.
+  in `build_parser()`. `_resolve_bounds()` handles `--bounds` named
+  shortcuts (e.g. `canal`) and explicit `x_min,y_min,x_max,y_max`.
+- **`constants.py`** — `KNOWN_HASHES` (46 entries), `HASH_TO_NAME`,
+  `ART_TYPES` (27 entries), the magic-number constants
+  (`ROTATION_MODULUS`, `FV_FLIP_X_BIT`, `FV_VARIANT_MASK`),
+  `DEFAULT_TILE_SIZE_WORLD_UNITS = 23`, and Canal Hideout geometry:
+  `CANAL_HIDEOUT_HASH = 60415`, `CANAL_HIDEOUT_BOUNDS = (700, 540, 860, 775)`,
+  `NAMED_BOUNDS = {"canal": ...}`. This is the file most PRs touch.
 
 ### `tests/`
 
@@ -129,10 +133,32 @@ minimal.
   preserved.
 - **`test_transforms.py`** — `shift`/`rotate`/`mirror` correctness on
   the sample fixture.
+- **`test_img2hideout.py`** — smoke tests for every `img2hideout` option
+  (alpha, dither, jitter, bounds, resample, color_metric, tile_size).
+- **`test_new_hashes.py`** — 0.2.1 warm hashes + 0.2.2 new Canal hashes
+  + `CANAL_HIDEOUT_BOUNDS` + `--bounds canal` CLI resolver + KI-9 fix
+  (Russian-name → English-canonical via hash). 140 cases total.
 - **`data/sample.hideout`** — tiny synthetic fixture (< 1 KB).
   Contains one of each: a functional object, an art-layer decoration
   with rotation, an art-layer decoration with `flip_x`, an unknown
   decoration (to test resilience).
+
+### `исходники/` (0.2.2)
+
+User-provided reference exports. **Not test fixtures** — these are real
+.hideout files with real Russian-named placements. Used as a data source
+for catalogue growth (test cases in `test_new_hashes.py` reference them
+by filename substring). Contents:
+
+- `Кордилой обозначил...hideout` — 11 Cordilina + 1 Petrified Cave Figure
+  outlining the Canal Hideout playable canvas. Source of
+  `CANAL_HIDEOUT_BOUNDS`.
+- `камни и кустарники.hideout` — Coastal Bush + Small Coastal Stone.
+- `еще камни и растения.hideout` — Medium Coastal Stone + Slender Seedling.
+- `еще элементы.hideout` — Cave Fossil, Cave Coral, Summit Brazier,
+  Marble Bench/Table/Walls/Fountain.
+- `всякое.hideout` — Log, Beech Tree, Pile of Leaves, Camp Crate, Camp Gear.
+- Matching `.jpg` screenshots alongside each `.hideout` for RGB calibration.
 
 ### `docs/`
 

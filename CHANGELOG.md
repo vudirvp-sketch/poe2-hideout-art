@@ -7,6 +7,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-07-09
+
+### Added
+- **18 new decoration hashes** from user-provided `исходники/` folder
+  (5 `.hideout` exports, all targeting Canal Hideout, hash 60415):
+  - Boundary / marker: `Cordilina` (1082688452), `Petrified Cave Figure`
+    (2014424642).
+  - Coastal stones: `Coastal Bush` (2984478824), `Small Coastal Stone`
+    (1122244925), `Medium Coastal Stone` (369950199).
+  - Plants / foliage: `Slender Seedling` (532751457, ru: «Тонкосемянник»),
+    `Log` (2780985165), `Beech Tree` (2796444611), `Pile of Leaves`
+    (4294658310).
+  - Cave / mountain: `Cave Fossil` (2206403756), `Cave Coral` (2359120247),
+    `Summit Brazier` (2623109233).
+  - Marble furniture (light gray — closest existing match for 2B "white"):
+    `Marble Bench` (534959854), `Marble Table` (4056218057),
+    `Marble Walls` (1380152311), `Marble Fountain` (525963527).
+  - Camp props: `Camp Crate` (2156404357), `Camp Gear` (412387213).
+  - All 18 added to `ART_TYPES` (none are gameplay-functional).
+- **`CANAL_HIDEOUT_HASH`** constant (60415) — the Canal Hideout map hash,
+  extracted from the header for programmatic use.
+- **`CANAL_HIDEOUT_BOUNDS`** constant `(700, 540, 860, 775)` — the
+  playable-canvas bounding box of Canal Hideout, calibrated from a
+  user-provided boundary outline (11 Cordilina placements around the
+  perimeter + 1 Petrified Cave Figure as centre marker).
+- **`NAMED_BOUNDS`** registry + **`--bounds <name>`** CLI shortcut.
+  `--bounds canal` now resolves to `CANAL_HIDEOUT_BOUNDS`; explicit
+  `--bounds x_min,y_min,x_max,y_max` still works. Case-insensitive.
+  Add new hideouts to `NAMED_BOUNDS` as their canvases get measured.
+- 70 new pytest cases (parametrised) in `tests/test_new_hashes.py`:
+  18 hash-registration tests, 18 ART_TYPES tests, 1 collision test,
+  1 catalogue-size sanity test (`len(KNOWN_HASHES) == 46`), 18
+  source-file presence tests (one per new hash), 5 whole-file no-unknowns
+  tests for each `исходники/*.hideout`, 1 Canal-hash header test,
+  3 Russian→English cross-validation tests, 7 bounds tests, 1
+  `is_art`-via-hash test for all new decorations in real exports.
+  Total test count: 140 collected (139 pass, 1 skipped — `Береговая
+  галька` Russian name not present in `исходники/`).
+
+### Changed
+- `src/hideout_art/constants.py` — `KNOWN_HASHES` grew from 28 → 46
+  entries; comments note estimated RGB where available and Russian
+  in-game names where they differ from canonical English (e.g.
+  `Long Grass` ← ru `Высокая трава`, `Sand Tussock` ← ru `Песчаный
+  кустарник`). Added `CANAL_HIDEOUT_HASH`, `CANAL_HIDEOUT_BOUNDS`,
+  `NAMED_BOUNDS` constants.
+- `src/hideout_art/cli.py` — extracted `_resolve_bounds()` helper that
+  accepts either a named shortcut (`canal`) or an explicit
+  `x_min,y_min,x_max,y_max` string. `--bounds` help text updated.
+- `src/hideout_art/img2hideout.py` — docstring of `image_to_hideout()`
+  now mentions `CANAL_HIDEOUT_BOUNDS` for the `bounds` parameter.
+- `STATUS.md` — rewritten: KI table at the top, test count updated to
+  140, hash count updated to 46, "Что улучшать дальше" trimmed to 5 items.
+- `docs/img2hideout.md` — added `--bounds canal` documentation and a
+  "Canal Hideout canvas" calibration section.
+- `examples/README.md` — added note about `--bounds canal` and the 18
+  new Canal decorations available for palette construction.
+- Version bumped to `0.2.2` in `pyproject.toml` and `__init__.py`.
+
+### Fixed
+- None (no new bugs). All previously known issues (KI-1..KI-9) remain
+  fixed; KI-2 partially improved (marble candidates added but not yet
+  RGB-calibrated).
+
 ## [0.2.1] - 2026-07-09
 
 ### Added
@@ -106,7 +170,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   with a small synthetic fixture.
 - Example palette file at `examples/palette.json`.
 
-[Unreleased]: https://github.com/vudirvp-sketch/poe2-hideout-art/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/vudirvp-sketch/poe2-hideout-art/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.2
 [0.2.1]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.1
 [0.2.0]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.0
 [0.1.0]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.1.0

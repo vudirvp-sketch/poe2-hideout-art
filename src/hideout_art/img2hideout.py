@@ -222,6 +222,9 @@ def image_to_hideout(
     bounds : (x_min, y_min, x_max, y_max) or None
         If set, skip placements whose world (x, y) falls outside this
         rectangle. Useful when the user has «outlined» the hideout.
+        For Canal Hideout, use the pre-calibrated ``CANAL_HIDEOUT_BOUNDS``
+        constant from ``hideout_art.constants`` (derived from a user
+        outline of 11 Cordilina placements around the playable perimeter).
     resample : str
         PIL downscaling filter: ``"nearest"``, ``"bilinear"``,
         ``"bicubic"`` (default), ``"lanczos"``. For pixel-art sources
