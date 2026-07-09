@@ -1,0 +1,562 @@
+[
+  {
+    "file": "Cat on the windowsill-1.0.hideout",
+    "hideout_name": "藏身處 - 絢麗星雲",
+    "hideout_hash": 35022,
+    "n_placements": 568,
+    "nn_stats": {
+      "n": 568,
+      "min": 0.0,
+      "p10": 1.0,
+      "p25": 1.0,
+      "median": 1.414,
+      "mean": 3.132,
+      "p75": 3.606,
+      "p90": 6.403,
+      "max": 61.221,
+      "stdev": 4.806
+    },
+    "grid_detection": {
+      "n_distinct_x": 137,
+      "n_distinct_y": 168,
+      "x_span": [
+        272,
+        494
+      ],
+      "y_span": [
+        153,
+        510
+      ],
+      "top_x_gap": {
+        "gap": 1,
+        "count": 105
+      },
+      "top_y_gap": {
+        "gap": 1,
+        "count": 129
+      },
+      "x_gap_diversity": 8,
+      "y_gap_diversity": 14
+    },
+    "rotation": {
+      "angle_bins_8": {
+        "0-45deg": 106,
+        "45-90deg": 69,
+        "90-135deg": 36,
+        "135-180deg": 38,
+        "180-225deg": 45,
+        "225-270deg": 65,
+        "270-315deg": 101,
+        "315-360deg": 108
+      },
+      "spatial_correlation": {
+        "observed_same_bin_rate": 0.2328,
+        "expected_random_rate": 0.125,
+        "moran_proxy": 0.1232,
+        "interpretation": "weakly_correlated"
+      },
+      "top_5_angles_deg": [
+        {
+          "deg": 0.0,
+          "count": 22
+        },
+        {
+          "deg": 315.0,
+          "count": 18
+        },
+        {
+          "deg": 281.26,
+          "count": 16
+        },
+        {
+          "deg": 225.0,
+          "count": 15
+        },
+        {
+          "deg": 303.75,
+          "count": 15
+        }
+      ]
+    }
+  },
+  {
+    "file": "CatGirl 1-1.0.hideout",
+    "hideout_name": "藏身處 - 羅雀後街",
+    "hideout_hash": 62635,
+    "n_placements": 624,
+    "nn_stats": {
+      "n": 624,
+      "min": 0.0,
+      "p10": 0.0,
+      "p25": 1.0,
+      "median": 1.414,
+      "mean": 1.905,
+      "p75": 2.236,
+      "p90": 3.162,
+      "max": 36.688,
+      "stdev": 2.733
+    },
+    "grid_detection": {
+      "n_distinct_x": 101,
+      "n_distinct_y": 99,
+      "x_span": [
+        260,
+        372
+      ],
+      "y_span": [
+        204,
+        441
+      ],
+      "top_x_gap": {
+        "gap": 1,
+        "count": 90
+      },
+      "top_y_gap": {
+        "gap": 1,
+        "count": 81
+      },
+      "x_gap_diversity": 3,
+      "y_gap_diversity": 7
+    },
+    "rotation": {
+      "angle_bins_8": {
+        "0-45deg": 133,
+        "45-90deg": 53,
+        "90-135deg": 49,
+        "135-180deg": 43,
+        "180-225deg": 70,
+        "225-270deg": 51,
+        "270-315deg": 93,
+        "315-360deg": 132
+      },
+      "spatial_correlation": {
+        "observed_same_bin_rate": 0.1863,
+        "expected_random_rate": 0.125,
+        "moran_proxy": 0.0701,
+        "interpretation": "weakly_correlated"
+      },
+      "top_5_angles_deg": [
+        {
+          "deg": 0.0,
+          "count": 34
+        },
+        {
+          "deg": 326.24,
+          "count": 22
+        },
+        {
+          "deg": 22.49,
+          "count": 21
+        },
+        {
+          "deg": 315.0,
+          "count": 21
+        },
+        {
+          "deg": 337.5,
+          "count": 19
+        }
+      ]
+    }
+  },
+  {
+    "file": "Nayuta-1.0.hideout",
+    "hideout_name": "藏身處 - 羅雀後街",
+    "hideout_hash": 62635,
+    "n_placements": 743,
+    "nn_stats": {
+      "n": 743,
+      "min": 0.0,
+      "p10": 1.0,
+      "p25": 1.0,
+      "median": 2.0,
+      "mean": 2.579,
+      "p75": 2.828,
+      "p90": 4.472,
+      "max": 30.414,
+      "stdev": 3.249
+    },
+    "grid_detection": {
+      "n_distinct_x": 115,
+      "n_distinct_y": 129,
+      "x_span": [
+        252,
+        450
+      ],
+      "y_span": [
+        183,
+        437
+      ],
+      "top_x_gap": {
+        "gap": 1,
+        "count": 103
+      },
+      "top_y_gap": {
+        "gap": 1,
+        "count": 110
+      },
+      "x_gap_diversity": 6,
+      "y_gap_diversity": 11
+    },
+    "rotation": {
+      "angle_bins_8": {
+        "0-45deg": 61,
+        "45-90deg": 56,
+        "90-135deg": 88,
+        "135-180deg": 93,
+        "180-225deg": 80,
+        "225-270deg": 63,
+        "270-315deg": 136,
+        "315-360deg": 166
+      },
+      "spatial_correlation": {
+        "observed_same_bin_rate": 0.2614,
+        "expected_random_rate": 0.125,
+        "moran_proxy": 0.1559,
+        "interpretation": "weakly_correlated"
+      },
+      "top_5_angles_deg": [
+        {
+          "deg": 315.01,
+          "count": 20
+        },
+        {
+          "deg": 0.0,
+          "count": 14
+        },
+        {
+          "deg": 213.75,
+          "count": 13
+        },
+        {
+          "deg": 315.0,
+          "count": 9
+        },
+        {
+          "deg": 99.27,
+          "count": 5
+        }
+      ]
+    }
+  },
+  {
+    "file": "Rent girlfriend-1.0.hideout",
+    "hideout_name": "藏身處 - 羅雀後街",
+    "hideout_hash": 62635,
+    "n_placements": 764,
+    "nn_stats": {
+      "n": 764,
+      "min": 0.0,
+      "p10": 0.0,
+      "p25": 1.0,
+      "median": 1.414,
+      "mean": 1.998,
+      "p75": 2.0,
+      "p90": 3.162,
+      "max": 82.638,
+      "stdev": 4.063
+    },
+    "grid_detection": {
+      "n_distinct_x": 106,
+      "n_distinct_y": 121,
+      "x_span": [
+        254,
+        450
+      ],
+      "y_span": [
+        183,
+        440
+      ],
+      "top_x_gap": {
+        "gap": 1,
+        "count": 91
+      },
+      "top_y_gap": {
+        "gap": 1,
+        "count": 107
+      },
+      "x_gap_diversity": 9,
+      "y_gap_diversity": 10
+    },
+    "rotation": {
+      "angle_bins_8": {
+        "0-45deg": 137,
+        "45-90deg": 46,
+        "90-135deg": 50,
+        "135-180deg": 66,
+        "180-225deg": 52,
+        "225-270deg": 93,
+        "270-315deg": 137,
+        "315-360deg": 183
+      },
+      "spatial_correlation": {
+        "observed_same_bin_rate": 0.2248,
+        "expected_random_rate": 0.125,
+        "moran_proxy": 0.1141,
+        "interpretation": "weakly_correlated"
+      },
+      "top_5_angles_deg": [
+        {
+          "deg": 0.0,
+          "count": 48
+        },
+        {
+          "deg": 348.75,
+          "count": 39
+        },
+        {
+          "deg": 315.0,
+          "count": 25
+        },
+        {
+          "deg": 337.5,
+          "count": 24
+        },
+        {
+          "deg": 303.75,
+          "count": 23
+        }
+      ]
+    }
+  },
+  {
+    "file": "Why doesnt Pikachu like Poke Ball -1.0.hideout",
+    "hideout_name": "藏身處 - 羅雀後街",
+    "hideout_hash": 62635,
+    "n_placements": 592,
+    "nn_stats": {
+      "n": 592,
+      "min": 0.0,
+      "p10": 1.0,
+      "p25": 1.0,
+      "median": 2.0,
+      "mean": 2.608,
+      "p75": 2.236,
+      "p90": 4.123,
+      "max": 55.082,
+      "stdev": 4.201
+    },
+    "grid_detection": {
+      "n_distinct_x": 108,
+      "n_distinct_y": 123,
+      "x_span": [
+        254,
+        450
+      ],
+      "y_span": [
+        183,
+        441
+      ],
+      "top_x_gap": {
+        "gap": 1,
+        "count": 95
+      },
+      "top_y_gap": {
+        "gap": 1,
+        "count": 99
+      },
+      "x_gap_diversity": 5,
+      "y_gap_diversity": 12
+    },
+    "rotation": {
+      "angle_bins_8": {
+        "0-45deg": 249,
+        "45-90deg": 52,
+        "90-135deg": 34,
+        "135-180deg": 27,
+        "180-225deg": 25,
+        "225-270deg": 62,
+        "270-315deg": 61,
+        "315-360deg": 82
+      },
+      "spatial_correlation": {
+        "observed_same_bin_rate": 0.3138,
+        "expected_random_rate": 0.125,
+        "moran_proxy": 0.2157,
+        "interpretation": "spatially_correlated"
+      },
+      "top_5_angles_deg": [
+        {
+          "deg": 0.0,
+          "count": 134
+        },
+        {
+          "deg": 43.17,
+          "count": 26
+        },
+        {
+          "deg": 16.8,
+          "count": 15
+        },
+        {
+          "deg": 247.5,
+          "count": 11
+        },
+        {
+          "deg": 22.49,
+          "count": 10
+        }
+      ]
+    }
+  },
+  {
+    "file": "cross ones leg-1.0.hideout",
+    "hideout_name": "藏身處 - 羅雀後街",
+    "hideout_hash": 62635,
+    "n_placements": 672,
+    "nn_stats": {
+      "n": 672,
+      "min": 0.0,
+      "p10": 0.0,
+      "p25": 1.0,
+      "median": 1.414,
+      "mean": 2.009,
+      "p75": 2.236,
+      "p90": 3.606,
+      "max": 44.283,
+      "stdev": 2.794
+    },
+    "grid_detection": {
+      "n_distinct_x": 107,
+      "n_distinct_y": 120,
+      "x_span": [
+        251,
+        400
+      ],
+      "y_span": [
+        204,
+        433
+      ],
+      "top_x_gap": {
+        "gap": 1,
+        "count": 102
+      },
+      "top_y_gap": {
+        "gap": 1,
+        "count": 105
+      },
+      "x_gap_diversity": 4,
+      "y_gap_diversity": 10
+    },
+    "rotation": {
+      "angle_bins_8": {
+        "0-45deg": 95,
+        "45-90deg": 63,
+        "90-135deg": 70,
+        "135-180deg": 45,
+        "180-225deg": 85,
+        "225-270deg": 78,
+        "270-315deg": 111,
+        "315-360deg": 125
+      },
+      "spatial_correlation": {
+        "observed_same_bin_rate": 0.2671,
+        "expected_random_rate": 0.125,
+        "moran_proxy": 0.1624,
+        "interpretation": "weakly_correlated"
+      },
+      "top_5_angles_deg": [
+        {
+          "deg": 315.0,
+          "count": 18
+        },
+        {
+          "deg": 303.75,
+          "count": 9
+        },
+        {
+          "deg": 0.0,
+          "count": 8
+        },
+        {
+          "deg": 262.26,
+          "count": 7
+        },
+        {
+          "deg": 135.01,
+          "count": 6
+        }
+      ]
+    }
+  },
+  {
+    "file": "poe2.hideout",
+    "hideout_name": "藏身處：運河",
+    "hideout_hash": 60415,
+    "n_placements": 450,
+    "nn_stats": {
+      "n": 450,
+      "min": 0.0,
+      "p10": 1.0,
+      "p25": 1.414,
+      "median": 2.828,
+      "mean": 3.602,
+      "p75": 5.0,
+      "p90": 6.083,
+      "max": 47.011,
+      "stdev": 4.031
+    },
+    "grid_detection": {
+      "n_distinct_x": 132,
+      "n_distinct_y": 127,
+      "x_span": [
+        614,
+        849
+      ],
+      "y_span": [
+        568,
+        826
+      ],
+      "top_x_gap": {
+        "gap": 1,
+        "count": 107
+      },
+      "top_y_gap": {
+        "gap": 1,
+        "count": 104
+      },
+      "x_gap_diversity": 9,
+      "y_gap_diversity": 11
+    },
+    "rotation": {
+      "angle_bins_8": {
+        "0-45deg": 57,
+        "45-90deg": 36,
+        "90-135deg": 18,
+        "135-180deg": 26,
+        "180-225deg": 66,
+        "225-270deg": 65,
+        "270-315deg": 106,
+        "315-360deg": 76
+      },
+      "spatial_correlation": {
+        "observed_same_bin_rate": 0.3917,
+        "expected_random_rate": 0.125,
+        "moran_proxy": 0.3048,
+        "interpretation": "spatially_correlated"
+      },
+      "top_5_angles_deg": [
+        {
+          "deg": 311.58,
+          "count": 48
+        },
+        {
+          "deg": 221.28,
+          "count": 15
+        },
+        {
+          "deg": 315.0,
+          "count": 12
+        },
+        {
+          "deg": 250.29,
+          "count": 10
+        },
+        {
+          "deg": 135.39,
+          "count": 7
+        }
+      ]
+    }
+  }
+]

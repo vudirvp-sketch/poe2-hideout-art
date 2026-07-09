@@ -1,0 +1,4781 @@
+[
+  {
+    "file": "Cat on the windowsill-1.0.hideout",
+    "hideout_name": "藏身處 - 絢麗星雲",
+    "n_placements": 568,
+    "types": [
+      {
+        "name": "裝飾物：飄雪",
+        "count": 126,
+        "share_pct": 22.2,
+        "nn_within_type": {
+          "n": 126,
+          "min": 0.0,
+          "median": 2.236,
+          "mean": 2.461,
+          "p90": 4.472,
+          "max": 6.083
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "stroke",
+        "centroid": {
+          "x": 361.1,
+          "y": 397.1
+        }
+      },
+      {
+        "name": "裝飾物：火山卵石",
+        "count": 94,
+        "share_pct": 16.5,
+        "nn_within_type": {
+          "n": 94,
+          "min": 0.0,
+          "median": 1.414,
+          "mean": 1.604,
+          "p90": 2.828,
+          "max": 5.657
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "mixed",
+        "centroid": {
+          "x": 359.0,
+          "y": 394.9
+        }
+      },
+      {
+        "name": "大理石板",
+        "count": 57,
+        "share_pct": 10.0,
+        "nn_within_type": {
+          "n": 57,
+          "min": 1.0,
+          "median": 4.472,
+          "mean": 5.28,
+          "p90": 10.0,
+          "max": 13.454
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "stroke",
+        "centroid": {
+          "x": 345.8,
+          "y": 433.8
+        }
+      },
+      {
+        "name": "裝飾物：寶石袋",
+        "count": 49,
+        "share_pct": 8.6,
+        "nn_within_type": {
+          "n": 49,
+          "min": 0.0,
+          "median": 1.0,
+          "mean": 1.414,
+          "p90": 2.828,
+          "max": 4.472
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 355.5,
+          "y": 389.5
+        }
+      },
+      {
+        "name": "藍色光束",
+        "count": 45,
+        "share_pct": 7.9,
+        "nn_within_type": {
+          "n": 45,
+          "min": 3.0,
+          "median": 6.325,
+          "mean": 6.54,
+          "p90": 9.487,
+          "max": 12.728
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 354.3,
+          "y": 398.0
+        }
+      },
+      {
+        "name": "木梁",
+        "count": 32,
+        "share_pct": 5.6,
+        "nn_within_type": {
+          "n": 32,
+          "min": 1.414,
+          "median": 3.0,
+          "mean": 3.994,
+          "p90": 7.616,
+          "max": 8.602
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 342.4,
+          "y": 438.1
+        }
+      },
+      {
+        "name": "裝飾物：廢棄教堂",
+        "count": 28,
+        "share_pct": 4.9,
+        "nn_within_type": {
+          "n": 28,
+          "min": 0.0,
+          "median": 2.236,
+          "mean": 2.799,
+          "p90": 4.472,
+          "max": 5.385
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 323.8,
+          "y": 446.0
+        }
+      },
+      {
+        "name": "營地地毯",
+        "count": 21,
+        "share_pct": 3.7,
+        "nn_within_type": {
+          "n": 21,
+          "min": 0.0,
+          "median": 1.0,
+          "mean": 1.085,
+          "p90": 1.414,
+          "max": 2.236
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 365.4,
+          "y": 348.8
+        }
+      },
+      {
+        "name": "裝飾物：奧瑞亞砌磚",
+        "count": 19,
+        "share_pct": 3.3,
+        "nn_within_type": {
+          "n": 19,
+          "min": 1.0,
+          "median": 5.099,
+          "mean": 4.461,
+          "p90": 6.708,
+          "max": 9.22
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 337.5,
+          "y": 361.8
+        }
+      },
+      {
+        "name": "裝飾物：床單",
+        "count": 13,
+        "share_pct": 2.3,
+        "nn_within_type": {
+          "n": 13,
+          "min": 4.243,
+          "median": 6.0,
+          "mean": 5.933,
+          "p90": 8.0,
+          "max": 9.055
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 421.2,
+          "y": 366.1
+        }
+      },
+      {
+        "name": "聖墓",
+        "count": 11,
+        "share_pct": 1.9,
+        "nn_within_type": {
+          "n": 11,
+          "min": 8.602,
+          "median": 17.088,
+          "mean": 16.366,
+          "p90": 21.213,
+          "max": 21.213
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 329.7,
+          "y": 410.6
+        }
+      },
+      {
+        "name": "大理石板堆",
+        "count": 10,
+        "share_pct": 1.8,
+        "nn_within_type": {
+          "n": 10,
+          "min": 3.606,
+          "median": 6.325,
+          "mean": 6.693,
+          "p90": 12.207,
+          "max": 12.207
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 440.9,
+          "y": 346.6
+        }
+      },
+      {
+        "name": "裝飾物：原始碎片",
+        "count": 10,
+        "share_pct": 1.8,
+        "nn_within_type": {
+          "n": 10,
+          "min": 0.0,
+          "median": 0.5,
+          "mean": 4.505,
+          "p90": 40.224,
+          "max": 40.224
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 349.6,
+          "y": 380.4
+        }
+      },
+      {
+        "name": "裝飾物：山麓殘礫",
+        "count": 9,
+        "share_pct": 1.6,
+        "nn_within_type": {
+          "n": 9,
+          "min": 8.602,
+          "median": 11.662,
+          "mean": 11.194,
+          "p90": 13.892,
+          "max": 13.892
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 338.3,
+          "y": 437.4
+        }
+      },
+      {
+        "name": "裝飾物：虛空地面",
+        "count": 6,
+        "share_pct": 1.1,
+        "nn_within_type": {
+          "n": 6,
+          "min": 22.136,
+          "median": 30.48,
+          "mean": 30.452,
+          "p90": 46.239,
+          "max": 46.239
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 354.8,
+          "y": 427.8
+        }
+      },
+      {
+        "name": "鋼骨",
+        "count": 6,
+        "share_pct": 1.1,
+        "nn_within_type": {
+          "n": 6,
+          "min": 2.0,
+          "median": 3.606,
+          "mean": 4.617,
+          "p90": 8.246,
+          "max": 8.246
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 342.7,
+          "y": 429.8
+        }
+      },
+      {
+        "name": "風吹落葉",
+        "count": 4,
+        "share_pct": 0.7,
+        "nn_within_type": {
+          "n": 4,
+          "min": 48.27,
+          "median": 48.389,
+          "mean": 48.389,
+          "p90": 48.508,
+          "max": 48.508
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 392.5,
+          "y": 392.2
+        }
+      },
+      {
+        "name": "棕櫚樹",
+        "count": 2,
+        "share_pct": 0.4,
+        "nn_within_type": {
+          "n": 2,
+          "min": 3.606,
+          "median": 3.606,
+          "mean": 3.606,
+          "p90": 3.606,
+          "max": 3.606
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 368.0,
+          "y": 355.5
+        }
+      },
+      {
+        "name": "裝飾物：冰湖",
+        "count": 2,
+        "share_pct": 0.4,
+        "nn_within_type": {
+          "n": 2,
+          "min": 2.236,
+          "median": 2.236,
+          "mean": 2.236,
+          "p90": 2.236,
+          "max": 2.236
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 369.5,
+          "y": 407.0
+        }
+      },
+      {
+        "name": "裝飾物：焚毀樹枝",
+        "count": 2,
+        "share_pct": 0.4,
+        "nn_within_type": {
+          "n": 2,
+          "min": 1.0,
+          "median": 1.0,
+          "mean": 1.0,
+          "p90": 1.0,
+          "max": 1.0
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 333.0,
+          "y": 381.5
+        }
+      },
+      {
+        "name": "倉庫",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 446.0,
+          "y": 316.0
+        }
+      },
+      {
+        "name": "公會倉庫",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 276.0,
+          "y": 153.0
+        }
+      },
+      {
+        "name": "傳送點",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 364.0,
+          "y": 391.0
+        }
+      },
+      {
+        "name": "工藝台",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 328.0,
+          "y": 215.0
+        }
+      },
+      {
+        "name": "黃金地球儀",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 344.0,
+          "y": 216.0
+        }
+      },
+      {
+        "name": "裝飾物：園藝憩站",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 174.0
+        }
+      },
+      {
+        "name": "裝飾物：劫盜鎖櫃",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 290.0,
+          "y": 180.0
+        }
+      },
+      {
+        "name": "裝飾物：探險鎖櫃",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 286.0,
+          "y": 195.0
+        }
+      },
+      {
+        "name": "埃哈",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 430.0,
+          "y": 353.0
+        }
+      },
+      {
+        "name": "修女卡西亞",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 443.0,
+          "y": 352.0
+        }
+      },
+      {
+        "name": "商人．羅格",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 272.0,
+          "y": 199.0
+        }
+      },
+      {
+        "name": "送葬者阿里摩爾",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 346.0,
+          "y": 266.0
+        }
+      },
+      {
+        "name": "艾瓦",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 470.0,
+          "y": 338.0
+        }
+      },
+      {
+        "name": "赫蓮娜",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 492.0,
+          "y": 352.0
+        }
+      },
+      {
+        "name": "尼科",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 494.0,
+          "y": 278.0
+        }
+      },
+      {
+        "name": "瓊恩",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 339.0,
+          "y": 211.0
+        }
+      },
+      {
+        "name": "基拉克",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 287.0,
+          "y": 238.0
+        }
+      },
+      {
+        "name": "戰鬥詩人．丹尼格",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 340.0,
+          "y": 155.0
+        }
+      },
+      {
+        "name": "賭徒．關南",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 274.0,
+          "y": 174.0
+        }
+      },
+      {
+        "name": "討價還價．圖貞",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 274.0,
+          "y": 186.0
+        }
+      },
+      {
+        "name": "最終之死",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 385.0,
+          "y": 275.0
+        }
+      },
+      {
+        "name": "莉莉羅斯",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 289.0,
+          "y": 224.0
+        }
+      }
+    ]
+  },
+  {
+    "file": "CatGirl 1-1.0.hideout",
+    "hideout_name": "藏身處 - 羅雀後街",
+    "n_placements": 624,
+    "types": [
+      {
+        "name": "裝飾物：火山卵石",
+        "count": 286,
+        "share_pct": 45.8,
+        "nn_within_type": {
+          "n": 286,
+          "min": 0.0,
+          "median": 1.414,
+          "mean": 1.41,
+          "p90": 2.236,
+          "max": 5.0
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "fill",
+        "centroid": {
+          "x": 311.1,
+          "y": 389.2
+        }
+      },
+      {
+        "name": "大理石板",
+        "count": 132,
+        "share_pct": 21.2,
+        "nn_within_type": {
+          "n": 132,
+          "min": 1.0,
+          "median": 3.081,
+          "mean": 3.695,
+          "p90": 6.708,
+          "max": 12.083
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "stroke",
+        "centroid": {
+          "x": 309.6,
+          "y": 386.9
+        }
+      },
+      {
+        "name": "營地地毯",
+        "count": 131,
+        "share_pct": 21.0,
+        "nn_within_type": {
+          "n": 131,
+          "min": 0.0,
+          "median": 2.236,
+          "mean": 2.483,
+          "p90": 4.0,
+          "max": 5.0
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "stroke",
+        "centroid": {
+          "x": 330.7,
+          "y": 407.9
+        }
+      },
+      {
+        "name": "裝飾物：冰湖",
+        "count": 27,
+        "share_pct": 4.3,
+        "nn_within_type": {
+          "n": 27,
+          "min": 0.0,
+          "median": 1.414,
+          "mean": 2.117,
+          "p90": 5.0,
+          "max": 6.708
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 307.7,
+          "y": 382.0
+        }
+      },
+      {
+        "name": "裝飾物：寶石袋",
+        "count": 15,
+        "share_pct": 2.4,
+        "nn_within_type": {
+          "n": 15,
+          "min": 1.0,
+          "median": 1.0,
+          "mean": 1.315,
+          "p90": 2.236,
+          "max": 2.828
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 318.5,
+          "y": 396.1
+        }
+      },
+      {
+        "name": "纏絲枯骨",
+        "count": 4,
+        "share_pct": 0.6,
+        "nn_within_type": {
+          "n": 4,
+          "min": 1.414,
+          "median": 1.825,
+          "mean": 1.825,
+          "p90": 2.236,
+          "max": 2.236
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 337.2,
+          "y": 415.5
+        }
+      },
+      {
+        "name": "裝飾物：飄雪",
+        "count": 4,
+        "share_pct": 0.6,
+        "nn_within_type": {
+          "n": 4,
+          "min": 3.606,
+          "median": 3.803,
+          "mean": 3.803,
+          "p90": 4.0,
+          "max": 4.0
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 319.0,
+          "y": 395.2
+        }
+      },
+      {
+        "name": "裝飾物：土著地面",
+        "count": 2,
+        "share_pct": 0.3,
+        "nn_within_type": {
+          "n": 2,
+          "min": 13.601,
+          "median": 13.601,
+          "mean": 13.601,
+          "p90": 13.601,
+          "max": 13.601
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 274.5,
+          "y": 348.0
+        }
+      },
+      {
+        "name": "倉庫",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 337.0,
+          "y": 272.0
+        }
+      },
+      {
+        "name": "公會倉庫",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 300.0,
+          "y": 275.0
+        }
+      },
+      {
+        "name": "傳送點",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 295.0,
+          "y": 400.0
+        }
+      },
+      {
+        "name": "工藝台",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 327.0,
+          "y": 223.0
+        }
+      },
+      {
+        "name": "黃金地球儀",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 335.0,
+          "y": 264.0
+        }
+      },
+      {
+        "name": "裝飾物：園藝憩站",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 289.0,
+          "y": 204.0
+        }
+      },
+      {
+        "name": "裝飾物：劫盜鎖櫃",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 336.0,
+          "y": 236.0
+        }
+      },
+      {
+        "name": "裝飾物：探險鎖櫃",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 348.0,
+          "y": 244.0
+        }
+      },
+      {
+        "name": "赫蓮娜",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 281.0,
+          "y": 233.0
+        }
+      },
+      {
+        "name": "尼科",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "埃哈",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 306.0,
+          "y": 372.0
+        }
+      },
+      {
+        "name": "艾瓦",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 306.0,
+          "y": 372.0
+        }
+      },
+      {
+        "name": "瓊恩",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 306.0,
+          "y": 372.0
+        }
+      },
+      {
+        "name": "戰鬥詩人．丹尼格",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 306.0,
+          "y": 372.0
+        }
+      },
+      {
+        "name": "討價還價．圖貞",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 306.0,
+          "y": 372.0
+        }
+      },
+      {
+        "name": "莉莉羅斯",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 306.0,
+          "y": 372.0
+        }
+      },
+      {
+        "name": "塔恩．奧克塔維斯",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 306.0,
+          "y": 372.0
+        }
+      },
+      {
+        "name": "基拉克",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 306.0,
+          "y": 372.0
+        }
+      },
+      {
+        "name": "賭徒．關南",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "商人．羅格",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "修女卡西亞",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "最終之死",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "裝飾物：球莖血肉",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 307.0,
+          "y": 384.0
+        }
+      }
+    ]
+  },
+  {
+    "file": "Nayuta-1.0.hideout",
+    "hideout_name": "藏身處 - 羅雀後街",
+    "n_placements": 743,
+    "types": [
+      {
+        "name": "裝飾物：火山卵石",
+        "count": 351,
+        "share_pct": 47.2,
+        "nn_within_type": {
+          "n": 351,
+          "min": 0.0,
+          "median": 2.0,
+          "mean": 1.979,
+          "p90": 3.162,
+          "max": 7.211
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "fill",
+        "centroid": {
+          "x": 311.6,
+          "y": 381.2
+        }
+      },
+      {
+        "name": "裝飾物：飄雪",
+        "count": 140,
+        "share_pct": 18.8,
+        "nn_within_type": {
+          "n": 140,
+          "min": 1.0,
+          "median": 4.243,
+          "mean": 4.557,
+          "p90": 8.062,
+          "max": 13.038
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "stroke",
+        "centroid": {
+          "x": 315.1,
+          "y": 382.2
+        }
+      },
+      {
+        "name": "裝飾物：廢棄教堂",
+        "count": 73,
+        "share_pct": 9.8,
+        "nn_within_type": {
+          "n": 73,
+          "min": 1.414,
+          "median": 4.472,
+          "mean": 4.927,
+          "p90": 7.81,
+          "max": 9.899
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 312.5,
+          "y": 377.8
+        }
+      },
+      {
+        "name": "大理石板",
+        "count": 48,
+        "share_pct": 6.5,
+        "nn_within_type": {
+          "n": 48,
+          "min": 3.162,
+          "median": 7.0,
+          "mean": 6.882,
+          "p90": 9.899,
+          "max": 13.038
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 319.1,
+          "y": 383.3
+        }
+      },
+      {
+        "name": "裝飾物：粗麻布袋",
+        "count": 30,
+        "share_pct": 4.0,
+        "nn_within_type": {
+          "n": 30,
+          "min": 1.414,
+          "median": 2.236,
+          "mean": 3.114,
+          "p90": 5.831,
+          "max": 9.434
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 280.6,
+          "y": 361.9
+        }
+      },
+      {
+        "name": "裝飾物：冰湖",
+        "count": 14,
+        "share_pct": 1.9,
+        "nn_within_type": {
+          "n": 14,
+          "min": 1.0,
+          "median": 5.894,
+          "mean": 6.08,
+          "p90": 10.63,
+          "max": 11.402
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 302.4,
+          "y": 389.6
+        }
+      },
+      {
+        "name": "裝飾物：布袋",
+        "count": 13,
+        "share_pct": 1.7,
+        "nn_within_type": {
+          "n": 13,
+          "min": 1.0,
+          "median": 2.236,
+          "mean": 2.073,
+          "p90": 2.236,
+          "max": 2.828
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 302.8,
+          "y": 340.7
+        }
+      },
+      {
+        "name": "裝飾物：原始牌匾",
+        "count": 12,
+        "share_pct": 1.6,
+        "nn_within_type": {
+          "n": 12,
+          "min": 1.414,
+          "median": 2.118,
+          "mean": 2.25,
+          "p90": 3.606,
+          "max": 3.606
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 270.8,
+          "y": 377.2
+        }
+      },
+      {
+        "name": "裝飾物：原始碎片",
+        "count": 11,
+        "share_pct": 1.5,
+        "nn_within_type": {
+          "n": 11,
+          "min": 1.0,
+          "median": 2.0,
+          "mean": 1.733,
+          "p90": 2.236,
+          "max": 2.828
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 276.6,
+          "y": 397.5
+        }
+      },
+      {
+        "name": "彎曲鐵管",
+        "count": 4,
+        "share_pct": 0.5,
+        "nn_within_type": {
+          "n": 4,
+          "min": 0.0,
+          "median": 0.707,
+          "mean": 0.707,
+          "p90": 1.414,
+          "max": 1.414
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 292.8,
+          "y": 364.2
+        }
+      },
+      {
+        "name": "頭盔架",
+        "count": 3,
+        "share_pct": 0.4,
+        "nn_within_type": {
+          "n": 3,
+          "min": 1.0,
+          "median": 1.0,
+          "mean": 9.642,
+          "p90": 26.926,
+          "max": 26.926
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 313.0,
+          "y": 391.7
+        }
+      },
+      {
+        "name": "裝飾物：葬骨飾板",
+        "count": 3,
+        "share_pct": 0.4,
+        "nn_within_type": {
+          "n": 3,
+          "min": 3.606,
+          "median": 3.606,
+          "mean": 5.737,
+          "p90": 10.0,
+          "max": 10.0
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 269.0,
+          "y": 341.0
+        }
+      },
+      {
+        "name": "裝飾物：碧藍礦石",
+        "count": 3,
+        "share_pct": 0.4,
+        "nn_within_type": {
+          "n": 3,
+          "min": 22.361,
+          "median": 22.361,
+          "mean": 26.284,
+          "p90": 34.132,
+          "max": 34.132
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 308.3,
+          "y": 369.3
+        }
+      },
+      {
+        "name": "纏絲枯骨",
+        "count": 2,
+        "share_pct": 0.3,
+        "nn_within_type": {
+          "n": 2,
+          "min": 1.0,
+          "median": 1.0,
+          "mean": 1.0,
+          "p90": 1.0,
+          "max": 1.0
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 294.5,
+          "y": 369.0
+        }
+      },
+      {
+        "name": "裝飾物：土著地面",
+        "count": 2,
+        "share_pct": 0.3,
+        "nn_within_type": {
+          "n": 2,
+          "min": 26.87,
+          "median": 26.87,
+          "mean": 26.87,
+          "p90": 26.87,
+          "max": 26.87
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 265.5,
+          "y": 336.5
+        }
+      },
+      {
+        "name": "新鮮人體器官",
+        "count": 2,
+        "share_pct": 0.3,
+        "nn_within_type": {
+          "n": 2,
+          "min": 1.0,
+          "median": 1.0,
+          "mean": 1.0,
+          "p90": 1.0,
+          "max": 1.0
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 319.5,
+          "y": 386.0
+        }
+      },
+      {
+        "name": "磨損鐵砧",
+        "count": 2,
+        "share_pct": 0.3,
+        "nn_within_type": {
+          "n": 2,
+          "min": 3.0,
+          "median": 3.0,
+          "mean": 3.0,
+          "p90": 3.0,
+          "max": 3.0
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 254.5,
+          "y": 355.0
+        }
+      },
+      {
+        "name": "倉庫",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 363.0,
+          "y": 303.0
+        }
+      },
+      {
+        "name": "公會倉庫",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 256.0,
+          "y": 183.0
+        }
+      },
+      {
+        "name": "傳送點",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 302.0,
+          "y": 376.0
+        }
+      },
+      {
+        "name": "工藝台",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 303.0,
+          "y": 272.0
+        }
+      },
+      {
+        "name": "地圖裝置",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 324.0,
+          "y": 246.0
+        }
+      },
+      {
+        "name": "裝飾物：園藝憩站",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 289.0,
+          "y": 204.0
+        }
+      },
+      {
+        "name": "裝飾物：劫盜鎖櫃",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 336.0,
+          "y": 236.0
+        }
+      },
+      {
+        "name": "裝飾物：探險鎖櫃",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 348.0,
+          "y": 244.0
+        }
+      },
+      {
+        "name": "裝飾物：聖域鎖櫃",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 325.0,
+          "y": 213.0
+        }
+      },
+      {
+        "name": "重組裝置",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 252.0,
+          "y": 216.0
+        }
+      },
+      {
+        "name": "符文之結鎖櫃",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 304.0,
+          "y": 240.0
+        }
+      },
+      {
+        "name": "修女卡西亞",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 423.0,
+          "y": 382.0
+        }
+      },
+      {
+        "name": "伊貢．凱瑟里斯",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 347.0,
+          "y": 247.0
+        }
+      },
+      {
+        "name": "赫蓮娜",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 292.0,
+          "y": 230.0
+        }
+      },
+      {
+        "name": "尼科",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 397.0,
+          "y": 383.0
+        }
+      },
+      {
+        "name": "埃哈",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 410.0,
+          "y": 383.0
+        }
+      },
+      {
+        "name": "艾瓦",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 450.0,
+          "y": 368.0
+        }
+      },
+      {
+        "name": "瓊恩",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 288.0,
+          "y": 291.0
+        }
+      },
+      {
+        "name": "戰鬥詩人．丹尼格",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "討價還價．圖貞",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "莉莉羅斯",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 283.0,
+          "y": 251.0
+        }
+      },
+      {
+        "name": "基拉克",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 267.0,
+          "y": 268.0
+        }
+      },
+      {
+        "name": "帝王之手．喬罕",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 340.0,
+          "y": 216.0
+        }
+      },
+      {
+        "name": "資本家．弗斯特",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 268.0,
+          "y": 205.0
+        }
+      },
+      {
+        "name": "賭徒．關南",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "商人．羅格",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "最終之死",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "初始看守者．艾里絲",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 306.0,
+          "y": 369.0
+        }
+      },
+      {
+        "name": "裝飾物：遺址堆",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 298.0,
+          "y": 372.0
+        }
+      },
+      {
+        "name": "裝飾物：香爐",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 291.0,
+          "y": 362.0
+        }
+      }
+    ]
+  },
+  {
+    "file": "Rent girlfriend-1.0.hideout",
+    "hideout_name": "藏身處 - 羅雀後街",
+    "n_placements": 764,
+    "types": [
+      {
+        "name": "裝飾物：火山卵石",
+        "count": 488,
+        "share_pct": 63.9,
+        "nn_within_type": {
+          "n": 488,
+          "min": 0.0,
+          "median": 1.414,
+          "mean": 1.492,
+          "p90": 2.828,
+          "max": 4.243
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "fill",
+        "centroid": {
+          "x": 300.0,
+          "y": 374.9
+        }
+      },
+      {
+        "name": "大理石板",
+        "count": 131,
+        "share_pct": 17.1,
+        "nn_within_type": {
+          "n": 131,
+          "min": 0.0,
+          "median": 4.123,
+          "mean": 4.943,
+          "p90": 10.0,
+          "max": 13.416
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "stroke",
+        "centroid": {
+          "x": 308.8,
+          "y": 369.6
+        }
+      },
+      {
+        "name": "裝飾物：飄雪",
+        "count": 113,
+        "share_pct": 14.8,
+        "nn_within_type": {
+          "n": 113,
+          "min": 0.0,
+          "median": 2.236,
+          "mean": 2.382,
+          "p90": 4.123,
+          "max": 6.708
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "stroke",
+        "centroid": {
+          "x": 286.9,
+          "y": 370.2
+        }
+      },
+      {
+        "name": "裝飾物：寶石袋",
+        "count": 8,
+        "share_pct": 1.0,
+        "nn_within_type": {
+          "n": 8,
+          "min": 0.0,
+          "median": 1.0,
+          "mean": 0.905,
+          "p90": 1.414,
+          "max": 1.414
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 312.1,
+          "y": 407.2
+        }
+      },
+      {
+        "name": "藍色光束",
+        "count": 4,
+        "share_pct": 0.5,
+        "nn_within_type": {
+          "n": 4,
+          "min": 0.0,
+          "median": 2.5,
+          "mean": 2.5,
+          "p90": 5.0,
+          "max": 5.0
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 293.2,
+          "y": 406.5
+        }
+      },
+      {
+        "name": "裝飾物：鐵製燭台",
+        "count": 2,
+        "share_pct": 0.3,
+        "nn_within_type": {
+          "n": 2,
+          "min": 26.0,
+          "median": 26.0,
+          "mean": 26.0,
+          "p90": 26.0,
+          "max": 26.0
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 328.0,
+          "y": 319.0
+        }
+      },
+      {
+        "name": "新鮮人體器官",
+        "count": 2,
+        "share_pct": 0.3,
+        "nn_within_type": {
+          "n": 2,
+          "min": 2.0,
+          "median": 2.0,
+          "mean": 2.0,
+          "p90": 2.0,
+          "max": 2.0
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 297.0,
+          "y": 414.0
+        }
+      },
+      {
+        "name": "倉庫",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 286.0,
+          "y": 260.0
+        }
+      },
+      {
+        "name": "公會倉庫",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 256.0,
+          "y": 183.0
+        }
+      },
+      {
+        "name": "傳送點",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 325.0,
+          "y": 286.0
+        }
+      },
+      {
+        "name": "工藝台",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 303.0,
+          "y": 272.0
+        }
+      },
+      {
+        "name": "黃金地球儀",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 324.0,
+          "y": 246.0
+        }
+      },
+      {
+        "name": "娜瓦莉",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 292.0,
+          "y": 277.0
+        }
+      },
+      {
+        "name": "埃哈",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 410.0,
+          "y": 383.0
+        }
+      },
+      {
+        "name": "艾瓦",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 450.0,
+          "y": 368.0
+        }
+      },
+      {
+        "name": "赫蓮娜",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 418.0,
+          "y": 385.0
+        }
+      },
+      {
+        "name": "尼科",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 397.0,
+          "y": 383.0
+        }
+      },
+      {
+        "name": "瓊恩",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 254.0,
+          "y": 320.0
+        }
+      },
+      {
+        "name": "札娜",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 257.0,
+          "y": 275.0
+        }
+      },
+      {
+        "name": "修女卡西亞",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 423.0,
+          "y": 382.0
+        }
+      },
+      {
+        "name": "塔恩．奧克塔維斯",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 303.0,
+          "y": 292.0
+        }
+      },
+      {
+        "name": "基拉克",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 267.0,
+          "y": 268.0
+        }
+      },
+      {
+        "name": "頭盔架",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 288.0,
+          "y": 397.0
+        }
+      }
+    ]
+  },
+  {
+    "file": "Why doesnt Pikachu like Poke Ball -1.0.hideout",
+    "hideout_name": "藏身處 - 羅雀後街",
+    "n_placements": 592,
+    "types": [
+      {
+        "name": "裝飾物：火山卵石",
+        "count": 222,
+        "share_pct": 37.5,
+        "nn_within_type": {
+          "n": 222,
+          "min": 0.0,
+          "median": 1.414,
+          "mean": 1.907,
+          "p90": 3.606,
+          "max": 6.403
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "fill",
+        "centroid": {
+          "x": 306.2,
+          "y": 375.0
+        }
+      },
+      {
+        "name": "裝飾物：鐵製燭台",
+        "count": 141,
+        "share_pct": 23.8,
+        "nn_within_type": {
+          "n": 141,
+          "min": 1.0,
+          "median": 3.606,
+          "mean": 3.318,
+          "p90": 4.472,
+          "max": 6.0
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "stroke",
+        "centroid": {
+          "x": 308.1,
+          "y": 381.9
+        }
+      },
+      {
+        "name": "大理石板",
+        "count": 100,
+        "share_pct": 16.9,
+        "nn_within_type": {
+          "n": 100,
+          "min": 0.0,
+          "median": 5.657,
+          "mean": 5.45,
+          "p90": 9.487,
+          "max": 11.662
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "stroke",
+        "centroid": {
+          "x": 306.2,
+          "y": 373.6
+        }
+      },
+      {
+        "name": "寺廟凳",
+        "count": 87,
+        "share_pct": 14.7,
+        "nn_within_type": {
+          "n": 87,
+          "min": 1.0,
+          "median": 2.236,
+          "mean": 2.427,
+          "p90": 4.123,
+          "max": 6.325
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "stroke",
+        "centroid": {
+          "x": 313.0,
+          "y": 389.9
+        }
+      },
+      {
+        "name": "裝飾物：冰湖",
+        "count": 13,
+        "share_pct": 2.2,
+        "nn_within_type": {
+          "n": 13,
+          "min": 0.0,
+          "median": 2.0,
+          "mean": 3.176,
+          "p90": 8.485,
+          "max": 12.369
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 316.2,
+          "y": 362.4
+        }
+      },
+      {
+        "name": "裝飾物：飄雪",
+        "count": 7,
+        "share_pct": 1.2,
+        "nn_within_type": {
+          "n": 7,
+          "min": 3.162,
+          "median": 5.0,
+          "mean": 4.865,
+          "p90": 7.071,
+          "max": 7.071
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 309.1,
+          "y": 373.4
+        }
+      },
+      {
+        "name": "倉庫",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 287.0,
+          "y": 228.0
+        }
+      },
+      {
+        "name": "公會倉庫",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 256.0,
+          "y": 183.0
+        }
+      },
+      {
+        "name": "傳送點",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 311.0,
+          "y": 379.0
+        }
+      },
+      {
+        "name": "工藝台",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 321.0,
+          "y": 293.0
+        }
+      },
+      {
+        "name": "黃金地球儀",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 311.0,
+          "y": 254.0
+        }
+      },
+      {
+        "name": "裝飾物：園藝憩站",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 289.0,
+          "y": 204.0
+        }
+      },
+      {
+        "name": "裝飾物：劫盜鎖櫃",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 270.0,
+          "y": 210.0
+        }
+      },
+      {
+        "name": "裝飾物：探險鎖櫃",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 266.0,
+          "y": 225.0
+        }
+      },
+      {
+        "name": "修女卡西亞",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 319.0,
+          "y": 292.0
+        }
+      },
+      {
+        "name": "赫蓮娜",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 341.0,
+          "y": 212.0
+        }
+      },
+      {
+        "name": "尼科",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 397.0,
+          "y": 383.0
+        }
+      },
+      {
+        "name": "送葬者阿里摩爾",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 326.0,
+          "y": 296.0
+        }
+      },
+      {
+        "name": "埃哈",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 316.0,
+          "y": 298.0
+        }
+      },
+      {
+        "name": "艾瓦",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 450.0,
+          "y": 368.0
+        }
+      },
+      {
+        "name": "瓊恩",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 263.0,
+          "y": 244.0
+        }
+      },
+      {
+        "name": "戰鬥詩人．丹尼格",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 345.0,
+          "y": 190.0
+        }
+      },
+      {
+        "name": "討價還價．圖貞",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 254.0,
+          "y": 216.0
+        }
+      },
+      {
+        "name": "莉莉羅斯",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 339.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "基拉克",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 300.0,
+          "y": 193.0
+        }
+      },
+      {
+        "name": "賭徒．關南",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 311.0,
+          "y": 187.0
+        }
+      },
+      {
+        "name": "商人．羅格",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 321.0,
+          "y": 184.0
+        }
+      },
+      {
+        "name": "最終之死",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 365.0,
+          "y": 305.0
+        }
+      }
+    ]
+  },
+  {
+    "file": "cross ones leg-1.0.hideout",
+    "hideout_name": "藏身處 - 羅雀後街",
+    "n_placements": 672,
+    "types": [
+      {
+        "name": "裝飾物：火山卵石",
+        "count": 398,
+        "share_pct": 59.2,
+        "nn_within_type": {
+          "n": 398,
+          "min": 0.0,
+          "median": 1.414,
+          "mean": 1.879,
+          "p90": 3.606,
+          "max": 5.385
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "fill",
+        "centroid": {
+          "x": 312.7,
+          "y": 382.3
+        }
+      },
+      {
+        "name": "大理石板",
+        "count": 82,
+        "share_pct": 12.2,
+        "nn_within_type": {
+          "n": 82,
+          "min": 1.414,
+          "median": 5.831,
+          "mean": 5.958,
+          "p90": 9.487,
+          "max": 13.928
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "stroke",
+        "centroid": {
+          "x": 309.1,
+          "y": 376.2
+        }
+      },
+      {
+        "name": "裝飾物：寶石袋",
+        "count": 59,
+        "share_pct": 8.8,
+        "nn_within_type": {
+          "n": 59,
+          "min": 0.0,
+          "median": 2.236,
+          "mean": 1.991,
+          "p90": 3.162,
+          "max": 5.831
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 336.5,
+          "y": 406.8
+        }
+      },
+      {
+        "name": "裝飾物：粗麻布袋",
+        "count": 36,
+        "share_pct": 5.4,
+        "nn_within_type": {
+          "n": 36,
+          "min": 0.0,
+          "median": 2.0,
+          "mean": 3.012,
+          "p90": 7.071,
+          "max": 7.071
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 289.7,
+          "y": 336.6
+        }
+      },
+      {
+        "name": "裝飾物：碧藍礦石",
+        "count": 31,
+        "share_pct": 4.6,
+        "nn_within_type": {
+          "n": 31,
+          "min": 0.0,
+          "median": 2.236,
+          "mean": 2.622,
+          "p90": 3.606,
+          "max": 11.18
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 270.4,
+          "y": 357.4
+        }
+      },
+      {
+        "name": "裝飾物：原始碎片",
+        "count": 24,
+        "share_pct": 3.6,
+        "nn_within_type": {
+          "n": 24,
+          "min": 1.0,
+          "median": 1.414,
+          "mean": 1.651,
+          "p90": 2.236,
+          "max": 2.828
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 337.0,
+          "y": 401.1
+        }
+      },
+      {
+        "name": "新鮮人體器官",
+        "count": 11,
+        "share_pct": 1.6,
+        "nn_within_type": {
+          "n": 11,
+          "min": 1.0,
+          "median": 2.0,
+          "mean": 1.967,
+          "p90": 2.828,
+          "max": 3.162
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 323.2,
+          "y": 372.4
+        }
+      },
+      {
+        "name": "裝飾物：飄雪",
+        "count": 4,
+        "share_pct": 0.6,
+        "nn_within_type": {
+          "n": 4,
+          "min": 6.403,
+          "median": 6.403,
+          "mean": 6.403,
+          "p90": 6.403,
+          "max": 6.403
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 297.5,
+          "y": 362.0
+        }
+      },
+      {
+        "name": "木梁",
+        "count": 2,
+        "share_pct": 0.3,
+        "nn_within_type": {
+          "n": 2,
+          "min": 15.264,
+          "median": 15.264,
+          "mean": 15.264,
+          "p90": 15.264,
+          "max": 15.264
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 274.0,
+          "y": 355.5
+        }
+      },
+      {
+        "name": "倉庫",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 320.0,
+          "y": 269.0
+        }
+      },
+      {
+        "name": "公會倉庫",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 300.0,
+          "y": 275.0
+        }
+      },
+      {
+        "name": "傳送點",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 306.0,
+          "y": 380.0
+        }
+      },
+      {
+        "name": "工藝台",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 327.0,
+          "y": 223.0
+        }
+      },
+      {
+        "name": "黃金地球儀",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 331.0,
+          "y": 280.0
+        }
+      },
+      {
+        "name": "裝飾物：園藝憩站",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 289.0,
+          "y": 204.0
+        }
+      },
+      {
+        "name": "裝飾物：劫盜鎖櫃",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 336.0,
+          "y": 236.0
+        }
+      },
+      {
+        "name": "裝飾物：探險鎖櫃",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 348.0,
+          "y": 244.0
+        }
+      },
+      {
+        "name": "裝飾物：聖域鎖櫃",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 325.0,
+          "y": 213.0
+        }
+      },
+      {
+        "name": "修女卡西亞",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "赫蓮娜",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 282.0,
+          "y": 228.0
+        }
+      },
+      {
+        "name": "尼科",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "埃哈",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 304.0,
+          "y": 230.0
+        }
+      },
+      {
+        "name": "艾瓦",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 304.0,
+          "y": 230.0
+        }
+      },
+      {
+        "name": "瓊恩",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "戰鬥詩人．丹尼格",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "討價還價．圖貞",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "莉莉羅斯",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "基拉克",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "帝王之手．喬罕",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 340.0,
+          "y": 216.0
+        }
+      },
+      {
+        "name": "資本家．弗斯特",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 400.0,
+          "y": 378.0
+        }
+      },
+      {
+        "name": "賭徒．關南",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "商人．羅格",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "最終之死",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 309.0,
+          "y": 231.0
+        }
+      },
+      {
+        "name": "頭盔架",
+        "count": 1,
+        "share_pct": 0.1,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 308.0,
+          "y": 376.0
+        }
+      }
+    ]
+  },
+  {
+    "file": "poe2.hideout",
+    "hideout_name": "藏身處：運河",
+    "n_placements": 450,
+    "types": [
+      {
+        "name": "裝飾物：大理石長凳",
+        "count": 268,
+        "share_pct": 59.6,
+        "nn_within_type": {
+          "n": 268,
+          "min": 1.414,
+          "median": 5.0,
+          "mean": 4.679,
+          "p90": 6.325,
+          "max": 8.062
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "stroke",
+        "centroid": {
+          "x": 785.9,
+          "y": 635.3
+        }
+      },
+      {
+        "name": "洞穴石化像",
+        "count": 161,
+        "share_pct": 35.8,
+        "nn_within_type": {
+          "n": 161,
+          "min": 0.0,
+          "median": 1.414,
+          "mean": 1.679,
+          "p90": 2.236,
+          "max": 4.243
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "fill",
+        "centroid": {
+          "x": 780.7,
+          "y": 622.6
+        }
+      },
+      {
+        "name": "一根木頭",
+        "count": 3,
+        "share_pct": 0.7,
+        "nn_within_type": {
+          "n": 3,
+          "min": 20.518,
+          "median": 20.518,
+          "mean": 25.944,
+          "p90": 36.797,
+          "max": 36.797
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "outline",
+        "centroid": {
+          "x": 719.3,
+          "y": 591.7
+        }
+      },
+      {
+        "name": "倉庫",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 767.0,
+          "y": 800.0
+        }
+      },
+      {
+        "name": "公會倉庫",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 681.0,
+          "y": 589.0
+        }
+      },
+      {
+        "name": "傳送點",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 773.0,
+          "y": 638.0
+        }
+      },
+      {
+        "name": "裝飾物：高地神塔地圖裝置",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 728.0,
+          "y": 826.0
+        }
+      },
+      {
+        "name": "裝飾物：聖域鎖櫃",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 658.0,
+          "y": 568.0
+        }
+      },
+      {
+        "name": "重鑄台",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 734.0,
+          "y": 773.0
+        }
+      },
+      {
+        "name": "回收台",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 751.0,
+          "y": 776.0
+        }
+      },
+      {
+        "name": "水井",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 739.0,
+          "y": 819.0
+        }
+      },
+      {
+        "name": "重組裝置",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 683.0,
+          "y": 716.0
+        }
+      },
+      {
+        "name": "艾瓦",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 685.0,
+          "y": 807.0
+        }
+      },
+      {
+        "name": "黑衣幽魂",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 687.0,
+          "y": 613.0
+        }
+      },
+      {
+        "name": "鮮血女祭司．阿特路伊",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 626.0,
+          "y": 626.0
+        }
+      },
+      {
+        "name": "時間建造者．凱亞祖利",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 737.0,
+          "y": 790.0
+        }
+      },
+      {
+        "name": "多里亞尼",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 771.0,
+          "y": 822.0
+        }
+      },
+      {
+        "name": "羅格",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 614.0,
+          "y": 617.0
+        }
+      },
+      {
+        "name": "圖貞",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 626.0,
+          "y": 620.0
+        }
+      },
+      {
+        "name": "丹尼格",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 659.0,
+          "y": 711.0
+        }
+      },
+      {
+        "name": "關南",
+        "count": 1,
+        "share_pct": 0.2,
+        "nn_within_type": {
+          "n": 1,
+          "median": null,
+          "mean": null
+        },
+        "nn_to_any_type": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0
+        },
+        "role": "singleton",
+        "centroid": {
+          "x": 631.0,
+          "y": 625.0
+        }
+      }
+    ]
+  }
+]
