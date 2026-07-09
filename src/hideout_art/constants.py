@@ -53,26 +53,29 @@ KNOWN_HASHES: dict[str, int] = {
 
     # ------------------------------------------------------------------ #
     # Decorations used for floor art (original Canal Hideout palette, 0.1.0)
+    # RGB values: PIXEL = pixel-sampled (0.2.6, scripts/sample_pixels.py),
+    # VLM = glm-4.6v estimate (0.2.4/0.2.5, noisy — see KI-11).
     # ------------------------------------------------------------------ #
-    "Long Grass":           2219637749,  # Russian in-game: "Высокая трава"
-    "Falling Sand":         3853073345,  # Russian "Летающий песок"; PINK particle effect (255,192,203) — VLM 0.2.5 re-measured (matches 0.2.4 (248,187,208) within noise). NOT skin/red — too pink.
-    "Fringe Moss":          1459723677,
-    "Sand Tussock":          146816198,  # Russian "Песчаный кустарник". VLM RGB CONFLICT (KI-11): 0.2.1 estimated (78,52,46) very dark brown; 0.2.5 re-measured (180,160,120) light tan. Real value depends on which part of plant — needs pixel sampling. NOT used for 2B 'skin' (too uncertain).
+    "Long Grass":           2219637749,  # PIXEL 0.2.6 (136,119,93) brown-tan. VLM was (46,125,50) green — wrong.
+    "Falling Sand":         3853073345,  # PIXEL 0.2.6 (145,125,101) brown-tan (sampling hit gap between particles). VLM 0.2.5 (255,192,203) pink (sampled actual particle). Particle effect — colour depends on sampling point.
+    "Fringe Moss":          1459723677,  # Not pixel-sampled (0 placements in исходники). VLM 0.2.1 (139,195,74) bright green — unverified.
+    "Sand Tussock":          146816198,  # PIXEL 0.2.6 (112,99,79) dark olive-tan. RESOLVES KI-11: between VLM 0.2.1 (78,52,46) and VLM 0.2.5 (180,160,120). NOT skin tone — too dark and too olive.
 
     # ------------------------------------------------------------------ #
     # Warm-tone earth decorations (added in 0.2.1 from user-provided exports).
     # Sampled median in-game RGB values are kept in the comment for reference;
     # use them when building palettes (see examples/palette_warm.json).
-    # NOTE (0.2.5, KI-11): the 0.2.1 RGB estimates were re-measured in 0.2.5
-    # via VLM (glm-4.6v) on укрошения.jpg. Maraket Rubble is REDDISH (153,78,68),
-    # not tan (138,120,94) — the 0.2.1 estimate was too neutral. Other 0.2.1
-    # values were also off; see KI-11 for the VLM-noise problem.
+    # NOTE (0.2.6): pixel sampling (scripts/sample_pixels.py) gave ground-truth
+    # RGB that differs from VLM estimates by 30-100+ points — see KI-11 (closed)
+    # and _pixel_sampling_summary_0_2_6 in examples/palette_2b.json.
+    # Maraket Rubble pixel-sampled (125,112,87) is NEUTRAL BROWN, not reddish
+    # as VLM 0.2.5 (153,78,68) claimed.
     # ------------------------------------------------------------------ #
-    "Maraket Rubble":       3012657298,  # REDDISH-BROWN (153,78,68) — VLM 0.2.5, is_reddish=true → fills 2B 'red' role. Prior 0.2.1 (138,120,94) was too neutral.
-    "Maraket Treasures":    1078696835,  # GOLD (191,154,111) — VLM 0.2.5 (prior 0.2.1 (108,91,83) was way off — likely sampled shadow)
-    "Maraket Samovar":       57228444,   # COPPER (184,134,77) — VLM 0.2.5 (prior 0.2.1 (148,133,115) was too gray)
-    "Maraket Ornament":     2125171205,  # BRONZE (197,153,102) — VLM 0.2.5 (prior 0.2.1 (136,120,97) was too neutral)
-    "Coastal Pebble":       2365064644,  # warm tan/khaki  ~ (134,115, 94) — 0.2.1 estimate, not yet re-measured (KI-11)
+    "Maraket Rubble":       3012657298,  # PIXEL 0.2.6 (125,112,87) neutral brown. VLM 0.2.5 (153,78,68) was wrong — NOT reddish.
+    "Maraket Treasures":    1078696835,  # PIXEL 0.2.6 (116,102,85) brown. VLM 0.2.5 (191,154,111) too bright.
+    "Maraket Samovar":       57228444,   # PIXEL 0.2.6 (194,157,118) copper. VLM 0.2.5 (184,134,77) close.
+    "Maraket Ornament":     2125171205,  # PIXEL 0.2.6 (113,104,82) brown. VLM 0.2.5 (197,153,102) too bright.
+    "Coastal Pebble":       2365064644,  # PIXEL 0.2.6 (127,111,86) tan. VLM 0.2.1 (134,115,94) close.
 
     # ------------------------------------------------------------------ #
     # New Canal Hideout decorations (added in 0.2.2 from "исходники/" folder).
@@ -86,42 +89,42 @@ KNOWN_HASHES: dict[str, int] = {
     "Petrified Cave Figure": 2014424642, # large statue (estimate 2-3 tiles)
 
     # Coastal stones (warm tan/gray, three sizes)
-    "Coastal Bush":         2984478824,  # coastal bush, warm green-tan (80,120,80) — VLM 0.2.5
-    "Small Coastal Stone":  1122244925,  # small DARK warm-gray stone (85,75,70) — VLM 0.2.5, is_dark=true → candidate for 2B 'black' role
-    "Medium Coastal Stone":  369950199,  # medium stone ~1 tile (RGB not yet re-measured)
+    "Coastal Bush":         2984478824,  # PIXEL 0.2.6 (114,98,70) brown. VLM 0.2.5 (80,120,80) green — wrong, bush is brown.
+    "Small Coastal Stone":  1122244925,  # PIXEL 0.2.6 (81,80,60) dark warm-gray. CONFIRMS VLM 0.2.5 (85,75,70). Fills 2B 'black' role.
+    "Medium Coastal Stone":  369950199,  # PIXEL 0.2.6 (71,67,50) darker than Small Coastal Stone.
 
     # Plants / foliage
-    "Slender Seedling":     532751457,   # Russian "Тонкосемянник"; bushy shrub
-    "Log":                  2780985165,  # fallen log, brown bark
-    "Beech Tree":           2796444611,  # large tree (estimate 2-3 tiles)
-    "Pile of Leaves":       4294658310,  # leaf pile, autumn warm tones
+    "Slender Seedling":     532751457,   # PIXEL 0.2.6 (105,93,67) dark olive-tan. Russian "Тонкосемянник"; bushy shrub.
+    "Log":                  2780985165,  # PIXEL 0.2.6 (162,138,107) warm brown bark.
+    "Beech Tree":           2796444611,  # PIXEL 0.2.6 (88,81,66) dark gray-brown. Large tree (~2 tiles).
+    "Pile of Leaves":       4294658310,  # PIXEL 0.2.6 (122,109,91) autumn warm brown.
 
     # Cave / mountain decorations
-    "Cave Fossil":          2206403756,  # BROWN rock (140,110,80) — VLM-measured 0.2.4, see palette_2b.json
-    "Cave Coral":           2359120247,  # brownish-gray coral (150,130,110) — VLM-measured 0.2.4
-    "Summit Brazier":       2623109233,  # golden-brown brazier metal (180,140,80) — VLM-measured 0.2.4
+    "Cave Fossil":          2206403756,  # PIXEL 0.2.6 (159,136,109) warm brown. VLM 0.2.4 (140,110,80) close.
+    "Cave Coral":           2359120247,  # PIXEL 0.2.6 (170,144,114) light brown. VLM 0.2.4 (150,130,110) close.
+    "Summit Brazier":       2623109233,  # PIXEL 0.2.6 (156,133,106) golden-brown metal. VLM 0.2.4 (180,140,80) close.
 
-    # Marble furniture (light gray/white — VLM-measured 0.2.4, fills 3 of 6
-    # TODOs in palette_2b.json. Marble Fountain is brightest at (230,230,220),
-    # Marble Table is mid at (200,200,195), Marble Bench/Walls are light gray
-    # at (210,210,205). Cave Fossil turned out to be BROWN, not light gray —
-    # prior 0.2.2 guess corrected in 0.2.4.)
-    "Marble Bench":          534959854,  # light gray marble (210,210,205) — VLM 0.2.4
-    "Marble Table":         4056218057,  # light gray marble (200,200,195) — VLM 0.2.4
-    "Marble Walls":         1380152311,  # light gray marble (210,210,205) — VLM 0.2.4
-    "Marble Fountain":       525963527,  # near-white marble (230,230,220) — VLM 0.2.4
+    # Marble furniture — KI-12: pixel-sampled RGB (76-110 brown range) is much
+    # darker than VLM 0.2.4 estimates (210-230 light gray). Sampling window
+    # likely hits the dark base/shadow of the marble object, not its bright
+    # top surface. Only Marble Table placement 1 gave bright cream (237,208,169).
+    # VLM values retained in palette_2b.json until manual calibration resolves KI-12.
+    "Marble Bench":          534959854,  # PIXEL 0.2.6 (79,64,45) brown. VLM 0.2.4 (210,210,205) light gray — KI-12 conflict.
+    "Marble Table":         4056218057,  # PIXEL 0.2.6 (196,170,136) cream. VLM 0.2.4 (200,200,195) close on R, browner on G/B.
+    "Marble Walls":         1380152311,  # PIXEL 0.2.6 (76,68,52) brown. VLM 0.2.4 (210,210,205) — KI-12 conflict.
+    "Marble Fountain":       525963527,  # PIXEL 0.2.6 (110,103,76) brown. VLM 0.2.4 (230,230,220) near-white — KI-12 conflict.
 
     # Camp props (warm brown wood + canvas)
-    "Camp Crate":           2156404357,  # wooden crate, warm brown
-    "Camp Gear":             412387213,  # bedroll/sack, warm tan
+    "Camp Crate":           2156404357,  # PIXEL 0.2.6 (138,122,94) warm brown wood.
+    "Camp Gear":             412387213,  # PIXEL 0.2.6 (70,66,56) dark brown.
 
     # ------------------------------------------------------------------ #
     # Aquatic decoration (added in 0.2.5 from "исходники/водоросли и летающий
     # песок.hideout"). Russian in-game name "Морская водоросль". 7 placements
-    # in source file (variants 0..11). VLM-measured mid-tone BROWN (128,96,64),
-    # warm — NOT a cool-palette candidate.
+    # in source file (variants 0..11). PIXEL 0.2.6 (126,111,87) warm brown —
+    # confirms VLM 0.2.5 (128,96,64) within noise. NOT a cool-palette candidate.
     # ------------------------------------------------------------------ #
-    "Seaweed":             1015947674,  # brown aquatic plant (128,96,64) — VLM 0.2.5, warm. NOT cool.
+    "Seaweed":             1015947674,  # PIXEL 0.2.6 (126,111,87) warm brown. Confirms VLM 0.2.5 (128,96,64).
 }
 
 # Reverse lookup: hash -> name

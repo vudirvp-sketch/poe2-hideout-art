@@ -19,6 +19,7 @@ everything lives and where the surprises are.
 | Add a new decoration hash | `src/hideout_art/constants.py` → `KNOWN_HASHES` |
 | Look up a decoration's placement footprint | `src/hideout_art/constants.py` → `DECORATION_FOOTPRINT_CATALOG` |
 | Re-measure footprints after adding placements to `исходники/` | `scripts/measure_decorations.py` |
+| Pixel-sample real RGB under placements | `scripts/sample_pixels.py` (closes KI-11) |
 | Add a new geometric transform | `src/hideout_art/transforms.py` |
 | Extend `img2hideout` (dither, alpha, etc.) | `src/hideout_art/img2hideout.py` |
 | Add a CLI subcommand | `src/hideout_art/cli.py` (register in `build_parser()`) |
@@ -130,15 +131,20 @@ minimal.
   confidence levels. See KI-10 in `STATUS.md` for the placement-vs-
   sprite-bounds limitation. This is the file most PRs touch.
 
-  **RGB values in comments** (0.2.4 + 0.2.5): Marble-серия, Cave Fossil/
-  Coral/Brazier, Small Coastal Stone, Maraket-серия, Falling Sand,
-  Sand Tussock, Seaweed comments now include VLM-measured mid-tone RGB.
-  Source: VLM (glm-4.6v) analysis of screenshots in `исходники/`.
-  Cave Fossil corrected from "light gray/white" (0.2.2 guess) to
-  "BROWN (140,110,80)". Maraket Rubble corrected from "tan (138,120,94)"
-  (0.2.1) to "REDDISH (153,78,68)" (0.2.5) — user intuition was right.
-  See `examples/palette_2b.json` → `_rgb_sources` + `_0_2_5_measured_rgb_summary`
-  for full attribution, and KI-11 in `STATUS.md` for VLM-noise caveat.
+  **RGB values in comments** (0.2.4 + 0.2.5 + 0.2.6): Two RGB sources
+  now coexist:
+  - **VLM** (glm-4.6v, 0.2.4/0.2.5) — first-pass estimates, NOISY (KI-11).
+  - **PIXEL** (0.2.6, `scripts/sample_pixels.py`) — ground truth from
+    screenshot pixel sampling under each placement.
+  When they conflict, trust PIXEL. See `_pixel_sampling_summary_0_2_6`
+  in `examples/palette_2b.json` for the full comparison table. Notable:
+  - Sand Tussock PIXEL (112,99,79) resolves VLM 0.2.1 (78,52,46) vs
+    VLM 0.2.5 (180,160,120) conflict — both VLM passes were wrong.
+  - Maraket Rubble PIXEL (125,112,87) is NEUTRAL brown, not reddish
+    as VLM 0.2.5 (153,78,68) claimed.
+  - Marble-серия PIXEL (76-196) is much darker than VLM (210-230) —
+    KI-12, sampling likely hit shadow. VLM values retained in
+    palette_2b.json until manual calibration resolves KI-12.
 
 ### `tests/`
 
@@ -154,15 +160,21 @@ minimal.
   + `CANAL_HIDEOUT_BOUNDS` + `--bounds canal` CLI resolver + KI-9 fix
   (Russian-name → English-canonical via hash) + 0.2.4 VLM-measured
   Marble-серия RGB + 0.2.5 Seaweed + Small Coastal Stone (black role) +
-  Maraket Rubble (red role) + palette_2b.json progress (5 of 6 TODOs
-  filled, only `skin` remains).
+  Maraket Rubble (red role) + 0.2.6 pixel-sampled RGB regression tests
+  (Small Coastal Stone, Maraket Rubble, Sand Tussock, Marble Table) +
+  palette_2b.json progress (5 of 6 TODOs filled, only `skin` remains).
+- **`test_sample_pixels.py`** (0.2.6) — 19 cases for the
+  `scripts/sample_pixels.py` calibration math: auto-calibration,
+  manual least-squares fit + residual, RGB statistics, aggregate
+  medians (n==1, n==2 mean, n>=3 nearest-rank), sampling window
+  bounds clamping. Pure-Python — no PIL/Pillow needed.
 - **`test_footprints.py`** (0.2.3) — 94 cases for
   `DECORATION_FOOTPRINT_CATALOG`: structural integrity, confidence↔
   samples consistency, spacing↔footprint math, regression tests for
   specific entries (Beech Tree, Cordilina, Marble Table), and a
   ground-truth check that `samples` matches real placement counts in
   `исходники/*.hideout`.
-- **Total test count: 255** (254 pass, 1 skipped — see `STATUS.md`).
+- **Total test count: 274** (273 pass, 1 skipped — see `STATUS.md`).
 - **`data/sample.hideout`** — tiny synthetic fixture (< 1 KB).
   Contains one of each: a functional object, an art-layer decoration
   with rotation, an art-layer decoration with `flip_x`, an unknown
@@ -223,6 +235,14 @@ One-off dev scripts. Anything experimental goes here, not in
   `DECORATION_FOOTPRINT_CATALOG` from `исходники/*.hideout`. Re-run
   whenever new placements are added, then update `constants.py`
   (`test_sample_counts_match_real_exports` will fail if you forget).
+- **`sample_pixels.py`** (0.2.6) — pixel-samples real RGB under each
+  art placement in a `.hideout` file using the matching `.jpg`
+  screenshot. Auto or manual world→pixel calibration, diagnostic
+  overlay PNG, JSON report. Closes KI-11. See `scripts/README.md`
+  for full usage.
+- **`sample_all.py`** (0.2.6) — convenience wrapper that runs
+  `sample_pixels.py` on all 7 `исходники/` screenshot+hideout pairs
+  and consolidates into `scripts/sampled_all.json`.
 
 ## When in doubt
 

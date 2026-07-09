@@ -152,7 +152,8 @@ See [`docs/format.md`](docs/format.md) for the full spec. Short version:
 - Know each decoration's tile footprint without observing it in-game.
 
 See [`STATUS.md`](STATUS.md) for the current list of known issues and
-planned improvements.
+planned improvements, and [`scripts/README.md`](scripts/README.md) for
+the pixel-sampling tool that produces ground-truth RGB (closes KI-11).
 
 ## Repository layout
 
@@ -192,7 +193,9 @@ poe2-hideout-art/
 ├── scripts/                 # one-off dev/exploration scripts
 │   ├── bulk_preview.py      # render PNGs for every .hideout in a folder
 │   ├── scrape_hashes.py     # find unknown hashes in a folder of exports
-│   └── measure_decorations.py  # (0.2.3) re-derive DECORATION_FOOTPRINT_CATALOG
+│   ├── measure_decorations.py  # (0.2.3) re-derive DECORATION_FOOTPRINT_CATALOG
+│   ├── sample_pixels.py     # (0.2.6) pixel-sample real RGB under each placement — closes KI-11
+│   └── sample_all.py        # (0.2.6) convenience: run sample_pixels.py on all 7 исходники pairs
 ├── pyproject.toml           # PEP 621 packaging + ruff config
 ├── README.md
 ├── CHANGELOG.md

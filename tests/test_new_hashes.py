@@ -410,19 +410,20 @@ def test_palette_2b_uses_marble_series():
 
 
 def test_palette_2b_marble_rgb_values():
-    """Marble-серия RGB values measured via VLM in 0.2.4 — regression protection.
+    """Marble-серия RGB values in palette_2b.json — regression protection.
 
-    Source: VLM (glm-4.6v) analysis of исходники/еще элементы.jpg.
-    These are first-pass mid-tone estimates; pixel-exact sampling may
-    shift values by ±10-15 RGB points. Test guards against accidental
-    edits and documents the source-of-truth.
+    Source: VLM (glm-4.6v) analysis of исходники/еще элементы.jpg (0.2.4).
+    These VLM values are RETAINED in palette_2b.json despite pixel-sampling
+    (0.2.6) showing darker values (KI-12) — pixel sampling likely hit the
+    dark base/shadow of the marble object. VLM values are trusted until
+    manual calibration resolves KI-12.
     """
     import json
     data = json.loads((EXAMPLES / "palette_2b.json").read_text(encoding="utf-8"))
     rgb_by_name = {e["decoration"]: tuple(e["color"]) for e in data["entries"]}
-    # VLM-measured mid-tone RGB from 0.2.4.
+    # VLM-measured mid-tone RGB from 0.2.4 (retained in 0.2.6 due to KI-12).
     assert rgb_by_name["Marble Fountain"] == (230, 230, 220)
-    assert rgb_by_name["Marble Table"]    == (200, 200, 195)
+    assert rgb_by_name["Marble Table"]    == (196, 170, 136)  # updated 0.2.6 pixel-sampled
     assert rgb_by_name["Marble Bench"]    == (210, 210, 205)
     assert rgb_by_name["Marble Walls"]    == (210, 210, 205)
 
@@ -631,22 +632,32 @@ def test_palette_2b_uses_maraket_rubble_for_red():
 
 
 def test_palette_2b_black_red_rgb_values():
-    """VLM-measured RGB for the 0.2.5 'black' and 'red' role fills — regression protection.
+    """RGB values for the 'black' and 'red' role fills — regression protection.
 
-    Source: VLM (glm-4.6v) analysis of исходники/камни и кустарники.jpg
-    (Small Coastal Stone) and исходники/укрошения.jpg (Maraket Rubble).
-    First-pass estimates; pixel sampling may shift values by ±10-15 points.
+    Source: pixel-sampled (0.2.6) via scripts/sample_pixels.py with
+    --world-bbox functional. Replaces noisy VLM 0.2.5 estimates (KI-11).
+
+    Small Coastal Stone: PIXEL 0.2.6 (81,80,60) — confirms VLM 0.2.5 (85,75,70).
+    Maraket Rubble: PIXEL 0.2.6 (125,112,87) — neutral brown, NOT reddish as
+    VLM 0.2.5 (153,78,68) claimed. Still used for 'red' role because no
+    better red candidate exists.
     """
     import json
     data = json.loads((EXAMPLES / "palette_2b.json").read_text(encoding="utf-8"))
     rgb_by_name = {e["decoration"]: tuple(e["color"]) for e in data["entries"]}
-    # VLM-measured mid-tone RGB from 0.2.5.
-    assert rgb_by_name["Small Coastal Stone"] == (85, 75, 70), (
-        "Small Coastal Stone RGB should be (85, 75, 70) — VLM 0.2.5"
+    # Pixel-sampled RGB from 0.2.6 (closes KI-11).
+    assert rgb_by_name["Small Coastal Stone"] == (81, 80, 60), (
+        "Small Coastal Stone RGB should be (81, 80, 60) — PIXEL 0.2.6 "
+        "(confirms VLM 0.2.5 (85,75,70) within noise)"
     )
-    assert rgb_by_name["Maraket Rubble"] == (153, 78, 68), (
-        "Maraket Rubble RGB should be (153, 78, 68) — VLM 0.2.5 (corrected from "
-        "0.2.1 estimate (138,120,94) which was too neutral)"
+    assert rgb_by_name["Maraket Rubble"] == (125, 112, 87), (
+        "Maraket Rubble RGB should be (125, 112, 87) — PIXEL 0.2.6 neutral "
+        "brown (VLM 0.2.5 (153,78,68) was wrong — NOT reddish, KI-11 confirmed)"
+    )
+    # Sand Tussock pixel-sampled value (used in entries as a dark tan role).
+    assert rgb_by_name["Sand Tussock"] == (112, 99, 79), (
+        "Sand Tussock RGB should be (112, 99, 79) — PIXEL 0.2.6 dark olive-tan. "
+        "Resolves KI-11 conflict between VLM 0.2.1 (78,52,46) and VLM 0.2.5 (180,160,120)."
     )
 
 

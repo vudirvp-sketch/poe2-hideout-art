@@ -7,6 +7,63 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.6] - 2026-07-09
+
+### Added
+- **Pixel sampling script** (`scripts/sample_pixels.py`) — closes KI-11.
+  Takes a `.hideout` file + matching `.jpg` screenshot and samples real
+  pixel RGB under each art placement. Auto or manual world→pixel
+  calibration (affine transform), diagnostic overlay PNG, JSON report
+  with median / mean / p25 / p75 RGB per placement and per decoration.
+- **`scripts/sample_all.py`** — convenience wrapper that runs
+  `sample_pixels.py` on all 7 `исходники/` screenshot+hideout pairs and
+  consolidates into `scripts/sampled_all.json`.
+- **Pixel-sampled RGB** for 25 of 28 art decorations (Cordilina, Fringe
+  Moss, Petrified Cave Figure have no sampled placements). All 7
+  screenshots sanity-checked: Stash gives believable brown wood
+  (R>G>B, brightness 64-182) → calibration valid.
+- **`_pixel_sampling_summary_0_2_6`** block in `palette_2b.json` — full
+  comparison table of pixel-sampled vs VLM-estimated RGB with drift
+  analysis.
+- **`_0_2_6_pixel_vs_vlm_drift`** block in `palette_2b.json` — per-channel
+  drift measurements documenting where VLM was wrong.
+
+### Changed
+- **`constants.py` RGB comments** — every art decoration now carries
+  both `PIXEL 0.2.6 (R,G,B)` ground-truth and `VLM 0.2.x (R,G,B)`
+  estimate (where available). When they conflict, PIXEL is trusted.
+- **`palette_2b.json` entries** — RGB values updated to pixel-sampled
+  where pixel confirms VLM (Small Coastal Stone); kept VLM values
+  where pixel sampling is unreliable (Marble-серия — KI-12).
+- **`STATUS.md`** — KI-11 marked closed; new KI-12 (Marble-серия
+  pixel-sampling shadow issue) added; "Что улучшать дальше" updated
+  with manual-calibration TODO for KI-12.
+- **`AGENTS.md`** — added navigation hint for `sample_pixels.py`;
+  updated RGB-values-in-comments section to document both sources.
+- **`scripts/README.md`** — full `sample_pixels.py` usage guide added.
+- **`README.md`** — repository layout updated with new scripts;
+  reference to `scripts/README.md` for pixel-sampling tool.
+
+### Resolved
+- **KI-11 (VLM-noise)** — closed. Pixel sampling provides ground-truth
+  RGB. Confirmed: Sand Tussock real RGB is (112,99,79) — between the
+  two conflicting VLM estimates (78,52,46) and (180,160,120). Maraket
+  Rubble is NEUTRAL brown (125,112,87), NOT reddish (153,78,68) as VLM
+  claimed. Coastal Bush is brown (114,98,70), NOT green (80,120,80).
+
+### Known Issues
+- **KI-12 (new)** — Marble-серия pixel-sampled RGB (76-196 brown range)
+  is much darker than VLM 0.2.4 estimates (210-230 light gray). The
+  sampling window (4 wu radius) likely hits the dark base/shadow of
+  the marble object, not its bright top surface. Only Marble Table
+  placement 1 gave bright cream (237,208,169). To resolve: manual
+  calibration + larger `--sample-radius-wu` on a screen with good
+  Marble visibility.
+- **KI-2 (updated)** — `skin` TODO remains open. Pixel-sampled Sand
+  Tussock (112,99,79) confirms it's too dark olive-tan for skin tone.
+  Need a new peach/tan decoration from another hideout.
+- **KI-10** — unchanged (placement vs sprite bounds).
+
 ## [0.2.5] - 2026-07-09
 
 ### Added
