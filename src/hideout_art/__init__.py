@@ -40,7 +40,7 @@ from .primitives import (
 from .transforms import mirror_x, mirror_y, rotate, shift
 from .writer import write_hideout
 
-__version__ = "0.3.0"
+__version__ = "0.6.0"
 __all__ = [
     "Hideout",
     "Placement",

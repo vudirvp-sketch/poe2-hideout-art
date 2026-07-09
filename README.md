@@ -1,315 +1,82 @@
 # hideout-art
 
-Read, transform and emit **Path of Exile 2** `.hideout` files. Build floor-art
-compositions from images. Pure Python, no external services, MIT-licensed.
+Превращаем картинки в `.hideout`-композиции для **Path of Exile 2**.
 
-> [!WARNING]
-> This project is **not affiliated with** Grinding Gear Games. All trademarked
-> names belong to their owners. Use at your own risk; tool-assisted hideout
-> editing has historically been tolerated but is not officially endorsed.
+Чистый Python. Без внешних сервисов. MIT.
 
 ---
 
-## Why does this exist?
+## Что это
 
-A PoE2 `.hideout` export looks like JSON — but it isn't quite standard JSON.
-The `doodads` object contains **hundreds of duplicate keys**, one per
-placement. Standard `json.load` collapses duplicates and silently keeps only
-the last one, which would drop 99% of the data on a real hideout.
+В PoE2 можно расставлять декоративные объекты на полу убежища вручную.
+Если экспортировать убежище в `.hideout`, получится JSON-подобный файл,
+где каждый размещённый объект — это одна запись. Меняя эти записи,
+можно «рисовать» картинками из декоративных объектов — например,
+выложить портрет или сцену.
 
-`hideout-art` ships a tolerant parser that preserves every placement in
-source order, plus a small toolkit for inspecting, transforming, rendering
-and re-emitting these files. The end goal: **turn any PNG into a floor-art
-composition** you can import into the game.
+Проект даёт:
 
-## Features
+- **Парсер** `.hideout` — корректно обрабатывает duplicate keys (стандартный `json.load` их теряет).
+- **Writer** — собирает `.hideout` обратно без потерь.
+- **Каталог декора** — `DECO_CATALOG.md` + `src/hideout_art/constants.py`.
+  Все хеши взяты из реальных `.hideout` файлов из `исходники/`, не выдуманы.
+- **img2hideout** — `src/hideout_art/img2hideout.py`. Берёт PNG/JPG, выбирает
+  палитру декораций, расставляет объекты по сетке.
+- **CLI** — `python -m hideout_art` для удобного запуска из терминала.
 
-- **Tolerant parser** — duplicate keys in `doodads` are preserved, not collapsed
-- **Field decoder** — `r` is a 16-bit angle, `fv` is `flip_x | variant` (bitfield)
-- **Geometric transforms** — shift / rotate / mirror, optionally on art-layer only
-- **Header rewrite** — transfer a composition to a different hideout map
-- **PNG preview** — top-down render, one colour per decoration type
-- **Image → hideout** — sample a PNG, map each pixel to the closest palette
-  entry, emit a `.hideout` file
-- **Drawing primitives** (0.2.7 core + 0.2.8 mosaic + 0.2.9 mosaic v2
-  [FROZEN, KI-17] + 0.3.0 clean) — `line` / `polyline` / `hollow_circle`
-  / `filled_circle` / `s_snake` / `thick_line_with_contours` directly
-  in world coordinates (0.2.7), plus `arc` / `rectangle` / `polygon` /
-  `grid` for mosaics & bas-relief (0.2.8), plus `bezier_curve` /
-  `thick_ring` / `thick_arc` / `crosshatch` for portraits & bas-relief
-  textures (0.2.9, frozen per KI-17 — see STATUS.md), plus the
-  `clean_composition` test bed: 7 simplest single-decoration contours
-  + fills (0.3.0, KI-17 response). All use art decorations, strictly
-  additive — never removes existing placements.
-- **CLI** + **Python API** — same operations, two interfaces
-- **Pure stdlib core** — `matplotlib` / `pillow` are optional extras
+---
 
-## Quick start
+## Что в репозитории
+
+```
+src/hideout_art/      # Библиотека (парсер, writer, img2hideout, константы, CLI)
+scripts/              # Утилиты: парсер, измерение footprint'ов
+docs/format.md        # Спецификация формата .hideout
+исходники/            # Каталог декора от пользователя (7 .hideout + 7 JPG)
+  *.hideout           # Каждый файл — небольшая композиция из конкретных декоров
+  *.jpg               # Скриншот того же состава в игре (как декор выглядит)
+DECO_CATALOG.md       # Каталог декора: что есть, hash, fv-диапазоны, размер
+STATUS.md             # Текущее состояние + Known Issues
+examples/             # Примеры палитр (пока пусто)
+tests/                # Тесты библиотеки
+```
+
+---
+
+## Быстрый старт
 
 ```bash
-pip install hideout-art
-# Optional extras:
-pip install "hideout-art[preview]"   # for PNG rendering
-pip install "hideout-art[image]"     # for img2hideout
-pip install "hideout-art[dev]"       # for contributors
+# Установка (пока только из репозитория)
+pip install -e .
+
+# Прочитать .hideout
+python -m hideout_art info исходники/галька.hideout
+
+# Превратить картинку в .hideout
+python -m hideout_art img2hideout myphoto.png -o myphoto.hideout \
+    --bounds canal --width 80
 ```
 
-### CLI
+---
 
-```bash
-hideout-art inspect  path/to/file.hideout
-hideout-art layers   path/to/file.hideout
-hideout-art stats    path/to/file.hideout
-hideout-art preview  path/to/file.hideout -o preview.png
-hideout-art shift    path/to/file.hideout -o moved.hideout -x 50 -y -20
-hideout-art shift    path/to/file.hideout -o art_only.hideout -x 50 --art-only
-hideout-art transfer path/to/file.hideout -o other.hideout \
-    --name "Kurast Hideout" --hash 12345
-hideout-art img2hideout picture.png -o art.hideout \
-    --palette examples/palette.json --scale 3 --width 100 --step 2 \
-    --preview
-```
+## Как использовать `исходники/`
 
-See [`docs/img2hideout.md`](docs/img2hideout.md) for the full parameter
-reference (alpha channel, dithering, jitter, bounds, resample, colour
-metrics, etc.).
+Это **каталог декора**, а не готовые картины. Каждый файл показывает
+несколько декоративных объектов, расставленных в центре убежища, чтобы
+увидеть, как они выглядят в игре (JPG рядом — скриншот того же состава).
 
-### Python API
+Что в них искать:
 
-```python
-from hideout_art import Hideout, render_png
+- Какой декор доступен в «Убежище в каналах» (hideout_hash=60415).
+- Как выглядит каждый декор (форма, размер, цвет).
+- Какие варианты `fv` существуют для каждого декора.
+- Минимальное расстояние между placement'ами (для footprint-оценки).
 
-h = Hideout.from_file("my.hideout")
+Полный список декора с hash + fv-диапазонами — в `DECO_CATALOG.md`.
 
-# Inspect
-print(len(h), "placements")
-print(h.counts_by_name().most_common(5))
-print("bbox:", h.bbox(art_only=True))
+---
 
-# Shift the art layer only
-h.shift(dx=50, dy=-20, art_only=True)
+## Лицензия
 
-# Render a preview
-render_png(h, "preview.png", art_only=True)
-
-# Save back
-h.to_file("moved.hideout")
-```
-
-```python
-from hideout_art import image_to_hideout, default_palette
-
-h = image_to_hideout(
-    "portrait.png",
-    palette=default_palette(),
-    target_width=120,
-    scale=2,
-    origin_x=700,
-    origin_y=550,
-    hideout_name="Canal Hideout",
-    hideout_hash=60415,
-)
-h.to_file("portrait.hideout")
-```
-
-### Drawing primitives (0.2.7 core + 0.2.8 mosaic + 0.2.9 mosaic v2 [FROZEN] + 0.3.0 clean)
-
-Inject geometric shapes — drawn with art decorations — directly into an
-existing `.hideout` file. Useful when `img2hideout` rasterisation is too
-noisy for clean geometry (circles, lines, S-curves, mosaics, portrait
-features).
-
-**Core (0.2.7):** `line`, `polyline`, `hollow_circle`, `filled_circle`,
-`s_snake`, `thick_line_with_contours` (+ curated `center_composition`).
-**Mosaic / bas-relief (0.2.8):** `arc`, `rectangle`, `polygon`, `grid`.
-**Mosaic v2 / portrait-grade (0.2.9, FROZEN per KI-17):** `bezier_curve`,
-`thick_ring`, `thick_arc`, `crosshatch` (+ curated `mosaic_composition`).
-Code & tests remain, but the 0.2.9 output was visually noisy in-game
-(see `STATUS.md` → KI-17) — these primitives are NOT in the canonical
-`.hideout` artifact anymore.
-**Clean composition (0.3.0, KI-17 response):** `clean_composition` —
-7 simplest single-decoration contours + fills (`hollow_circle`,
-`filled_circle`, `rectangle`, `polygon` ×2, `arc`, `grid`), each using
-exactly ONE decoration (Long Grass for contours, Maraket Rubble for
-fills — both at sp≈13.3..13.6 wu, the densest in the catalog). No mixed
-outline+fill inside one shape. The simplest possible visual-verify test
-bed.
-
-```bash
-# CLI — strictly additive, never removes existing placements.
-# Default mode: center_composition (5 core primitives).
-python scripts/draw_primitives.py \
-    "чистый холст.hideout" \
-    -o "чистый холст с примитивами.hideout" \
-    --center 780 657 \
-    --bounds-check \
-    --preview preview.png
-
-# 0.3.0 clean mode: ONLY clean_composition (7 simplest shapes).
-# Recommended for visual verification (KI-17 response).
-python scripts/draw_primitives.py \
-    "чистый холст.hideout" \
-    -o "чистый холст clean.hideout" \
-    --center 780 657 \
-    --clean \
-    --bounds-check \
-    --preview clean_preview.png
-```
-
-```python
-from hideout_art import (
-    Hideout, center_composition, clean_composition, mosaic_composition,
-    line, hollow_circle, filled_circle,
-    s_snake, thick_line_with_contours, PrimitiveOptions,
-    arc, rectangle, polygon, grid,  # 0.2.8 mosaic primitives
-    bezier_curve, thick_ring, thick_arc, crosshatch,  # 0.2.9 mosaic v2 (FROZEN)
-)
-
-h = Hideout.from_file("my.hideout")
-# 0.3.0 RECOMMENDED: clean_composition — 7 simplest shapes for visual verify.
-# Each shape uses ONE decoration; no mixed outline+fill; no exotic primitives.
-h.placements.extend(clean_composition(780, 657))
-h.to_file("with_clean.hideout")
-
-# Or build single shapes with custom decoration + spacing:
-opts = PrimitiveOptions(decoration="Maraket Rubble")
-h.placements.extend(hollow_circle(800, 600, 25, opts))
-
-# 0.2.8 mosaic primitives — useful for bas-relief frames & tile patterns:
-h.placements.extend(rectangle(720, 580, 840, 720, opts))   # hollow border
-h.placements.extend(polygon(780, 657, 30, 6, opts))        # hexagon tile
-h.placements.extend(grid(720, 580, 840, 720,
-                         PrimitiveOptions(decoration="Coastal Pebble"),
-                         cols=5, rows=5))                   # 5x5 mosaic grid
-
-# 0.2.9 mosaic v2 primitives — FROZEN per KI-17 (visually noisy in-game).
-# Code remains available for experimentation; do NOT add to canonical .hideout.
-# h.placements.extend(bezier_curve(...))
-# h.placements.extend(thick_ring(...))
-# h.placements.extend(crosshatch(...))
-```
-
-Spacing is derived automatically from `DECORATION_FOOTPRINT_CATALOG` —
-override with `PrimitiveOptions(spacing_override=...)` if you need tighter
-or looser placement. Only `ART_TYPES` decorations are accepted; functional
-objects are rejected.
-
-See [`docs/mosaic_recipe.md`](docs/mosaic_recipe.md) for the portrait
-recipe (concept «Портрет из артефактов и природы» + decoration role
-ranking). See [`STATUS.md`](STATUS.md) → KI-17/18: в 0.3.0 откат к
-чистым single-decoration примитивам. `download/чистый холст clean.hideout`
-(65 placements = 30 functional/boundary + 35 clean) ждёт visual-verify
-от пользователя.
-
-## How a `.hideout` file is laid out
-
-See [`docs/format.md`](docs/format.md) for the full spec. Short version:
-
-```jsonc
-{
-  "version": 1,
-  "language": "English",
-  "hideout_name": "Canal Hideout",
-  "hideout_hash": 60415,
-  "doodads": {
-    "Stash":     { "hash": 3230065491, "x": 811, "y": 519, "r": 32298, "fv": 0 },
-    "Long Grass": { "hash": 2219637749, "x": 774, "y": 632, "r": 57344, "fv": 7 },
-    "Long Grass": { "hash": 2219637749, "x": 721, "y": 557, "r": 10922, "fv": 135 },
-    // ... hundreds more, all sharing keys
-  }
-}
-```
-
-| Field | Type | Meaning |
-|---|---|---|
-| `hash` | uint32 | Stable in-game asset id (same value for every instance of a decoration) |
-| `x`, `y` | int | World coordinates. **y grows upward.** |
-| `r` | uint16 | Rotation as a fraction of 360°: `deg = r / 65536 * 360` |
-| `fv` | uint8 | Bit 0x80 = horizontal flip; lower 7 bits = variant index (0..127) |
-
-## What you can build with this
-
-| Goal | Tool |
-|---|---|
-| Inspect a hideout to see what's in it | `inspect`, `layers`, `stats` |
-| Move a composition elsewhere in the same hideout | `shift` |
-| Mirror a composition for symmetry | `mirror_x`, `mirror_y` (Python API) |
-| Move a composition to a different hideout map | `transfer` (+ sample validation) |
-| Combine several compositions side-by-side | `recombine` (Python API) |
-| Visualise a hideout before re-importing | `preview` |
-| Generate new art from a PNG | `img2hideout` |
-| Draw geometric shapes (lines, circles, S-curves, mosaics, clean contours + fills) with decorations | `primitives.py` + `scripts/draw_primitives.py` (0.2.7 core + 0.2.8 mosaic + 0.2.9 mosaic v2 [FROZEN] + 0.3.0 clean) |
-| Catalogue new decorations from observed hashes | PR to `constants.py` |
-
-## What you **can't** do
-
-- Validate that a `hash` exists in a target hideout without a sample export.
-  Use `Hideout.find_unknown_hashes()` after loading a target sample.
-- Discover tile-grid boundaries — they are not in the file; placements
-  outside the playable area are silently clipped by the game. You can
-  work around this with `img2hideout --bounds x_min,y_min,x_max,y_max`
-  if you have "outlined" the playable area.
-- Know each decoration's tile footprint without observing it in-game.
-
-See [`STATUS.md`](STATUS.md) for the current list of known issues and
-planned improvements, and [`scripts/README.md`](scripts/README.md) for
-the pixel-sampling tool that produces ground-truth RGB (closes KI-11).
-
-## Repository layout
-
-```
-poe2-hideout-art/
-├── src/hideout_art/         # the Python package
-│   ├── parser.py            # tolerant regex parser, Hideout/Placement dataclasses
-│   ├── writer.py            # .hideout emitter (byte-compatible with the format)
-│   ├── transforms.py        # shift / rotate / mirror / recombine
-│   ├── preview.py           # PNG rendering (matplotlib, optional)
-│   ├── palette.py           # colour -> decoration mapping
-│   ├── img2hideout.py       # PNG -> Hideout (pillow, optional)
-│   ├── cli.py               # `hideout-art` CLI entry point
-│   └── constants.py         # known hashes, ART_TYPES, CANAL_HIDEOUT_BOUNDS,
-│                            # DECORATION_FOOTPRINT_CATALOG (0.2.3)
-├── tests/                   # pytest test suite
-│   ├── test_parser.py
-│   ├── test_writer.py
-│   ├── test_transforms.py
-│   ├── test_img2hideout.py  # img2hideout smoke tests
-│   ├── test_new_hashes.py   # 0.2.1/0.2.2 hashes + bounds + KI-9 fix
-│   ├── test_footprints.py   # 0.2.3 decoration footprint catalog tests
-│   └── data/sample.hideout  # tiny synthetic test fixture
-├── examples/                # example palette JSON + sample inputs
-│   ├── palette.json         # 4-colour Canal Hideout base palette
-│   ├── palette_warm.json    # 9-colour warm-tone palette (0.2.1, working)
-│   ├── palette_2b.json      # cool-tone portraits (5 of 6 TODOs filled 0.2.5 — only skin remains)
-│   └── README.md
-├── исходники/               # (0.2.1+0.2.2+0.2.5) user-provided reference exports:
-│   │                          8 .hideout files + matching screenshots,
-│   │                          source of the 24 new hashes (23 in 0.2.2 + 1 Seaweed in 0.2.5), the Canal
-│   │                          Hideout canvas bounds calibration, and the
-│   │                          DECORATION_FOOTPRINT_CATALOG measurements
-├── docs/
-│   ├── format.md            # full .hideout format spec
-│   └── screenshots/         # preview PNGs for the README
-├── scripts/                 # one-off dev/exploration scripts
-│   ├── bulk_preview.py      # render PNGs for every .hideout in a folder
-│   ├── scrape_hashes.py     # find unknown hashes in a folder of exports
-│   ├── measure_decorations.py  # (0.2.3) re-derive DECORATION_FOOTPRINT_CATALOG
-│   ├── sample_pixels.py     # (0.2.6) pixel-sample real RGB under each placement — closes KI-11
-│   └── sample_all.py        # (0.2.6) convenience: run sample_pixels.py on all 7 исходники pairs
-├── pyproject.toml           # PEP 621 packaging + ruff config
-├── README.md
-├── CHANGELOG.md
-├── CONTRIBUTING.md
-├── AGENTS.md                # navigation hints for AI assistants working on this repo
-└── LICENSE
-```
-
-## Contributing
-
-PRs welcome — especially new `KNOWN_HASHES` entries from observed hideouts.
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the workflow, and
-[`AGENTS.md`](AGENTS.md) if you are an AI assistant working on this repo.
-
-## License
-
-MIT. See [`LICENSE`](LICENSE).
+MIT. Не аффилирован с Grinding Gear Games. Все названия принадлежат
+их владельцам.
