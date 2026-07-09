@@ -42,6 +42,14 @@ Shapes (mosaic / bas-relief, 0.2.8)
 * :func:`polygon` — regular n-gon (triangle, square, pentagon, hexagon…).
 * :func:`grid` — regular cols×rows grid (mosaic tiles, pointillism).
 
+Shapes (mosaic v2 / portrait-grade, 0.2.9)
+------------------------------------------
+* :func:`bezier_curve` — quadratic Bézier curve (smiles, eyebrows, fingers).
+* :func:`thick_ring` — annular ring with outline + fill (glasses lenses, eyes).
+* :func:`thick_arc` — thick arc band with outline + fill (glasses temples,
+  brackets, smile with thickness).
+* :func:`crosshatch` — diagonal cross-hatch pattern (beard, hair, texture).
+
 See ``scripts/draw_primitives.py`` for a CLI that injects the curated
 composition into the centre of an existing ``.hideout`` file.
 """
@@ -619,6 +627,401 @@ def grid(
 
 
 # --------------------------------------------------------------------------- #
+# Mosaic v2 / portrait-grade primitives (0.2.9)
+# --------------------------------------------------------------------------- #
+def bezier_curve(
+    p0: tuple[float, float],
+    p1: tuple[float, float],
+    p2: tuple[float, float],
+    opts: PrimitiveOptions,
+    *,
+    spacing: float | None = None,
+) -> list[Placement]:
+    """Draw a quadratic Bézier curve from ``p0`` through control ``p1`` to ``p2``.
+
+    The curve is sampled at a fixed ``spacing`` along an *approximate* arc
+    length (chord length sum of subdivided segments). Endpoints are always
+    included. Use for organic curves — smiles, eyebrows, finger outlines,
+    shoulder lines, hair contours.
+
+    The control point ``p1`` pulls the curve toward itself but the curve
+    does NOT pass through ``p1`` (except in degenerate cases). For a curve
+    that visibly bulges toward ``p1``, place ``p1`` well outside the
+    ``p0``–``p2`` chord.
+
+    Parameters
+    ----------
+    p0, p1, p2:
+        Start, control, end points (in world units).
+    opts:
+        Decoration + rotation/variant.
+    spacing:
+        Override the catalog spacing (otherwise :func:`safe_spacing`).
+    """
+    sp = spacing if spacing is not None else _resolve_spacing(opts)
+    # Approximate arc length by sampling 32 fine sub-segments. This is
+    # cheap and accurate enough — error is well below placement spacing.
+    n_fine = 32
+    fine_pts: list[tuple[float, float]] = []
+    for i in range(n_fine + 1):
+        t = i / n_fine
+        mt = 1.0 - t
+        x = mt * mt * p0[0] + 2.0 * mt * t * p1[0] + t * t * p2[0]
+        y = mt * mt * p0[1] + 2.0 * mt * t * p1[1] + t * t * p2[1]
+        fine_pts.append((x, y))
+    # Cumulative chord length.
+    seg_lens = [
+        math.hypot(fine_pts[i + 1][0] - fine_pts[i][0],
+                   fine_pts[i + 1][1] - fine_pts[i][1])
+        for i in range(n_fine)
+    ]
+    total = sum(seg_lens)
+    if total == 0:
+        return [_make_placement(p0[0], p0[1], opts)]
+    n = max(2, int(math.ceil(total / sp)))
+    out: list[Placement] = []
+    for i in range(n + 1):
+        t = i / n
+        # Walk the fine polyline to find the point at arc-length t*total.
+        target = t * total
+        acc = 0.0
+        for j, sl in enumerate(seg_lens):
+            if acc + sl >= target or j == len(seg_lens) - 1:
+                # interpolate within fine segment j
+                local = (target - acc) / sl if sl > 0 else 0.0
+                local = max(0.0, min(1.0, local))
+                x = fine_pts[j][0] + (fine_pts[j + 1][0] - fine_pts[j][0]) * local
+                y = fine_pts[j][1] + (fine_pts[j + 1][1] - fine_pts[j][1]) * local
+                out.append(_make_placement(x, y, opts))
+                break
+            acc += sl
+    return out
+
+
+def thick_ring(
+    cx: float,
+    cy: float,
+    inner_r: float,
+    outer_r: float,
+    outline_opts: PrimitiveOptions,
+    fill_opts: PrimitiveOptions,
+    *,
+    spacing: float | None = None,
+) -> list[Placement]:
+    """Draw an annular ring (donut) with a contrasting outline + fill.
+
+    The outer and inner circles form the outline; the band between them is
+    filled with a second decoration. Use for glasses lenses, eyes, decorative
+    borders, halos, nimbus shapes.
+
+    Parameters
+    ----------
+    cx, cy:
+        Centre of the ring.
+    inner_r, outer_r:
+        Inner and outer radii. ``inner_r`` may be 0 (degenerates to a
+        :func:`filled_circle` with an outline).
+    outline_opts, fill_opts:
+        Decorations for the two circle outlines and the annular fill. SHOULD
+        be different (otherwise the outline is invisible).
+    spacing:
+        Override the catalog spacing (otherwise uses ``fill_opts`` spacing).
+
+    Raises
+    ------
+    ValueError
+        If ``inner_r < 0``, ``outer_r <= 0``, or ``inner_r >= outer_r``.
+    """
+    if inner_r < 0:
+        raise ValueError(f"inner_r must be >= 0 (got {inner_r})")
+    if outer_r <= 0:
+        raise ValueError(f"outer_r must be > 0 (got {outer_r})")
+    if inner_r >= outer_r:
+        raise ValueError(
+            f"inner_r ({inner_r}) must be < outer_r ({outer_r})"
+        )
+    sp = spacing if spacing is not None else _resolve_spacing(fill_opts)
+    outline: list[Placement] = []
+    fill: list[Placement] = []
+
+    # Outer circle outline.
+    outline.extend(hollow_circle(cx, cy, outer_r, outline_opts, spacing=sp))
+    # Inner circle outline (skip if inner_r is 0 — degenerates to a point).
+    if inner_r > 0:
+        outline.extend(hollow_circle(cx, cy, inner_r, outline_opts, spacing=sp))
+    else:
+        outline.append(_make_placement(cx, cy, outline_opts))
+
+    # Fill: concentric rings between inner_r and outer_r, spaced `sp` apart.
+    # Start one ring inward from outer_r so fill does not collide with outline.
+    outline_keys: set[tuple[int, int]] = {(p.x, p.y) for p in outline}
+    ring_r = outer_r - sp
+    while ring_r > inner_r + 1e-6:
+        circ = 2.0 * math.pi * ring_r
+        n_on_ring = max(6, int(round(circ / sp)))
+        for i in range(n_on_ring):
+            theta = 2.0 * math.pi * i / n_on_ring
+            px = cx + ring_r * math.cos(theta)
+            py = cy + ring_r * math.sin(theta)
+            ix, iy = int(round(px)), int(round(py))
+            if (ix, iy) in outline_keys:
+                continue
+            fill.append(_make_placement(px, py, fill_opts))
+        ring_r -= sp
+
+    return outline + fill
+
+
+def thick_arc(
+    cx: float,
+    cy: float,
+    radius: float,
+    thickness: float,
+    start_angle_deg: float,
+    end_angle_deg: float,
+    outline_opts: PrimitiveOptions,
+    fill_opts: PrimitiveOptions,
+    *,
+    spacing: float | None = None,
+) -> list[Placement]:
+    """Draw a thick arc band with outline + fill.
+
+    The shape is a partial annulus swept from ``start_angle_deg`` to
+    ``end_angle_deg`` at centre ``radius``, with band ``thickness``.
+    Two arc outlines run along the inner and outer edges; two radial cap
+    lines close the band at each end; the interior is filled.
+
+    Use for glasses temples (partial circles), brackets, smile curves with
+    thickness, decorative arch bands.
+
+    Parameters
+    ----------
+    cx, cy:
+        Centre of curvature.
+    radius:
+        Centreline radius (mid-band).
+    thickness:
+        Total band width (perpendicular to the centreline). Inner edge sits
+        at ``radius - thickness/2``, outer edge at ``radius + thickness/2``.
+    start_angle_deg, end_angle_deg:
+        Sweep endpoints in degrees (counter-clockwise from +x axis).
+    outline_opts, fill_opts:
+        Decorations for the perimeter and interior. SHOULD differ.
+    spacing:
+        Override catalog spacing (otherwise uses ``fill_opts`` spacing).
+
+    Raises
+    ------
+    ValueError
+        If ``radius <= 0`` or ``thickness <= 0``.
+    """
+    if radius <= 0:
+        raise ValueError(f"radius must be > 0 (got {radius})")
+    if thickness <= 0:
+        raise ValueError(f"thickness must be > 0 (got {thickness})")
+    sp = spacing if spacing is not None else _resolve_spacing(fill_opts)
+    inner_r = radius - thickness / 2.0
+    outer_r = radius + thickness / 2.0
+    if inner_r < 0:
+        inner_r = 0.0
+
+    sweep_deg = end_angle_deg - start_angle_deg
+    outline: list[Placement] = []
+    fill: list[Placement] = []
+
+    # Outer arc (radius = outer_r).
+    outline.extend(arc(cx, cy, outer_r, start_angle_deg, end_angle_deg,
+                       outline_opts, spacing=sp))
+    # Inner arc (radius = inner_r), walked in the same direction.
+    if inner_r > 0:
+        inner_arc = arc(cx, cy, inner_r, start_angle_deg, end_angle_deg,
+                        outline_opts, spacing=sp)
+        outline.extend(inner_arc)
+    else:
+        outline.append(_make_placement(
+            cx + 0 * math.cos(math.radians(start_angle_deg)),
+            cy + 0 * math.sin(math.radians(start_angle_deg)),
+            outline_opts,
+        ))
+
+    # Two radial caps: a line from inner edge to outer edge at each endpoint.
+    for ang_deg in (start_angle_deg, end_angle_deg):
+        ang = math.radians(ang_deg)
+        ix = cx + inner_r * math.cos(ang)
+        iy = cy + inner_r * math.sin(ang)
+        ox = cx + outer_r * math.cos(ang)
+        oy = cy + outer_r * math.sin(ang)
+        cap = line(ix, iy, ox, oy, outline_opts, spacing=sp)
+        # Drop endpoints (already on the arc outlines) to avoid duplicates.
+        if len(cap) >= 3:
+            cap = cap[1:-1]
+        outline.extend(cap)
+
+    # Fill: radial spokes at uniform angular spacing, each spoke running from
+    # inner_r+epsilon to outer_r-epsilon. Skip points that land on outline.
+    outline_keys: set[tuple[int, int]] = {(p.x, p.y) for p in outline}
+    arc_len_center = abs(math.radians(sweep_deg)) * radius
+    n_spokes = max(2, int(math.ceil(arc_len_center / sp)))
+    inner_pad = inner_r + sp * 0.1 if inner_r > 0 else 0.0
+    outer_pad = outer_r - sp * 0.1
+    for i in range(n_spokes + 1):
+        t = i / n_spokes
+        ang = math.radians(start_angle_deg + sweep_deg * t)
+        spoke_len = outer_pad - inner_pad
+        if spoke_len <= 0:
+            continue
+        n_on_spoke = max(1, int(math.floor(spoke_len / sp)))
+        for j in range(n_on_spoke + 1):
+            tt = j / n_on_spoke if n_on_spoke > 0 else 0.5
+            r = inner_pad + spoke_len * tt
+            px = cx + r * math.cos(ang)
+            py = cy + r * math.sin(ang)
+            ix, iy = int(round(px)), int(round(py))
+            if (ix, iy) in outline_keys:
+                continue
+            fill.append(_make_placement(px, py, fill_opts))
+
+    # Defensive dedup of outline at identical integer coordinates.
+    seen: set[tuple[int, int]] = set()
+    deduped: list[Placement] = []
+    for p in outline:
+        key = (p.x, p.y)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(p)
+    return deduped + fill
+
+
+def crosshatch(
+    x0: float,
+    y0: float,
+    x1: float,
+    y1: float,
+    opts: PrimitiveOptions,
+    *,
+    spacing: float | None = None,
+    angle_deg: float = 45.0,
+    bidirectional: bool = True,
+) -> list[Placement]:
+    """Draw a diagonal cross-hatch pattern clipped to the rectangle (x0,y0)..(x1,y1).
+
+    Two families of parallel diagonal lines (at ``angle_deg`` and
+    ``angle_deg + 90°``) are sampled at uniform ``spacing``. Both families
+    are clipped to the rectangle. With ``bidirectional=False`` only the
+    first family is drawn (single-direction hatch).
+
+    Use for textures — beards, hair, shadows, fabric, decorative shading.
+
+    Parameters
+    ----------
+    x0, y0, x1, y1:
+        Rectangle corners (any order — auto-normalised).
+    opts:
+        Decoration + rotation/variant.
+    spacing:
+        Override catalog spacing (otherwise :func:`safe_spacing`).
+    angle_deg:
+        Angle of the first hatch family, in degrees (0 = horizontal,
+        90 = vertical). The second family is at ``angle_deg + 90``.
+    bidirectional:
+        If True (default), draw both families (cross-hatch). If False,
+        draw only the first family (parallel hatch).
+    """
+    if x0 > x1:
+        x0, x1 = x1, x0
+    if y0 > y1:
+        y0, y1 = y1, y0
+    sp = spacing if spacing is not None else _resolve_spacing(opts)
+    rect_w = x1 - x0
+    rect_h = y1 - y0
+    if rect_w <= 0 or rect_h <= 0:
+        return []
+
+    out: list[Placement] = []
+    seen: set[tuple[int, int]] = set()
+
+    def _add_family(ang_deg: float) -> None:
+        ang = math.radians(ang_deg)
+        # Direction along the lines.
+        dx = math.cos(ang)
+        dy = math.sin(ang)
+        # Perpendicular direction (for offsetting parallel lines).
+        nx = -dy
+        ny = dx
+        # The rectangle's "diagonal" extent — lines are generated for
+        # perpendicular offsets in [-diag/2, +diag/2] where diag is the
+        # rectangle diagonal. This guarantees full coverage.
+        diag = math.hypot(rect_w, rect_h)
+        cx = (x0 + x1) / 2.0
+        cy = (y0 + y1) / 2.0
+        n_offsets = max(2, int(math.ceil(diag / sp)))
+        for k in range(-n_offsets, n_offsets + 1):
+            # Offset line passes through (px, py) with direction (dx, dy).
+            px = cx + nx * k * sp
+            py = cy + ny * k * sp
+            # Liang-Barsky clipping: parametric line point(t) = (px+dx*t, py+dy*t).
+            # Standard form: p_i*t <= q_i for the four edges.
+            #   left  (x=x0): p=-dx, q=px-x0
+            #   right (x=x1): p= dx, q=x1-px
+            #   bot   (y=y0): p=-dy, q=py-y0
+            #   top   (y=y1): p= dy, q=y1-py
+            t_min = -math.inf
+            t_max = math.inf
+            reject = False
+            for p_i, q_i in (
+                (-dx, px - x0),
+                ( dx, x1 - px),
+                (-dy, py - y0),
+                ( dy, y1 - py),
+            ):
+                if abs(p_i) < 1e-12:
+                    # Line parallel to this edge.
+                    if q_i < 0:
+                        reject = True
+                        break
+                    continue
+                r = q_i / p_i
+                if p_i < 0:
+                    if r > t_max:
+                        reject = True
+                        break
+                    if r > t_min:
+                        t_min = r
+                else:  # p_i > 0
+                    if r < t_min:
+                        reject = True
+                        break
+                    if r < t_max:
+                        t_max = r
+            if reject or t_min > t_max:
+                continue
+            # Sample points along the clipped segment at uniform spacing.
+            seg_len = (t_max - t_min) * math.hypot(dx, dy)
+            if seg_len <= 0:
+                continue
+            n_pts = max(1, int(math.ceil(seg_len / sp)))
+            for i in range(n_pts + 1):
+                t = t_min + (t_max - t_min) * (i / n_pts)
+                qx = px + dx * t
+                qy = py + dy * t
+                # Defensive: ensure inside rectangle (numerical safety).
+                if qx < x0 - 1e-6 or qx > x1 + 1e-6 or \
+                   qy < y0 - 1e-6 or qy > y1 + 1e-6:
+                    continue
+                ix, iy = int(round(qx)), int(round(qy))
+                if (ix, iy) in seen:
+                    continue
+                seen.add((ix, iy))
+                out.append(_make_placement(qx, qy, opts))
+
+    _add_family(angle_deg)
+    if bidirectional:
+        _add_family(angle_deg + 90.0)
+    return out
+
+
+# --------------------------------------------------------------------------- #
 # Convenience: a curated composition of all five primitives
 # --------------------------------------------------------------------------- #
 def center_composition(
@@ -710,6 +1113,117 @@ def center_composition(
         thickness=28.0,
         outline_opts=opts(thick_outline_decoration),
         fill_opts=opts(thick_fill_decoration),
+    ))
+
+    return out
+
+
+# --------------------------------------------------------------------------- #
+# Convenience: a curated composition of the 0.2.9 mosaic v2 primitives
+# --------------------------------------------------------------------------- #
+def mosaic_composition(
+    center_x: float,
+    center_y: float,
+    *,
+    bezier_decoration: str = "Small Coastal Stone",
+    ring_outline_decoration: str = "Small Coastal Stone",
+    ring_fill_decoration: str = "Cave Coral",
+    arc_outline_decoration: str = "Small Coastal Stone",
+    arc_fill_decoration: str = "Long Grass",
+    hatch_decoration: str = "Seaweed",
+    spacing_override: float | None = None,
+) -> list[Placement]:
+    """Build a composition of the four 0.2.9 mosaic v2 primitives.
+
+    The composition is **strictly separated** from :func:`center_composition`:
+    it lives in a different zone of the canvas (offset DOWN by ~95 wu from
+    the centre, in the free space below the 0.2.7 core shapes) so the 0.2.7
+    core shapes can be visually verified independently of the 0.2.9
+    additions. This protects the KI-14/15 re-verification (which only
+    covers ``center_composition``) from being confounded by new shapes
+    landing on top of the old ones.
+
+    Layout (relative to ``center_x, center_y``, zone centre = ``(cx, cy+95)``)::
+
+        ┌───────────────────────────────┐
+        │  [thick_ring]   [thick_arc]   │   y = zy - 12  (compact r=7)
+        │                                │
+        │  [bezier smile]                │   y = zy + 5..15
+        │                                │
+        │  [crosshatch beard patch]      │   y = zy + 10..22
+        └───────────────────────────────┘
+
+    Total zone height ~37 wu, width ~50 wu. Fits inside Canal Hideout
+    bounds ``(700, 540, 860, 775)`` when ``center`` is ``(780, 657)`` —
+    zone becomes x∈[755, 808], y∈[733, 774], strictly below the
+    ``center_composition`` bottom (S-snake at cy+65 = 722).
+
+    All defaults use only decorations with high/medium placement confidence
+    and that match the roles laid out in ``docs/mosaic_recipe.md``:
+
+      * ``bezier_decoration`` — Small Coastal Stone: контур/точки, узнаваемая форма.
+      * ``ring_outline_decoration`` — Small Coastal Stone: та же роль для контура линзы.
+      * ``ring_fill_decoration`` — Cave Coral: светло-коричневый fill, виден на tan-полу.
+      * ``arc_outline_decoration`` — Small Coastal Stone.
+      * ``arc_fill_decoration`` — Long Grass: виден на полу (KI-13).
+      * ``hatch_decoration`` — Seaweed: бесформенная куча, роль «бороды».
+    """
+    cx = float(center_x)
+    cy = float(center_y)
+
+    # Zone centre — directly BELOW center_composition, in the free canvas
+    # space between the S-snake bottom (cy+65) and the canvas floor (775).
+    zx = cx
+    zy = cy + 95.0
+
+    def opts(name: str) -> PrimitiveOptions:
+        return PrimitiveOptions(
+            decoration=name,
+            spacing_override=spacing_override,
+        )
+
+    out: list[Placement] = []
+
+    # (1) thick_ring — glasses lens shape, top-left of zone.
+    #     The ring band is narrow (outer_r - inner_r = 7 wu), but Cave Coral
+    #     has 'single' confidence → fallback spacing 15 wu → no fill would be
+    #     generated. Override the ring's spacing to 3.0 wu so the fill band
+    #     gets 2+ concentric rings of Cave Coral placements.
+    ring_fill_opts_dense = PrimitiveOptions(
+        decoration=ring_fill_decoration,
+        spacing_override=3.0 if spacing_override is None else spacing_override,
+    )
+    out.extend(thick_ring(
+        zx - 18.0, zy - 12.0,
+        inner_r=3.0, outer_r=10.0,
+        outline_opts=opts(ring_outline_decoration),
+        fill_opts=ring_fill_opts_dense,
+        spacing=3.0 if spacing_override is None else spacing_override,
+    ))
+
+    # (2) thick_arc — half-circle bracket, top-right of zone.
+    out.extend(thick_arc(
+        zx + 18.0, zy - 12.0,
+        radius=8.0, thickness=4.0,
+        start_angle_deg=0.0, end_angle_deg=180.0,
+        outline_opts=opts(arc_outline_decoration),
+        fill_opts=opts(arc_fill_decoration),
+    ))
+
+    # (3) bezier_curve — smile arc below the two top shapes.
+    out.extend(bezier_curve(
+        p0=(zx - 15.0, zy + 5.0),
+        p1=(zx,        zy + 15.0),
+        p2=(zx + 15.0, zy + 5.0),
+        opts=opts(bezier_decoration),
+    ))
+
+    # (4) crosshatch — beard/shadow patch at the bottom of the zone.
+    out.extend(crosshatch(
+        zx - 18.0, zy + 10.0,
+        zx + 18.0, zy + 22.0,
+        opts=opts(hatch_decoration),
+        angle_deg=30.0,
     ))
 
     return out

@@ -31,12 +31,13 @@ composition** you can import into the game.
 - **PNG preview** — top-down render, one colour per decoration type
 - **Image → hideout** — sample a PNG, map each pixel to the closest palette
   entry, emit a `.hideout` file
-- **Drawing primitives** (0.2.7 core + 0.2.8 mosaic) — `line` /
-  `polyline` / `hollow_circle` / `filled_circle` / `s_snake` /
+- **Drawing primitives** (0.2.7 core + 0.2.8 mosaic + 0.2.9 mosaic v2) —
+  `line` / `polyline` / `hollow_circle` / `filled_circle` / `s_snake` /
   `thick_line_with_contours` directly in world coordinates (0.2.7),
   plus `arc` / `rectangle` / `polygon` / `grid` for mosaics &
-  bas-relief (0.2.8). All use art decorations, strictly additive —
-  never removes existing placements.
+  bas-relief (0.2.8), plus `bezier_curve` / `thick_ring` / `thick_arc` /
+  `crosshatch` for portraits & bas-relief textures (0.2.9). All use art
+  decorations, strictly additive — never removes existing placements.
 - **CLI** + **Python API** — same operations, two interfaces
 - **Pure stdlib core** — `matplotlib` / `pillow` are optional extras
 
@@ -108,15 +109,18 @@ h = image_to_hideout(
 h.to_file("portrait.hideout")
 ```
 
-### Drawing primitives (0.2.7 core + 0.2.8 mosaic)
+### Drawing primitives (0.2.7 core + 0.2.8 mosaic + 0.2.9 mosaic v2)
 
 Inject geometric shapes — drawn with art decorations — directly into an
 existing `.hideout` file. Useful when `img2hideout` rasterisation is too
-noisy for clean geometry (circles, lines, S-curves, mosaics).
+noisy for clean geometry (circles, lines, S-curves, mosaics, portrait
+features).
 
 **Core (0.2.7):** `line`, `polyline`, `hollow_circle`, `filled_circle`,
 `s_snake`, `thick_line_with_contours` (+ curated `center_composition`).
 **Mosaic / bas-relief (0.2.8):** `arc`, `rectangle`, `polygon`, `grid`.
+**Mosaic v2 / portrait-grade (0.2.9):** `bezier_curve`, `thick_ring`,
+`thick_arc`, `crosshatch` (+ curated `mosaic_composition`).
 
 ```bash
 # CLI — strictly additive, never removes existing placements.
@@ -124,21 +128,28 @@ python scripts/draw_primitives.py \
     "чистый холст.hideout" \
     -o "чистый холст с примитивами.hideout" \
     --center 780 657 \
+    --with-mosaic \
     --bounds-check \
     --preview preview.png
 ```
 
 ```python
 from hideout_art import (
-    Hideout, center_composition, line, hollow_circle, filled_circle,
+    Hideout, center_composition, mosaic_composition,
+    line, hollow_circle, filled_circle,
     s_snake, thick_line_with_contours, PrimitiveOptions,
     arc, rectangle, polygon, grid,  # 0.2.8 mosaic primitives
+    bezier_curve, thick_ring, thick_arc, crosshatch,  # 0.2.9 mosaic v2
 )
 
 h = Hideout.from_file("my.hideout")
 # Add the curated 5-shape composition (vertical lines + hollow circle +
 # filled circle + S-snake + thick line with contours) centred at (780, 657).
 h.placements.extend(center_composition(780, 657))
+# 0.2.9: also add the 4-shape mosaic v2 composition (bezier smile +
+# thick_ring lens + thick_arc bracket + crosshatch beard) in a separate
+# zone below the core shapes — does NOT overlap center_composition.
+h.placements.extend(mosaic_composition(780, 657))
 h.to_file("with_primitives.hideout")
 
 # Or build single shapes with custom decoration + spacing:
@@ -151,6 +162,18 @@ h.placements.extend(polygon(780, 657, 30, 6, opts))        # hexagon tile
 h.placements.extend(grid(720, 580, 840, 720,
                          PrimitiveOptions(decoration="Coastal Pebble"),
                          cols=5, rows=5))                   # 5x5 mosaic grid
+
+# 0.2.9 mosaic v2 primitives — useful for portraits & organic shapes:
+h.placements.extend(bezier_curve(  # smile arc
+    (760, 650), (780, 670), (800, 650),
+    PrimitiveOptions(decoration="Small Coastal Stone")))
+h.placements.extend(thick_ring(    # glasses lens
+    770, 640, inner_r=4, outer_r=10,
+    outline_opts=PrimitiveOptions(decoration="Small Coastal Stone"),
+    fill_opts=PrimitiveOptions(decoration="Cave Coral")))
+h.placements.extend(crosshatch(    # beard texture
+    760, 660, 800, 690,
+    PrimitiveOptions(decoration="Seaweed"), angle_deg=30))
 ```
 
 Spacing is derived automatically from `DECORATION_FOOTPRINT_CATALOG` —
@@ -158,10 +181,12 @@ override with `PrimitiveOptions(spacing_override=...)` if you need tighter
 or looser placement. Only `ART_TYPES` decorations are accepted; functional
 objects are rejected.
 
-See [`STATUS.md`](STATUS.md) → KI-14/15: в 0.2.8 исправлены S-snake
-(декоратор Sand Tussock → Maraket Rubble) и thick_line (thickness 14 → 28,
-fill Coastal Pebble → Long Grass). Ожидает повторной визуальной проверки
-пользователем.
+See [`docs/mosaic_recipe.md`](docs/mosaic_recipe.md) for the portrait
+recipe (concept «Портрет из артефактов и природы» + decoration role
+ranking). See [`STATUS.md`](STATUS.md) → KI-14/15: в 0.2.8 исправлены
+S-snake (декоратор Sand Tussock → Maraket Rubble) и thick_line (thickness
+14 → 28, fill Coastal Pebble → Long Grass). KI-16 (0.2.9, open): mosaic
+v2 примитивы не проверены в игре — ожидается visual-verify.
 
 ## How a `.hideout` file is laid out
 
@@ -200,7 +225,7 @@ See [`docs/format.md`](docs/format.md) for the full spec. Short version:
 | Combine several compositions side-by-side | `recombine` (Python API) |
 | Visualise a hideout before re-importing | `preview` |
 | Generate new art from a PNG | `img2hideout` |
-| Draw geometric shapes (lines, circles, S-curves, mosaics) with decorations | `primitives.py` + `scripts/draw_primitives.py` (0.2.7 core + 0.2.8 mosaic) |
+| Draw geometric shapes (lines, circles, S-curves, mosaics, portrait features) with decorations | `primitives.py` + `scripts/draw_primitives.py` (0.2.7 core + 0.2.8 mosaic + 0.2.9 mosaic v2) |
 | Catalogue new decorations from observed hashes | PR to `constants.py` |
 
 ## What you **can't** do

@@ -42,7 +42,10 @@ from hideout_art.constants import (  # noqa: E402
     CANAL_HIDEOUT_BOUNDS,
     KNOWN_HASHES,
 )
-from hideout_art.primitives import center_composition  # noqa: E402
+from hideout_art.primitives import (  # noqa: E402
+    center_composition,
+    mosaic_composition,
+)
 
 
 def _validate_decoration(name: str, role: str) -> str:
@@ -103,6 +106,37 @@ def main(argv: list[str] | None = None) -> int:
              "Default: use min_spacing_wu from DECORATION_FOOTPRINT_CATALOG.",
     )
     p.add_argument(
+        "--with-mosaic", action="store_true",
+        help="Also inject the 0.2.9 mosaic v2 composition (bezier_curve + "
+             "thick_ring + thick_arc + crosshatch) in the free zone below "
+             "the core composition. Strictly additive. "
+             "See docs/mosaic_recipe.md for the concept.",
+    )
+    p.add_argument(
+        "--bezier-decoration", default="Small Coastal Stone",
+        help="Decoration for the mosaic-zone bezier smile (default: %(default)s).",
+    )
+    p.add_argument(
+        "--ring-outline-decoration", default="Small Coastal Stone",
+        help="Decoration for the mosaic-zone thick_ring outline (default: %(default)s).",
+    )
+    p.add_argument(
+        "--ring-fill-decoration", default="Cave Coral",
+        help="Decoration for the mosaic-zone thick_ring fill (default: %(default)s).",
+    )
+    p.add_argument(
+        "--arc-outline-decoration", default="Small Coastal Stone",
+        help="Decoration for the mosaic-zone thick_arc outline (default: %(default)s).",
+    )
+    p.add_argument(
+        "--arc-fill-decoration", default="Long Grass",
+        help="Decoration for the mosaic-zone thick_arc fill (default: %(default)s).",
+    )
+    p.add_argument(
+        "--hatch-decoration", default="Seaweed",
+        help="Decoration for the mosaic-zone crosshatch (default: %(default)s).",
+    )
+    p.add_argument(
         "--preview", type=Path, default=None,
         help="Optional path to render a PNG preview of the result.",
     )
@@ -120,6 +154,13 @@ def main(argv: list[str] | None = None) -> int:
     _validate_decoration(args.s_snake_decoration, "s-snake")
     _validate_decoration(args.thick_outline_decoration, "thick-outline")
     _validate_decoration(args.thick_fill_decoration, "thick-fill")
+    if args.with_mosaic:
+        _validate_decoration(args.bezier_decoration, "bezier")
+        _validate_decoration(args.ring_outline_decoration, "ring-outline")
+        _validate_decoration(args.ring_fill_decoration, "ring-fill")
+        _validate_decoration(args.arc_outline_decoration, "arc-outline")
+        _validate_decoration(args.arc_fill_decoration, "arc-fill")
+        _validate_decoration(args.hatch_decoration, "hatch")
 
     # 1. Load source.
     if not args.input.exists():
@@ -141,7 +182,23 @@ def main(argv: list[str] | None = None) -> int:
         thick_fill_decoration=args.thick_fill_decoration,
         spacing_override=args.spacing_override,
     )
-    print(f"[draw] generated {len(new_placements)} new placements")
+    print(f"[draw] generated {len(new_placements)} core placements")
+
+    # 2b. Optional: mosaic v2 composition (0.2.9) — bezier + ring + arc + hatch.
+    if args.with_mosaic:
+        mosaic_placements = mosaic_composition(
+            center_x=args.center[0],
+            center_y=args.center[1],
+            bezier_decoration=args.bezier_decoration,
+            ring_outline_decoration=args.ring_outline_decoration,
+            ring_fill_decoration=args.ring_fill_decoration,
+            arc_outline_decoration=args.arc_outline_decoration,
+            arc_fill_decoration=args.arc_fill_decoration,
+            hatch_decoration=args.hatch_decoration,
+            spacing_override=args.spacing_override,
+        )
+        print(f"[draw] generated {len(mosaic_placements)} mosaic v2 placements")
+        new_placements.extend(mosaic_placements)
 
     # 3. Optional bounds check.
     if args.bounds_check:

@@ -30,17 +30,22 @@ from hideout_art.constants import (
 from hideout_art.primitives import (
     PrimitiveOptions,
     arc,
+    bezier_curve,
     center_composition,
+    crosshatch,
     filled_circle,
     grid,
     hollow_circle,
     line,
+    mosaic_composition,
     polygon,
     polyline,
     rectangle,
     s_snake,
     safe_spacing,
+    thick_arc,
     thick_line_with_contours,
+    thick_ring,
 )
 
 
@@ -630,3 +635,260 @@ class TestGrid:
         a = grid(100, 200, 200, 240, opts, cols=3, rows=2)
         b = grid(200, 240, 100, 200, opts, cols=3, rows=2)
         assert {(p.x, p.y) for p in a} == {(p.x, p.y) for p in b}
+
+
+# --------------------------------------------------------------------------- #
+# Mosaic v2 / portrait-grade primitives (0.2.9)
+# --------------------------------------------------------------------------- #
+class TestBezierCurve:
+    def test_endpoints_always_included(self):
+        opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        out = bezier_curve((100, 200), (150, 250), (200, 200), opts)
+        coords = [(p.x, p.y) for p in out]
+        assert (100, 200) in coords
+        assert (200, 200) in coords
+
+    def test_curve_bulges_toward_control_point(self):
+        """Quadratic Bezier with control above the chord must produce
+        points whose max y is strictly above the chord y."""
+        opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        # Chord from (0,0) to (100,0), control at (50, 80).
+        out = bezier_curve((0, 0), (50, 80), (100, 0), opts,
+                           spacing=10.0)
+        ys = [p.y for p in out]
+        # The curve should reach approximately y = 40 (half the control y)
+        # at the midpoint — well above the chord y=0.
+        assert max(ys) > 30, f"max y={max(ys)} — curve did not bulge upward"
+
+    def test_degenerate_zero_length_returns_single_point(self):
+        opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        out = bezier_curve((50, 50), (50, 50), (50, 50), opts)
+        assert len(out) == 1
+        assert (out[0].x, out[0].y) == (50, 50)
+
+    def test_uses_only_known_art_decorations(self):
+        opts = PrimitiveOptions(decoration="Long Grass")
+        out = bezier_curve((0, 0), (50, 30), (100, 0), opts)
+        for p in out:
+            assert p.name == "Long Grass"
+            assert p.hash == KNOWN_HASHES["Long Grass"]
+            assert p.name in ART_TYPES
+
+    def test_no_duplicate_coords(self):
+        opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        out = bezier_curve((0, 0), (40, 80), (80, 0), opts, spacing=8.0)
+        coords = [(p.x, p.y) for p in out]
+        assert len(coords) == len(set(coords)), \
+            f"{len(coords) - len(set(coords))} duplicate coords"
+
+    def test_spacing_override_controls_density(self):
+        opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        sparse = bezier_curve((0, 0), (50, 80), (100, 0), opts, spacing=50.0)
+        dense = bezier_curve((0, 0), (50, 80), (100, 0), opts, spacing=5.0)
+        assert len(dense) > len(sparse) > 1
+
+
+class TestThickRing:
+    def test_rejects_negative_inner_r(self):
+        opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        fill = PrimitiveOptions(decoration="Long Grass")
+        with pytest.raises(ValueError, match="inner_r must be >= 0"):
+            thick_ring(0, 0, -1, 10, opts, fill)
+
+    def test_rejects_zero_outer_r(self):
+        opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        fill = PrimitiveOptions(decoration="Long Grass")
+        with pytest.raises(ValueError, match="outer_r must be > 0"):
+            thick_ring(0, 0, 0, 0, opts, fill)
+
+    def test_rejects_inner_r_greater_equal_outer_r(self):
+        opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        fill = PrimitiveOptions(decoration="Long Grass")
+        with pytest.raises(ValueError, match="inner_r .* must be < outer_r"):
+            thick_ring(0, 0, 10, 10, opts, fill)
+        with pytest.raises(ValueError, match="inner_r .* must be < outer_r"):
+            thick_ring(0, 0, 15, 10, opts, fill)
+
+    def test_produces_both_outline_and_fill(self):
+        outline_opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        fill_opts = PrimitiveOptions(decoration="Long Grass")
+        out = thick_ring(0, 0, 5, 15, outline_opts, fill_opts, spacing=5.0)
+        names = {p.name for p in out}
+        # Both decorations must appear.
+        assert "Small Coastal Stone" in names
+        assert "Long Grass" in names
+
+    def test_inner_r_zero_degenerates_to_filled_circle_with_outline(self):
+        """inner_r=0 → inner 'circle' collapses to a single centre point."""
+        outline_opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        fill_opts = PrimitiveOptions(decoration="Long Grass")
+        out = thick_ring(50, 50, 0, 10, outline_opts, fill_opts, spacing=5.0)
+        # The centre (50, 50) must appear as an outline point.
+        coords = [(p.x, p.y) for p in out]
+        assert (50, 50) in coords
+
+    def test_no_duplicate_coords(self):
+        outline_opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        fill_opts = PrimitiveOptions(decoration="Long Grass")
+        out = thick_ring(100, 100, 5, 15, outline_opts, fill_opts, spacing=5.0)
+        coords = [(p.x, p.y) for p in out]
+        assert len(coords) == len(set(coords))
+
+
+class TestThickArc:
+    def test_rejects_zero_or_negative_radius(self):
+        opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        fill = PrimitiveOptions(decoration="Long Grass")
+        with pytest.raises(ValueError, match="radius must be > 0"):
+            thick_arc(0, 0, 0, 5, 0, 180, opts, fill)
+        with pytest.raises(ValueError, match="radius must be > 0"):
+            thick_arc(0, 0, -5, 5, 0, 180, opts, fill)
+
+    def test_rejects_zero_or_negative_thickness(self):
+        opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        fill = PrimitiveOptions(decoration="Long Grass")
+        with pytest.raises(ValueError, match="thickness must be > 0"):
+            thick_arc(0, 0, 10, 0, 0, 180, opts, fill)
+
+    def test_produces_both_outline_and_fill(self):
+        outline_opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        fill_opts = PrimitiveOptions(decoration="Long Grass")
+        out = thick_arc(0, 0, 15, 6, 0, 180, outline_opts, fill_opts,
+                        spacing=5.0)
+        names = {p.name for p in out}
+        assert "Small Coastal Stone" in names
+        assert "Long Grass" in names
+
+    def test_half_circle_arc_stays_in_upper_half_plane(self):
+        """A 0..180° arc centred at origin sweeps the upper half plane:
+        all produced points must have y >= 0 (within rounding tolerance)."""
+        outline_opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        fill_opts = PrimitiveOptions(decoration="Long Grass")
+        out = thick_arc(0, 0, 20, 6, 0, 180, outline_opts, fill_opts,
+                        spacing=5.0)
+        for p in out:
+            # Allow tiny negative for numerical safety at the 0° and 180° endpoints.
+            assert p.y >= -1, f"point {p} below x-axis (lower half plane)"
+
+    def test_no_duplicate_coords(self):
+        outline_opts = PrimitiveOptions(decoration="Small Coastal Stone")
+        fill_opts = PrimitiveOptions(decoration="Long Grass")
+        out = thick_arc(100, 100, 15, 6, 30, 150, outline_opts, fill_opts,
+                        spacing=5.0)
+        coords = [(p.x, p.y) for p in out]
+        assert len(coords) == len(set(coords))
+
+
+class TestCrosshatch:
+    def test_returns_empty_for_zero_area_rectangle(self):
+        opts = PrimitiveOptions(decoration="Seaweed")
+        assert crosshatch(50, 50, 50, 50, opts) == []
+        assert crosshatch(50, 50, 50, 100, opts) == []
+        assert crosshatch(50, 50, 100, 50, opts) == []
+
+    def test_all_points_inside_rectangle(self):
+        opts = PrimitiveOptions(decoration="Seaweed")
+        out = crosshatch(100, 200, 200, 240, opts, spacing=5.0)
+        for p in out:
+            assert 100 <= p.x <= 200, f"{p} x outside rect"
+            assert 200 <= p.y <= 240, f"{p} y outside rect"
+
+    def test_no_duplicate_coords(self):
+        opts = PrimitiveOptions(decoration="Seaweed")
+        out = crosshatch(0, 0, 50, 50, opts, spacing=5.0)
+        coords = [(p.x, p.y) for p in out]
+        assert len(coords) == len(set(coords)), \
+            f"{len(coords) - len(set(coords))} duplicate coords"
+
+    def test_bidirectional_has_more_points_than_unidirectional(self):
+        opts = PrimitiveOptions(decoration="Seaweed")
+        bi = crosshatch(0, 0, 50, 50, opts, spacing=5.0, bidirectional=True)
+        uni = crosshatch(0, 0, 50, 50, opts, spacing=5.0, bidirectional=False)
+        assert len(bi) > len(uni) > 0
+
+    def test_normalises_swapped_corners(self):
+        opts = PrimitiveOptions(decoration="Seaweed")
+        a = crosshatch(0, 0, 50, 50, opts, spacing=5.0)
+        b = crosshatch(50, 50, 0, 0, opts, spacing=5.0)
+        assert {(p.x, p.y) for p in a} == {(p.x, p.y) for p in b}
+
+    def test_angle_zero_produces_axis_aligned_grid(self):
+        """angle_deg=0 + bidirectional → 0° + 90° = horizontal + vertical
+        lines = an axis-aligned grid."""
+        opts = PrimitiveOptions(decoration="Seaweed")
+        out = crosshatch(0, 0, 50, 50, opts, spacing=10.0, angle_deg=0.0)
+        # The intersection points (10, 10), (20, 20), etc. should all be present.
+        # At least verify the structure: many points, all inside rect.
+        assert len(out) > 10
+        for p in out:
+            assert 0 <= p.x <= 50 and 0 <= p.y <= 50
+
+    def test_uses_only_known_art_decorations(self):
+        opts = PrimitiveOptions(decoration="Long Grass")
+        out = crosshatch(0, 0, 30, 30, opts)
+        for p in out:
+            assert p.name == "Long Grass"
+            assert p.hash == KNOWN_HASHES["Long Grass"]
+
+
+class TestMosaicComposition:
+    def test_uses_only_known_art_decorations(self):
+        out = mosaic_composition(780, 657)
+        for p in out:
+            assert p.hash in KNOWN_HASHES.values()
+            assert p.name in ART_TYPES
+
+    def test_all_placements_within_canal_hideout_bounds(self):
+        cx, cy = 780, 657
+        out = mosaic_composition(cx, cy)
+        x_min, y_min, x_max, y_max = CANAL_HIDEOUT_BOUNDS
+        for p in out:
+            assert x_min <= p.x <= x_max, \
+                f"{p.name} x={p.x} outside canvas"
+            assert y_min <= p.y <= y_max, \
+                f"{p.name} y={p.y} outside canvas"
+
+    def test_no_duplicate_placements_per_decoration(self):
+        from collections import Counter
+        out = mosaic_composition(780, 657)
+        by_name: dict[str, list[tuple[int, int]]] = {}
+        for p in out:
+            by_name.setdefault(p.name, []).append((p.x, p.y))
+        for name, coords in by_name.items():
+            dupes = {k: v for k, v in Counter(coords).items() if v > 1}
+            assert not dupes, f"{name} has duplicates: {dupes}"
+
+    def test_does_not_overlap_center_composition(self):
+        """The mosaic zone MUST be strictly separated from
+        center_composition so KI-14/15 re-verification is not confounded."""
+        cc = center_composition(780, 657)
+        mc = mosaic_composition(780, 657)
+        cc_keys = {(p.x, p.y) for p in cc}
+        overlap = [p for p in mc if (p.x, p.y) in cc_keys]
+        assert not overlap, \
+            f"mosaic_composition overlaps center_composition at {len(overlap)} points"
+
+    def test_contains_all_four_new_primitives_decorations(self):
+        """The composition must use decorations from all four new shapes:
+        bezier (Small Coastal Stone), ring_fill (Cave Coral),
+        arc_fill (Long Grass), hatch (Seaweed)."""
+        out = mosaic_composition(780, 657)
+        names = {p.name for p in out}
+        # Bezier + ring_outline + arc_outline all use Small Coastal Stone.
+        assert "Small Coastal Stone" in names
+        # Ring fill uses Cave Coral.
+        assert "Cave Coral" in names
+        # Arc fill uses Long Grass.
+        assert "Long Grass" in names
+        # Hatch uses Seaweed.
+        assert "Seaweed" in names
+
+    def test_zone_is_below_center_composition(self):
+        """All mosaic_composition placements must have y > max y of
+        center_composition (zone is in the free space below)."""
+        cc = center_composition(780, 657)
+        mc = mosaic_composition(780, 657)
+        cc_max_y = max(p.y for p in cc)
+        for p in mc:
+            assert p.y > cc_max_y, \
+                f"mosaic point {p} not below center_composition (max_y={cc_max_y})"

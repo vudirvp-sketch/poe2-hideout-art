@@ -7,6 +7,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.9] - 2026-07-10
+
+### Added
+- **4 mosaic v2 / portrait-grade primitives** в
+  `src/hideout_art/primitives.py`:
+  - `bezier_curve(p0, p1, p2, opts, *, spacing=None)` — квадратичная
+    кривая Безье (органические кривые: улыбки, брови, контур пальца,
+    плечи). Сэмплирование по approximate arc length (32 fine sub-segments).
+  - `thick_ring(cx, cy, inner_r, outer_r, outline_opts, fill_opts, *,
+    spacing=None)` — кольцо с outline + fill (очки-линзы, глаза,
+    декоративные рамки, нимбы). inner_r=0 деградирует в filled_circle
+    с outline.
+  - `thick_arc(cx, cy, radius, thickness, start_angle_deg, end_angle_deg,
+    outline_opts, fill_opts, *, spacing=None)` — толстая дуга с outline
+    + fill (дужки очков, скобки, улыбка с толщиной, арки). Две arc
+    outlines + две radial caps + fill spokes.
+  - `crosshatch(x0, y0, x1, y1, opts, *, spacing=None, angle_deg=45,
+    bidirectional=True)` — диагональная крестовая штриховка (борода,
+    волосы, тени, текстуры). Liang-Barsky clipping к прямоугольнику.
+- **`mosaic_composition(center_x, center_y, ...)`** — курируемая
+  демонстрация 4 новых примитивов в отдельной зоне холста (снизу от
+  `center_composition`, не перекрывает её — KI-14/15 re-verify остаётся
+  чистым). Defaults: Small Coastal Stone (контур), Cave Coral (ring fill),
+  Long Grass (arc fill), Seaweed (hatch).
+- **`docs/mosaic_recipe.md`** — емкий рецепт портрета: концепция
+  «Портрет из артефактов и природы», decoration-to-role mapping, рейтинг
+  декораций по назначению (контур/точки vs заполнение/фон), псевдокод
+  для 0.2.9 примитивов.
+- **30 новых pytest cases** в `tests/test_primitives.py`: TestBezierCurve
+  (6), TestThickRing (6), TestThickArc (5), TestCrosshatch (7),
+  TestMosaicComposition (6).
+- **CLI флаг `--with-mosaic`** в `scripts/draw_primitives.py` —
+  опционально добавляет mosaic v2 композицию. Per-shape decoration
+  overrides: `--bezier-decoration`, `--ring-outline-decoration`,
+  `--ring-fill-decoration`, `--arc-outline-decoration`,
+  `--arc-fill-decoration`, `--hatch-decoration`.
+- **Артефакт**: `download/чистый холст с примитивами.hideout` (165
+  placements = 30 functional/boundary + 63 core + 72 mosaic v2).
+- **Превью**: `download/чистый холст с примитивами.{preview,colored}.png`.
+
+### Changed
+- `__init__.py` — re-exports bezier_curve/thick_ring/thick_arc/crosshatch/
+  mosaic_composition. Version 0.2.8 → 0.2.9.
+- `pyproject.toml` — version 0.2.8 → 0.2.9.
+
+### Known Issues
+- **KI-16 (open 0.2.9)** — Mosaic v2 примитивы (bezier/ring/arc/hatch)
+  не проверены в игре. Ожидается visual-verify после импорта
+  `download/чистый холст с примитивами.hideout`.
+
 ## [0.2.8] - 2026-07-10
 
 ### Added
@@ -26,9 +76,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   TestRectangle (4), TestPolygon (5), TestGrid (6), + 2 regression-теста
   для KI-14/KI-15 (`test_ki14_s_snake_uses_maraket_rubble`,
   `test_ki15_thick_line_fill_uses_long_grass`).
-- **Артефакт**: `download/чистый холст с примитивами.hideout` (93
-  placements = 30 functional/boundary + 63 art, обновлён под 0.2.8).
-- **Превью**: `download/чистый холст с примитивами.{preview,colored}.png`.
 
 ### Changed — KI-14 fix
 - `center_composition` default `s_snake_decoration`: `"Sand Tussock"` →
@@ -53,15 +100,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Ожидает повторной визуальной проверки пользователем.
 - **KI-14 (fixed 0.2.8)** — S-snake плохо различима.
 - **KI-15 (fixed 0.2.8)** — Thick_line stadium не видна.
-
-### Changed — документация
-- `STATUS.md` — KI-13/14/15 закрыты, добавлены новые KI-14/15 fix-секции,
-  добавлены примитивы 0.2.8 в «Что работает».
-- `AGENTS.md` — file map расширен (4 новых примитива), test count
-  311 → 333.
-- `README.md` — раздел "Drawing primitives" обновлён: 9 фигур вместо 5.
-- `__init__.py` — re-exports arc/rectangle/polygon/grid. Version 0.2.7 → 0.2.8.
-- `pyproject.toml` — version 0.2.7 → 0.2.8.
 
 ## [0.2.7] - 2026-07-09 — кратко
 

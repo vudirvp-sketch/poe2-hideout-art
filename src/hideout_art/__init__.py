@@ -19,22 +19,27 @@ from .preview import render_png
 from .primitives import (
     PrimitiveOptions,
     arc,
+    bezier_curve,
     center_composition,
+    crosshatch,
     filled_circle,
     grid,
     hollow_circle,
     line,
+    mosaic_composition,
     polygon,
     polyline,
     rectangle,
     s_snake,
     safe_spacing,
+    thick_arc,
     thick_line_with_contours,
+    thick_ring,
 )
 from .transforms import mirror_x, mirror_y, rotate, shift
 from .writer import write_hideout
 
-__version__ = "0.2.8"
+__version__ = "0.2.9"
 __all__ = [
     "Hideout",
     "Placement",
@@ -62,5 +67,11 @@ __all__ = [
     "rectangle",
     "polygon",
     "grid",
+    # Primitives (0.2.9) — mosaic v2 / portrait-grade shapes.
+    "bezier_curve",
+    "thick_ring",
+    "thick_arc",
+    "crosshatch",
+    "mosaic_composition",
     "__version__",
 ]
