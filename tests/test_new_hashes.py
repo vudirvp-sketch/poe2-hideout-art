@@ -355,13 +355,99 @@ def test_palette_warm_uses_new_decorations():
 
 
 def test_palette_2b_still_has_todos():
-    """palette_2b.json is still a template — TODOs must remain (no white/black/gray yet)."""
+    """palette_2b.json is still a template — 3 TODOs remain (black/skin/red).
+
+    In 0.2.4 the white/gray/silver TODOs were FILLED with Marble-серия RGB
+    measured via VLM analysis of исходники/еще элементы.jpg. The 3 remaining
+    TODOs (black, skin, red) cannot be filled from currently-known
+    decorations and still need new in-game discoveries.
+    """
     import json
     data = json.loads((EXAMPLES / "palette_2b.json").read_text(encoding="utf-8"))
     names = [e["decoration"] for e in data["entries"]]
     todo_count = sum(1 for n in names if n.startswith("TODO_"))
-    # We expect 6 remaining TODOs: white, black, gray, silver, skin, red.
-    assert todo_count == 6
+    # We expect 3 remaining TODOs: black, skin, red.
+    assert todo_count == 3
+    todo_names = [n for n in names if n.startswith("TODO_")]
+    assert "TODO_BLACK_DECORATION" in todo_names
+    assert "TODO_SKIN_DECORATION" in todo_names
+    assert "TODO_RED_DECORATION" in todo_names
+
+
+def test_palette_2b_uses_marble_series():
+    """palette_2b.json (0.2.4) fills 3 of 6 TODOs with the Marble-серия.
+
+    Marble Fountain  -> white role (brightest, ~230 RGB)
+    Marble Table     -> silver role (~200 RGB)
+    Marble Bench     -> gray role (~210 RGB)
+    Marble Walls     -> gray alt (~210 RGB, near-twin of Marble Bench)
+    """
+    import json
+    data = json.loads((EXAMPLES / "palette_2b.json").read_text(encoding="utf-8"))
+    names = {e["decoration"] for e in data["entries"]}
+    assert "Marble Fountain" in names, "Marble Fountain should fill the white role"
+    assert "Marble Table" in names,    "Marble Table should fill the silver role"
+    assert "Marble Bench" in names,    "Marble Bench should fill the gray role"
+    assert "Marble Walls" in names,    "Marble Walls should fill the gray-alt role"
+
+
+def test_palette_2b_marble_rgb_values():
+    """Marble-серия RGB values measured via VLM in 0.2.4 — regression protection.
+
+    Source: VLM (glm-4.6v) analysis of исходники/еще элементы.jpg.
+    These are first-pass mid-tone estimates; pixel-exact sampling may
+    shift values by ±10-15 RGB points. Test guards against accidental
+    edits and documents the source-of-truth.
+    """
+    import json
+    data = json.loads((EXAMPLES / "palette_2b.json").read_text(encoding="utf-8"))
+    rgb_by_name = {e["decoration"]: tuple(e["color"]) for e in data["entries"]}
+    # VLM-measured mid-tone RGB from 0.2.4.
+    assert rgb_by_name["Marble Fountain"] == (230, 230, 220)
+    assert rgb_by_name["Marble Table"]    == (200, 200, 195)
+    assert rgb_by_name["Marble Bench"]    == (210, 210, 205)
+    assert rgb_by_name["Marble Walls"]    == (210, 210, 205)
+
+
+def test_palette_2b_marble_entries_resolve_to_known_hashes():
+    """Every Marble entry in palette_2b.json must resolve to a KNOWN_HASHES entry.
+
+    This would catch a typo in the decoration name. The 3 remaining TODO_*
+    entries are expected to fail this check — they are filtered out below.
+    """
+    import json
+    data = json.loads((EXAMPLES / "palette_2b.json").read_text(encoding="utf-8"))
+    for e in data["entries"]:
+        name = e["decoration"]
+        if name.startswith("TODO_"):
+            continue
+        assert name in KNOWN_HASHES, (
+            f"palette_2b.json references '{name}' which is not in KNOWN_HASHES"
+        )
+
+
+def test_palette_2b_marble_only_section_loads_via_palette_class():
+    """If we strip the 3 TODO_* entries, palette_2b.json must load via
+    Palette.from_json_file without errors.
+
+    This proves the Marble-серия entries are syntactically valid and that
+    the only thing keeping palette_2b.json from being a working palette is
+    the 3 missing black/skin/red decorations.
+    """
+    import copy
+    import json
+
+    data = json.loads((EXAMPLES / "palette_2b.json").read_text(encoding="utf-8"))
+    stripped = copy.deepcopy(data)
+    stripped["entries"] = [
+        e for e in stripped["entries"] if not e["decoration"].startswith("TODO_")
+    ]
+    # Must not raise.
+    p = Palette.from_dict(stripped)
+    # 4 original + 4 marble = 8 working entries.
+    assert len(p.entries) == 8
+    for entry in p.entries:
+        assert entry.decoration in KNOWN_HASHES
 
 
 # ---------------------------------------------------------------------------

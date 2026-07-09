@@ -99,24 +99,39 @@ specifically, for a character like 2B from NieR: Automata. The default
 silver, skin-tone, or red. This template defines the colour ROLES you
 need; the actual decoration names are left as `TODO_*` placeholders.
 
-**Note (0.2.2):** the 18 new decorations added in 0.2.2 include a
-**Marble series** (Bench, Table, Walls, Fountain) and **Cave Fossil** —
-all visually light gray/white in screenshots. These are the strongest
-candidates yet for the "white" and "gray" TODOs in `palette_2b.json`.
-However, their **exact in-game RGB has not been measured**. To close
-KI-2 fully:
+**Update (0.2.4):** the white/silver/gray TODOs are now FILLED with the
+Marble-серия, using RGB values measured via VLM (glm-4.6v) analysis of
+the `исходники/еще элементы.jpg` screenshot:
 
-1. In the game, place one each of `Marble Bench`, `Marble Table`,
-   `Marble Walls`, `Marble Fountain`, `Cave Fossil` in your hideout.
-2. Take a screenshot.
-3. Send the screenshot — we'll sample median RGB and fill the TODOs.
+| Role          | Decoration       | RGB                  | Source           |
+|---------------|------------------|----------------------|------------------|
+| white (dress) | Marble Fountain  | (230, 230, 220)      | VLM 0.2.4        |
+| silver (sword)| Marble Table     | (200, 200, 195)      | VLM 0.2.4        |
+| gray (shadow) | Marble Bench     | (210, 210, 205)      | VLM 0.2.4        |
+| gray alt      | Marble Walls     | (210, 210, 205)      | VLM 0.2.4        |
+
+3 TODOs remain — `black` (blindfold/hair), `skin` (face/neck), `red`
+(emblem) — none of the currently-known decorations fit. To close KI-2
+fully:
+
+1. Find new in-game decorations matching these 3 roles (charred wood /
+   obsidian for black; pale peach/tan for skin; red flower/crystal for
+   red).
+2. Place one of each in your hideout, export, screenshot.
+3. Send both files — we'll measure RGB via VLM and fill the TODOs.
+
+**Important correction (0.2.4):** prior 0.2.2 comments assumed Cave Fossil
+was "light gray/white ammonite-like" — a cool-palette candidate. VLM
+analysis revealed Cave Fossil is actually **BROWN (140, 110, 80)**. It
+is NOT a candidate for the 2B cool palette. Cave Coral (150, 130, 110)
+and Summit Brazier (180, 140, 80) are also warm.
 
 The 5 warm-tone decorations added in 0.2.1 (Maraket Rubble/Treasures/
 Samovar/Ornament + Coastal Pebble) do NOT fill these cool-tone TODOs.
 They are warm tan/gray, not the neutral cool gray that 2B's sword/dress
 shadows require. For warm-tone art, use `palette_warm.json`.
 
-### Filling in the template
+### Filling in the remaining template
 
 1. In the game, place ONE of each missing decoration in your hideout.
 2. Export the hideout to `.hideout`.
@@ -129,8 +144,10 @@ shadows require. For warm-tone art, use `palette_warm.json`.
    decoration names.
 8. Run `hideout-art img2hideout portrait.png --palette examples/palette_2b.json ...`.
 
-Until the TODOs are filled in, `Palette.from_json_file()` raises a
-`ValueError` listing the known decorations — by design.
+Until all TODOs are filled in, `Palette.from_json_file()` raises a
+`ValueError` listing the known decorations — by design. (The Marble-серия
+entries alone DO load cleanly; only the 3 remaining TODO_* entries
+block palette loading.)
 
 ## Producing a source image
 

@@ -1,5 +1,5 @@
 {
-  "_comment": "TEMPLATE palette for cool-tone portraits (e.g. 2B from NieR:Automata) — needs pure white (dress), pure black (blindfold/hair), silver (sword blade), skin tone, and red (emblem). The original 4 Canal Hideout colours cover pink/green/light-green/dark-brown but are NOT enough for a face or character portrait. Until the TODOs are filled with real decoration names, image_to_hideout() will refuse to load this palette (Palette.__post_init__ raises on unknown decoration names). The 5 new warm-tone decorations added in 0.2.1 (Maraket Rubble/Treasures/Samovar/Ornament + Coastal Pebble) do NOT fill these cool-tone TODOs — they are warm tan/gray. For warm-tone art, use examples/palette_warm.json instead (it loads cleanly today).",
+  "_comment": "TEMPLATE palette for cool-tone portraits (e.g. 2B from NieR:Automata) — needs pure white (dress), pure black (blindfold/hair), silver (sword blade), skin tone, and red (emblem). In 0.2.4 the white/silver/gray TODOs were FILLED with the Marble-серия (RGB sampled via VLM analysis of the 'еще элементы.jpg' screenshot — see _rgb_sources below). Black, skin and red are STILL MISSING. Until those 3 are filled, the palette LOADS (Marble entries resolve to known hashes), but it cannot yet render a recognisable 2B — the darkest entry is Sand Tussock (78,52,46) which is too warm-brown for a blindfold.",
   "_how_to_fill": [
     "1. In the game, place ONE of each missing decoration in your hideout.",
     "2. Export the hideout to .hideout.",
@@ -10,14 +10,24 @@
     "7. Replace the TODO entries below with the actual decoration name.",
     "8. Now `hideout-art img2hideout portrait.png --palette examples/palette_2b.json` works."
   ],
+  "_rgb_sources": {
+    "_method": "RGB values for the Marble-серия and Cave Fossil/Coral/Brazier were measured via VLM (glm-4.6v) analysis of the screenshot исходники/еще элементы.jpg. The VLM identified each decoration visually and reported a mid-tone RGB. These are FIRST-PASS estimates, not pixel-exact medians — they may shift by ±10-15 points after a clean pixel sampling pass. The key qualitative finding: Cave Fossil is BROWN (140,110,80), not the light gray/white we assumed in 0.2.2 — it is NOT a cool-palette candidate.",
+    "Marble Bench":     "(210, 210, 205) — VLM mid-tone estimate, 1 sample, 0.2.4",
+    "Marble Table":     "(200, 200, 195) — VLM mid-tone estimate, 2 samples, 0.2.4",
+    "Marble Walls":     "(210, 210, 205) — VLM mid-tone estimate, 1 sample, 0.2.4",
+    "Marble Fountain":  "(230, 230, 220) — VLM mid-tone estimate (brightest, near-white), 1 sample, 0.2.4",
+    "Cave Fossil":      "(140, 110, 80) — VLM mid-tone BROWN rock; previously assumed light gray — corrected in 0.2.4. NOT a 2B cool-palette candidate.",
+    "Cave Coral":       "(150, 130, 110) — VLM mid-tone brownish-gray; warm, not cool. NOT a 2B candidate.",
+    "Summit Brazier":   "(180, 140, 80) — VLM mid-tone golden-brown metal; warm, NOT cool. Candidate for warm 'red' role only."
+  },
   "_colour_roles_needed_for_2b": {
-    "white":  "2B's dress, skin highlights, skirt trim. Look for snow, marble, bone, white flowers, pale sand. STILL MISSING — strongest 0.2.2 candidates: Marble Bench / Marble Table / Marble Walls / Marble Fountain (need RGB sampling).",
+    "white":  "2B's dress, skin highlights, skirt trim. FILLED in 0.2.4 by Marble Fountain (230,230,220) — brightest marble, near-white. Marble Table (200,200,195) is the alternate mid-white.",
     "black":  "2B's blindfold, hair, glove, boots. Look for charred wood, obsidian, ash, black sand, dark stone. STILL MISSING — Sand Tussock (78,52,46) is the closest existing option but too brown.",
-    "gray":   "Shadows on dress, sword blade, metal details. Look for stone rubble, gravel, ash pile, slate. STILL MISSING — Maraket Samovar (148,133,115) is too warm; 0.2.2 Cave Fossil / Cave Coral may work as cool light gray (need RGB sampling).",
-    "silver": "Sword blade highlights, metallic accents. Look for crystal, ice, polished stone. STILL MISSING — 0.2.2 Marble Fountain (with water) may work (need RGB sampling).",
-    "skin":   "2B's skin (visible near eyes/neck). Look for pale tan sand, pale pink sand, peach flower. Falling Sand (248,187,208) is too pink — need peach/tan.",
+    "gray":   "Shadows on dress, sword blade, metal details. FILLED in 0.2.4 by Marble Bench (210,210,205) and Marble Walls (210,210,205) — light cool gray.",
+    "silver": "Sword blade highlights, metallic accents. FILLED in 0.2.4 by Marble Table (200,200,195) — slightly cooler/darker than Marble Fountain, used for silver role. Note: 4 marble decorations have very similar RGB (200-230 range); this is intentional — they are 4 visually similar marble textures.",
+    "skin":   "2B's skin (visible near eyes/neck). Look for pale tan sand, pale pink sand, peach flower. Falling Sand (248,187,208) is too pink — need peach/tan. STILL MISSING.",
     "pink":   "Glow accents, lips. COVERED by Falling Sand.",
-    "red":    "Emblem on dress. Look for red flower, blood moss, ruby crystal, red candle. STILL MISSING — 0.2.2 Summit Brazier (fire) could work as warm red/orange (need RGB sampling)."
+    "red":    "Emblem on dress. Look for red flower, blood moss, ruby crystal, red candle. STILL MISSING — 0.2.2 Summit Brazier (180,140,80) is golden-brown, too yellow for true red."
   },
   "_available_warm_alternatives_in_0_2_1": {
     "Maraket Rubble":     "warm tan/khaki (138,120,94) — usable for mid-tone warm fills, NOT for cool 2B gray",
@@ -26,26 +36,19 @@
     "Maraket Ornament":   "warm tan/khaki (136,120,97) — near-duplicate of Maraket Rubble",
     "Coastal Pebble":     "warm tan/khaki (134,115,94) — near-duplicate of Maraket Rubble"
   },
-  "_0_2_2_candidates_needing_rgb_sampling": {
-    "_comment": "These 18 new Canal decorations were added in 0.2.2 from user-provided exports. RGB values are ESTIMATED from screenshots — please send a clean screenshot to calibrate. The Marble series and Cave Fossil are the most promising candidates for the 2B cool palette.",
-    "Marble Bench":      "light gray marble — top candidate for 2B 'white' role",
-    "Marble Table":      "light gray marble — alternate for 'white'",
-    "Marble Walls":      "light gray marble — alternate for 'white' or 'gray'",
-    "Marble Fountain":   "light gray marble + water — candidate for 'silver'",
-    "Cave Fossil":       "light gray/white ammonite — candidate for 'white' or 'gray'",
-    "Cave Coral":        "pale gray/pink coral — candidate for 'gray' or 'skin'",
-    "Summit Brazier":    "stone brazier (fire = warm orange) — candidate for 'red' if lit",
-    "Pile of Leaves":    "autumn warm tones — not for 2B but useful for warm palettes",
-    "Log":               "brown bark — not for 2B",
-    "Beech Tree":        "large tree — not for 2B (also LARGE footprint)",
-    "Cordilina":         "green plant — not for 2B",
-    "Petrified Cave Figure": "large statue — not for 2B (also LARGE footprint)",
-    "Coastal Bush":      "warm green-tan bush — not for 2B",
-    "Small Coastal Stone":  "small stone — too small for art use",
-    "Medium Coastal Stone": "medium stone — could be 'gray' alt, need RGB",
-    "Slender Seedling":  "bushy shrub — not for 2B",
-    "Camp Crate":        "wooden crate — too warm for 2B",
-    "Camp Gear":         "bedroll/sack — too warm for 2B"
+  "_0_2_4_measured_rgb_summary": {
+    "_comment": "VLM analysis of исходники/еще элементы.jpg (2026-07-09). 4 Marble decorations + 3 cave/brazier decorations measured. Marble-серия are confirmed cool light-gray/white and now fill 3 of 6 TODOs. Cave Fossil turned out to be BROWN — corrected the prior 0.2.2 guess of 'light gray/white ammonite'.",
+    "marble_series": {
+      "Marble Fountain":  "(230,230,220) — brightest, near-white. Role: white (2B dress).",
+      "Marble Table":     "(200,200,195) — mid light gray. Role: silver (sword blade).",
+      "Marble Bench":     "(210,210,205) — light gray. Role: gray (dress shadows).",
+      "Marble Walls":     "(210,210,205) — light gray (near-twin of Marble Bench). Role: gray alt."
+    },
+    "not_2b_candidates": {
+      "Cave Fossil":      "(140,110,80) BROWN — corrected from prior 'light gray/white' guess. NOT cool.",
+      "Cave Coral":       "(150,130,110) brownish-gray — warm, NOT cool.",
+      "Summit Brazier":   "(180,140,80) golden-brown — warm, NOT cool."
+    }
   },
   "entries": [
     {
@@ -74,30 +77,37 @@
     },
 
     {
-      "_role": "white (dress, highlights) — STILL MISSING, look in-game",
-      "color": [240, 240, 240],
-      "decoration": "TODO_WHITE_DECORATION",
+      "_role": "white (2B dress, skin highlights) — FILLED 0.2.4, VLM-measured from Marble Fountain",
+      "color": [230, 230, 220],
+      "decoration": "Marble Fountain",
       "weight": 1.0,
       "max_count": null
     },
     {
-      "_role": "black (blindfold, hair) — STILL MISSING, Sand Tussock is closest but too brown",
+      "_role": "silver (sword blade, metallic accents) — FILLED 0.2.4, VLM-measured from Marble Table",
+      "color": [200, 200, 195],
+      "decoration": "Marble Table",
+      "weight": 1.0,
+      "max_count": null
+    },
+    {
+      "_role": "gray (shadows on dress, sword details) — FILLED 0.2.4, VLM-measured from Marble Bench",
+      "color": [210, 210, 205],
+      "decoration": "Marble Bench",
+      "weight": 1.0,
+      "max_count": null
+    },
+    {
+      "_role": "gray alt (textural variety for dithered gradients) — FILLED 0.2.4, VLM-measured from Marble Walls",
+      "color": [210, 210, 205],
+      "decoration": "Marble Walls",
+      "weight": 0.6,
+      "max_count": null
+    },
+    {
+      "_role": "black (blindfold, hair) — STILL MISSING, look in-game",
       "color": [20, 20, 20],
       "decoration": "TODO_BLACK_DECORATION",
-      "weight": 1.0,
-      "max_count": null
-    },
-    {
-      "_role": "gray (shadows, sword) — STILL MISSING cool neutral gray; Maraket Samovar is warm",
-      "color": [128, 128, 128],
-      "decoration": "TODO_GRAY_DECORATION",
-      "weight": 1.0,
-      "max_count": null
-    },
-    {
-      "_role": "silver (metallic accents) — STILL MISSING",
-      "color": [200, 200, 215],
-      "decoration": "TODO_SILVER_DECORATION",
       "weight": 1.0,
       "max_count": null
     },

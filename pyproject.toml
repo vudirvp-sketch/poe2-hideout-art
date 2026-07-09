@@ -1,6 +1,6 @@
 [project]
 name = "hideout-art"
-version = "0.2.3"
+version = "0.2.4"
 description = "Read, transform and emit Path of Exile 2 .hideout files. Build floor-art compositions from images."
 readme = "README.md"
 license = { text = "MIT" }

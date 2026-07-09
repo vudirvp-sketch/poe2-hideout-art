@@ -7,6 +7,69 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.4] - 2026-07-09
+
+### Added
+- **VLM-measured RGB for cold-tone decorations.** Used the `VLM` skill
+  (glm-4.6v) to analyze the `исходники/еще элементы.jpg` screenshot
+  (which contains Marble Bench/Table/Walls/Fountain + Cave Fossil +
+  Cave Coral + Summit Brazier placements). Identified each decoration
+  visually and reported mid-tone RGB values.
+- **`palette_2b.json` partial fill.** Replaced 3 of 6 TODO placeholders
+  with VLM-measured Marble-серия entries:
+  - `white`  role → Marble Fountain (230, 230, 220) — brightest marble
+  - `silver` role → Marble Table    (200, 200, 195) — mid light gray
+  - `gray`   role → Marble Bench    (210, 210, 205) — light cool gray
+  - `gray` alt → Marble Walls       (210, 210, 205) — near-twin of Bench
+- **New metadata block** in `palette_2b.json`: `_rgb_sources` (method
+  description + per-decoration RGB attribution), `_0_2_4_measured_rgb_summary`
+  (compact table of measured values and qualitative findings).
+- **5 new pytest tests** in `tests/test_new_hashes.py`:
+  - `test_palette_2b_still_has_todos` (updated) — now expects 3 TODOs
+    (black/skin/red), down from 6.
+  - `test_palette_2b_uses_marble_series` — verifies Marble Fountain/
+    Table/Bench/Walls are in the palette.
+  - `test_palette_2b_marble_rgb_values` — regression protection for
+    the VLM-measured RGB values.
+  - `test_palette_2b_marble_entries_resolve_to_known_hashes` —
+    catches typos in decoration names.
+  - `test_palette_2b_marble_only_section_loads_via_palette_class` —
+    proves that the Marble-серия entries alone form a valid Palette
+    (only the 3 remaining TODOs keep palette_2b.json from loading).
+- Total test count: **237** (236 pass, 1 skipped).
+
+### Changed
+- `src/hideout_art/constants.py` — comments for Cave Fossil/Cave Coral/
+  Summit Brazier/Marble Bench/Table/Walls/Fountain updated with VLM-
+  measured RGB values. Cave Fossil comment corrected from "light
+  gray/white ammonite-like" to "BROWN rock (140,110,80)" — the prior
+  0.2.2 guess was wrong.
+- `STATUS.md` — KI-2 status updated to "partial 0.2.4" with a full
+  RGB-measurement table; "Что улучшать дальше" trimmed; new principle
+  added: "RGB-значения — с указанием источника".
+- `AGENTS.md` — note added about the VLM-measured RGB source for the
+  Marble-серия and the corrected Cave Fossil colour.
+- `docs/img2hideout.md` — palette_2b.json section updated: 3 of 6 TODOs
+  filled, 3 remain (black/skin/red); new "VLM-измеренные RGB" subsection.
+- `examples/palette_2b.json` — see Added section above.
+- Version bumped to `0.2.4` in `pyproject.toml` and `__init__.py`.
+
+### Fixed
+- **Cave Fossil colour correction (qualitative).** Prior 0.2.2 comment
+  in `constants.py` guessed Cave Fossil as "light gray/white ammonite-
+  like" — VLM analysis of the screenshot revealed it is actually BROWN
+  (140,110,80), a warm rock. This means Cave Fossil is NOT a candidate
+  for the 2B cool palette (was listed as a candidate in 0.2.2). The
+  `_0_2_2_candidates_needing_rgb_sampling` block in `palette_2b.json`
+  was effectively superseded by the new `_0_2_4_measured_rgb_summary`
+  block, which records the correction.
+
+### Known Issues (no change in 0.2.4)
+- KI-2 is now **partial 0.2.4** (was partial 0.2.2): 3 of 6 TODOs filled,
+  3 remain (black/skin/red).
+- KI-10 is unchanged: catalog measures placement footprint, not sprite
+  bounds.
+
 ## [0.2.3] - 2026-07-09
 
 ### Added
@@ -101,7 +164,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `img2hideout`, CLI (`inspect`/`layers`/`stats`/`preview`/`shift`/
   `transfer`/`img2hideout`), 23 known hashes, docs, 33 pytest tests.
 
-[Unreleased]: https://github.com/vudirvp-sketch/poe2-hideout-art/compare/v0.2.3...HEAD
+[Unreleased]: https://github.com/vudirvp-sketch/poe2-hideout-art/compare/v0.2.4...HEAD
+[0.2.4]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.4
 [0.2.3]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.3
 [0.2.2]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.2
 [0.2.1]: https://github.com/vudirvp-sketch/poe2-hideout-art/releases/tag/v0.2.1

@@ -265,10 +265,31 @@ Atziri Statue и другие функциональные объекты (Stash
   5 Maraket/Coastal Pebble). **Загружается и работает.** Для пустынь,
   дерева, камня, осенних сцен.
 - `examples/palette_2b.json` — шаблон для холодных портретов (2B-style).
-  Содержит TODO-плейсхолдеры для white/black/cool-gray/silver/skin/red.
-  В 0.2.2 появились marble-декорации (Marble Bench/Table/Walls/Fountain)
-  и Cave Fossil — кандидаты на white/light-gray, но точные RGB ещё не
-  измерены. Присылайте скриншот — закрою KI-2 полностью.
+  В 0.2.4 **3 из 6 TODO заполнены** Marble-серией (VLM-measured RGB):
+  - `white`  → Marble Fountain (230, 230, 220)
+  - `silver` → Marble Table    (200, 200, 195)
+  - `gray`   → Marble Bench    (210, 210, 205)
+  - `gray` alt → Marble Walls  (210, 210, 205)
+  
+  Остаются 3 TODO: `black` (повязка/волосы), `skin` (кожа), `red`
+  (эмблема) — ни одна известная декорация не подходит. Палитра пока
+  НЕ загружается через `Palette.from_json_file` из-за оставшихся TODO_*.
+  Если их временно вырезать — загрузится и работает.
+
+### VLM-измеренные RGB (0.2.4)
+
+Источником RGB-значений для Marble-серии и Cave Fossil/Coral/Brazier
+послужил VLM-анализ скриншота `исходники/еще элементы.jpg` через
+`glm-4.6v`. VLM идентифицировал каждую декорацию визуально и сообщил
+mid-tone RGB.
+
+**Важная находка:** Cave Fossil — **коричневый** (140, 110, 80), а не
+светло-серый/белый, как предполагалось в 0.2.2. Это значит, что Cave
+Fossil **не** подходит для холодной 2B-палитры. Cave Coral и Summit
+Brazier тоже тёплые. Только Marble-серия оказалась действительно cool.
+
+Полная таблица измеренных значений — в `examples/palette_2b.json` →
+`_0_2_4_measured_rgb_summary`, с указанием метода и источника.
 
 ## Доступные декорации Canal Hideout (46 шт.)
 

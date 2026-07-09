@@ -93,15 +93,19 @@ KNOWN_HASHES: dict[str, int] = {
     "Pile of Leaves":       4294658310,  # leaf pile, autumn warm tones
 
     # Cave / mountain decorations
-    "Cave Fossil":          2206403756,  # light gray/white ammonite-like
-    "Cave Coral":           2359120247,  # pale gray/pink coral
-    "Summit Brazier":       2623109233,  # stone brazier (fire = warm orange)
+    "Cave Fossil":          2206403756,  # BROWN rock (140,110,80) — VLM-measured 0.2.4, see palette_2b.json
+    "Cave Coral":           2359120247,  # brownish-gray coral (150,130,110) — VLM-measured 0.2.4
+    "Summit Brazier":       2623109233,  # golden-brown brazier metal (180,140,80) — VLM-measured 0.2.4
 
-    # Marble furniture (light gray/white — closest existing match for 2B "white")
-    "Marble Bench":          534959854,  # light gray marble
-    "Marble Table":         4056218057,  # light gray marble
-    "Marble Walls":         1380152311,  # light gray marble
-    "Marble Fountain":       525963527,  # light gray marble + water
+    # Marble furniture (light gray/white — VLM-measured 0.2.4, fills 3 of 6
+    # TODOs in palette_2b.json. Marble Fountain is brightest at (230,230,220),
+    # Marble Table is mid at (200,200,195), Marble Bench/Walls are light gray
+    # at (210,210,205). Cave Fossil turned out to be BROWN, not light gray —
+    # prior 0.2.2 guess corrected in 0.2.4.)
+    "Marble Bench":          534959854,  # light gray marble (210,210,205) — VLM 0.2.4
+    "Marble Table":         4056218057,  # light gray marble (200,200,195) — VLM 0.2.4
+    "Marble Walls":         1380152311,  # light gray marble (210,210,205) — VLM 0.2.4
+    "Marble Fountain":       525963527,  # near-white marble (230,230,220) — VLM 0.2.4
 
     # Camp props (warm brown wood + canvas)
     "Camp Crate":           2156404357,  # wooden crate, warm brown

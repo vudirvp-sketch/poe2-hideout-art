@@ -130,6 +130,12 @@ minimal.
   confidence levels. See KI-10 in `STATUS.md` for the placement-vs-
   sprite-bounds limitation. This is the file most PRs touch.
 
+  **RGB values in comments** (0.2.4): Marble-серия and Cave Fossil/
+  Coral/Brazier comments now include VLM-measured mid-tone RGB. Source:
+  VLM (glm-4.6v) analysis of `исходники/еще элементы.jpg`. Cave Fossil
+  corrected from "light gray/white" (0.2.2 guess) to "BROWN (140,110,80)".
+  See `examples/palette_2b.json` → `_rgb_sources` for full attribution.
+
 ### `tests/`
 
 - **`test_parser.py`** — round-trip parse → write → parse equality;
@@ -142,13 +148,16 @@ minimal.
   (alpha, dither, jitter, bounds, resample, color_metric, tile_size).
 - **`test_new_hashes.py`** — 0.2.1 warm hashes + 0.2.2 new Canal hashes
   + `CANAL_HIDEOUT_BOUNDS` + `--bounds canal` CLI resolver + KI-9 fix
-  (Russian-name → English-canonical via hash). 140 cases total.
+  (Russian-name → English-canonical via hash) + 0.2.4 VLM-measured
+  Marble-серия RGB + palette_2b.json progress (3 of 6 TODOs filled).
+  95 cases total.
 - **`test_footprints.py`** (0.2.3) — 94 cases for
   `DECORATION_FOOTPRINT_CATALOG`: structural integrity, confidence↔
   samples consistency, spacing↔footprint math, regression tests for
   specific entries (Beech Tree, Cordilina, Marble Table), and a
   ground-truth check that `samples` matches real placement counts in
   `исходники/*.hideout`.
+- **Total test count: 237** (236 pass, 1 skipped — see `STATUS.md`).
 - **`data/sample.hideout`** — tiny synthetic fixture (< 1 KB).
   Contains one of each: a functional object, an art-layer decoration
   with rotation, an art-layer decoration with `flip_x`, an unknown
