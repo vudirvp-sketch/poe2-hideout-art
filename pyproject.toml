@@ -1,0 +1,60 @@
+[project]
+name = "hideout-art"
+version = "0.1.0"
+description = "Read, transform and emit Path of Exile 2 .hideout files. Build floor-art compositions from images."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "hideout-art contributors" }]
+requires-python = ">=3.10"
+keywords = ["poe2", "path-of-exile-2", "hideout", "decoration", "pixel-art"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Games/Entertainment",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+[project.optional-dependencies]
+preview = ["matplotlib>=3.7"]
+image = ["pillow>=10.0"]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.4",
+    "matplotlib>=3.7",
+    "pillow>=10.0",
+]
+
+[project.scripts]
+hideout-art = "hideout_art.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/vudirvp-sketch/poe2-hideout-art"
+Issues = "https://github.com/vudirvp-sketch/poe2-hideout-art/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hideout_art"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "C4"]
+ignore = ["E501"]  # we trust our line-length

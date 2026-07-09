@@ -1,0 +1,14 @@
+# Normalise line endings to LF on commit, check out as-is
+* text=auto eol=lf
+
+# Binary files — never diff
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.zip  binary
+
+# Linguist tweaks (so GitHub shows correct language stats)
+*.hideout linguist-language=JSON

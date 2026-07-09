@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "language": "English",
+  "hideout_name": "Test Hideout",
+  "hideout_hash": 99999,
+  "doodads": {
+    "Stash": {
+      "hash": 3230065491,
+      "x": 100,
+      "y": 100,
+      "r": 0,
+      "fv": 0
+    },
+    "Long Grass": {
+      "hash": 2219637749,
+      "x": 110,
+      "y": 110,
+      "r": 10922,
+      "fv": 7
+    },
+    "Long Grass": {
+      "hash": 2219637749,
+      "x": 112,
+      "y": 112,
+      "r": 0,
+      "fv": 135
+    },
+    "Unknown Decoration": {
+      "hash": 9999999999,
+      "x": 150,
+      "y": 150,
+      "r": 32768,
+      "fv": 0
+    }
+  }
+}
